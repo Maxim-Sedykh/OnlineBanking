@@ -18,5 +18,7 @@ namespace OnlineBanking.Domain.Entity
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set; }
+
+        public List<Transaction> Transactions { get; set; }
     }
 }

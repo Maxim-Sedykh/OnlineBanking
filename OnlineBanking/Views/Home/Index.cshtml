@@ -2,7 +2,155 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-md-12 px-0">
+        <div id="carouselExampleCaptions" class="carousel slide carousel-dark" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item carousel-block active">
+                    <img src="https://kalix.club/uploads/posts/2022-12/1671649333_kalix-club-p-fon-bank-oboi-7.jpg"
+                         class="d-block w-100 h-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block bg-white br-15">
+                        <h5>Улучшенные транзакции</h5>
+                        <p>Онлайн транзакции с надежной системой безопасности</p>
+                    </div>
+                </div>
+                <div class="carousel-item carousel-block">
+                    <img src="https://klike.net/uploads/posts/2022-11/1667884428_3-24.jpg"
+                         class="d-block w-100 h-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block bg-white br-15">
+                        <h5>Лучшие кредиты</h5>
+                        <p>Кредит наличными на выгодных условиях</p>
+                    </div>
+                </div>
+                <div class="carousel-item carousel-block">
+                    <img src="https://www.postposmo.com/wp-content/uploads/2020/06/historia-de-la-tarjeta-de-cr%C3%A9dito-4.jpg"
+                         class="d-block w-100 h-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block bg-white br-15">
+                        <h5>Технологичная карта</h5>
+                        <p>Бесконтактная банковская карта с технологией NFC</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
 </div>
+<div class="row mb-5 row-margin">
+    <div class="icon mx-auto mt-5">
+        <i class="fa fa-angle-double-down fa-3x" aria-hidden="true"></i>
+    </div>
+    
+    <div class="col-md-12">
+        <img class="d-block mx-auto img-fluid" src="https://thumbs.dreamstime.com/b/%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D1%87%D0%BA%D0%B8-%D0%BA%D1%80%D0%B5%D0%B4%D0%B8%D1%82%D0%B0-%D0%B2-%D0%B1%D0%B0%D0%BD%D0%BA%D0%B5-12171822.jpg"
+                alt="Банковская карта" style="width:37%;"/>
+    </div>
+    <div class="col-md-4">
+        <div class="icon mx-auto my-2">
+            <i class="fas fa-exchange-alt mx-auto fa-2x"></i>
+        </div>
+        <p class="fs-5 fw-bold text-center">
+            Банковская карта
+        </p>
+        <p class="text-center  fs-6">
+            Откройте дверь к финансовой свободе с нашей банковской картой! Удобство, 
+            безопасность и надежность - все это в одном пластиковом карте.
+            Покупайте, путешествуйте, наслаждайтесь жизнью без ограничений!
+        </p>
+    </div>
+    <div class="col-md-4">
+        <div class="icon mx-auto my-2">
+            <i class="fas fa-credit-card mx-auto fa-2x"></i>
+        </div>
+        <p class="fs-5 fw-bold text-center">
+            Кредит
+        </p>
+        <p class="text-center fs-6">
+            Планируете большую покупку или мечтаете о реализации своих целей? 
+            Наши кредитные программы помогут вам воплотить в жизнь ваши мечты. 
+            Гибкие условия, низкие проценты и индивидуальный подход - все это для вашего финансового успеха!
+        </p>
+    </div>
+    <div class="col-md-4">
+        <div class="icon mx-auto my-2">
+            <i class="fas fa-money-check-alt mx-auto fa-2x"></i>
+        </div>
+        <p class="fs-5 fw-bold text-center">
+            Транзакции
+        </p>
+        <p class="text-center fs-6">
+            Быстрые и безопасные транзакции - ключ к успешному управлению вашими финансами. 
+            С нашими современными технологиями вы можете проводить операции онлайн или офлайн, не беспокоясь о безопасности.
+            Доверьте нам свои финансы и наслаждайтесь удобством!
+        </p>
+    </div>
+</div>
+<div class="row row-margin bg-grey-100">
+    <div class="col-md-6 ps-5" style="padding-top: 100px;">
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Выгода
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Ощутите истинное великолепие с нашей новой золотой банковской картой. Роскошь в каждой детали,
+                        элегантность в каждой транзакции. Станьте обладателем карты, которая подчеркнет ваш уникальный стиль и высокий статус.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                        Благосостояние
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Золото не только ценный металл, но и символ успеха. Наша золотая банковская карта станет неотъемлемым атрибутом вашего благосостояния.
+                        Позвольте себе уникальность и утонченность с каждым мгновением, проведенным с нашей картой в руках.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                        Престиж
+                    </button>
+                </h2>
+                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Не просто пластик, а произведение искусства. Новый дизайн золотой банковской карты – это воплощение роскоши и престижа.
+                        С ней вы окажетесь на вершине финансового мира, демонстрируя свою уверенность и вкус. Позвольте своим деньгам блеснуть во всей красе.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 pt-4">
+        <img class="d-block img-fluid " src="/images/credit-card.png" />
+    </div>
+</div>
+<div class="row row-margin">
+    <div class="col-md-12">
+        <img class="d-block img-fluid w-50 mx-auto mt-5" src="https://kalix.club/uploads/posts/2022-12/1671649370_kalix-club-p-fon-bank-oboi-6.jpg" />
+        <p class="text-center fs-6 mt-4">
+            <b class="text-blue">01</b>. Быстро, выгодно, безопасно - ваш кредит онлайн!
+        </p>
+        <p class="text-center fs-6">
+            <b class="text-blue">02</b>. Финансовая поддержка прямо у вас на смартфоне!
+        </p>
+        <p class="text-center fs-6">
+            <b class="text-blue">03</b>. Деньги на счет в минуты - легко получить кредит онлайн!
+        </p>
+    </div>
+</div>
+
+

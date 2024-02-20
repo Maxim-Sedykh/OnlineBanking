@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineBanking.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace OnlineBanking.Domain.ValueObjects.Transaction
     {
         public decimal Amount { get; set; }
 
-        public string Currency { get; set; }
+        public Currency Currency { get; set; }
     }
 }

@@ -8,7 +8,11 @@ namespace OnlineBanking.Domain.Enum
 {
     public enum StatusCode
     {
+        UserNotFound = 11,
+        UserAlreadyExist = 12,
 
+        PasswordIsWrong = 21,
+        PasswordNotEqualsPasswordConfirm = 22,
 
         InternalServerError = 500,
     }

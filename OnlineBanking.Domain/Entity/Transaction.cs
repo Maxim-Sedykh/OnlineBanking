@@ -15,9 +15,17 @@ namespace OnlineBanking.Domain.Entity
 
         public int SenderId { get; set; }
 
+        public User Sender { get; set; }
+
         public int RecipientId { get; set; }
 
+        public User Recipient { get; set; }
+
         public Money Money { get; set; }
+
+        public byte PaymentMethodId { get; set; }
+
+        public PaymentMethod PaymentMethod { get; set; }
 
         public DateTime TransactionDate { get; set; }
 

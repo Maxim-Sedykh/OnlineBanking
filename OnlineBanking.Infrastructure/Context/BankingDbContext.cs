@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 using OnlineBanking.DAL.Interceptors;
 using OnlineBanking.Domain.Entity;
 using System;
@@ -13,10 +14,11 @@ namespace OnlineBanking.DAL.Context
     public class BankingDbContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Loan> Loans { get; set; }
+        public DbSet<Credit> Credits { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<Transaction> Users { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         public BankingDbContext(DbContextOptions<BankingDbContext> options) : base(options)
         {

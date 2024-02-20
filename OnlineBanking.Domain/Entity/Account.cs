@@ -16,6 +16,8 @@ namespace OnlineBanking.Domain.Entity
         
         public int UserId { get; set; }
 
+        public User User { get; set; }
+
         public AccountType AccountType { get; set; }
 
         public Money Balance { get; set; }

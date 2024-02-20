@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineBanking", "OnlineBanking\OnlineBanking.csproj", "{C1723B73-E774-44B0-83C9-734ED108AF1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineBanking", "OnlineBanking\OnlineBanking.csproj", "{C1723B73-E774-44B0-83C9-734ED108AF1F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{867C59FE-B23E-40EA-9F3C-4AF734690286}"
 EndProject
@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{3F4EB001-198C-497D-8232-9805732E276C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineBanking.Application", "OnlineBanking.Application\OnlineBanking.Application.csproj", "{80973F9D-CB25-408B-9302-78B7DCC83215}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineBanking.Application", "OnlineBanking.Application\OnlineBanking.Application.csproj", "{80973F9D-CB25-408B-9302-78B7DCC83215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineBanking.Domain", "OnlineBanking.Domain\OnlineBanking.Domain.csproj", "{45B7E64F-9833-48D5-B7EB-54BA84EE2D3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineBanking.Domain", "OnlineBanking.Domain\OnlineBanking.Domain.csproj", "{45B7E64F-9833-48D5-B7EB-54BA84EE2D3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineBanking.DAL", "OnlineBanking.Infrastructure\OnlineBanking.DAL.csproj", "{84CDF0CC-2A27-46D2-8F2D-9821AA7CE28A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineBanking.DAL", "OnlineBanking.Infrastructure\OnlineBanking.DAL.csproj", "{84CDF0CC-2A27-46D2-8F2D-9821AA7CE28A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

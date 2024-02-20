@@ -8,15 +8,19 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.Entity
 {
-    public class Loan : IEntityId<long>, IAuditable
+    public class Credit : IEntityId<long>, IAuditable
     {
         public long Id { get; set; }
 
         public int UserId { get; set; }
 
+        public User User { get; set; }
+
         public Money LoanSum { get; set; }
 
         public float Percent { get; set; }
+
+        public DateTime CreditDate { get; set; }
 
         public DateTime CreditTerm { get; set; }
 

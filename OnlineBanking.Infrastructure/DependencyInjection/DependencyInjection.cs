@@ -34,7 +34,7 @@ namespace OnlineBanking.DAL.DependencyInjection
             var types = new List<Type>()
             {
                 typeof(Transaction),
-                typeof(Loan),
+                typeof(Credit),
                 typeof(Account),
                 typeof(PaymentMethod),
                 typeof(Transaction)

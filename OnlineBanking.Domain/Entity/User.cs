@@ -1,4 +1,5 @@
-﻿using OnlineBanking.Domain.Interfaces.Entity;
+﻿using OnlineBanking.Domain.Enum;
+using OnlineBanking.Domain.Interfaces.Entity;
 using OnlineBanking.Domain.ValueObjects.User;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,24 @@ namespace OnlineBanking.Domain.Entity
 
         public string Password { get; set; }
 
+        public bool IsOnlineBankingUser { get; set; }
+
+        public Role Role { get; set; }
+
         public Address Address { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set; }
+
+        public List<Account> Accounts { get; set; }
+
+        public List<Transaction> SenderTransactions { get; set; }
+
+        public List<Transaction> RecicipientTransactions { get; set; }
+
+        public List<Credit> Credits { get; set; }
+
+        public UserToken UserToken { get; set; }
     }
 }

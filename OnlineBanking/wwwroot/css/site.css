@@ -20,3 +20,66 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*custom-styles*/
+
+footer {
+    height:300px;
+}
+
+.br-15 {
+    border-radius: 15px;
+}
+
+.bg-blue-100 {
+    background-color: #2352c5;
+}
+
+.bg-blue-200 {
+    background-color: #0c1190;
+}
+
+.bg-blue-300 {
+    background-color: #057adc;
+}
+
+.bg-grey-100 {
+    background-color: #f7f9fc;
+}
+
+.carousel-block {
+    height: 750px;
+}
+
+.img-cover {
+    background-size: cover;
+}
+
+.img-carousel {
+    border-radius: 0px 0px 15px 15px;
+}
+
+.fa-icon {
+    font-size: 20px;
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-margin {
+    padding: 0px 300px 0px 300px;
+}
+
+.img-credit-main {
+    height:100px;
+    width:200px;
+}
+
+.text-blue {
+    color: #1a2ac4;
+}
+
+/*custom-styles*/
