@@ -1,25 +1,76 @@
 ﻿@using OnlineBanking.Domain.ViewModel.User;
 @model UserProfileViewModel
 
-<div class="container">
-    <form>
+<div class="container" style="min-height:1300px;">
+    <p class="text-center fs-4 mt-2">Ваш аватар</p>
+    <form asp-controller="User" asp-action="EditUserData" enctype="multipart/form-data" method="post">
+        <div>
+            <input asp-for="Id" type="hidden" value="@Model.Id">
+            <input asp-for="Username" type="hidden" value="@Model.Username">
+            <input asp-for="Firstname" type="hidden" value="@Model.Firstname">
+            <input asp-for="Surname" type="hidden" value="@Model.Surname">
+            <input asp-for="ZipCode" type="hidden" value="@Model.ZipCode">
+            <input asp-for="City" type="hidden" value="@Model.City">
+            <input asp-for="Street" type="hidden" value="@Model.Street">
+            <input asp-for="Role" type="hidden" value="@Model.Role">
+            <input asp-for="CreatedAt" type="hidden" value="@Model.CreatedAt">
+        </div>
         <div class="row">
             <div class="col-md-12">
                 @if (Model.Avatar == null && Model.Image == null)
                 {
-                    <img class="img-fluid rounded-start rounded" src="~/images/\default-avatar.jpeg">
-                    <label class="col-form-label">Изображение</label>
-                    <input asp-for="@Model.Avatar" class="form-control" type="file">
+                    <img class="img-fluid rounded-circle d-block mx-auto my-4" src="~/images/\default-avatar.jpeg" style="width:300px;">
+                    <input asp-for="@Model.Avatar" class="form-control w-50 mx-auto" type="file">
                 }
                 else
                 {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())"
-                         class="img-fluid rounded-start rounded">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())" style="height: 300px; width:300px;"
+                         class="img-fluid rounded-circle d-block mx-auto my-4">
                 }
             </div>
         </div>
-       
-    </form>
-    
+        <div class="row border my-3 py-3">
+            <p class="text-center fs-4">Личные данные</p>
+            <div class="col-md-6 ps-5 m-auto">
+                <div class="my-3 d-flex">
+                    <label>Логин</label>  <input class="form-control br-40 w-50 ms-2 mx-auto" asp-for="@Model.Username" type="text" disabled>
+                </div>
+                <div class="mb-3 d-flex">
+                    <label>Имя</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Firstname" type="text" disabled>
+                </div>
+                <div class="mb-3 d-flex">
+                    <label>Фамилия</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Surname" type="text" disabled>
+                </div>
+                <div class="mb-3 d-flex">
+                    <label>Роль</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Role" type="text" disabled>
+                </div>
+            </div>
+            <div class="col-md-6 ps-5">
+                <div class="my-3 d-flex">
+                    <label>Город</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.City" type="text" disabled>
+                </div>
+                <div class="mb-3 d-flex">
+                    <label>Улица</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Street" type="text" disabled>
+                </div>
+                <div class="mb-3 d-flex">
+                    <label>Zip</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.ZipCode" type="text" disabled>
+                </div>
+                <div class="mb-3 d-flex">
+                    <label>Создан</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.CreatedAt" type="date" disabled>
+                </div>
+            </div>
+            <div class="col-md-12"><button type="submit" class="btn btn-primary  d-block mx-auto">Редактировать</button></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 card">
+                @foreach (var account in Model.UserAccounts)
+                {
+                    <div>
+                        @account.AccountName
+                    </div>
+                }       
+            </div>
+         </div>
+     </form>
 </div>
 

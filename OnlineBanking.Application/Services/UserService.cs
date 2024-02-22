@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OnlineBanking.Application.Resources;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Interfaces.Repository;
+using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Transaction;
@@ -12,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Runtime.ConstrainedExecution;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +23,7 @@ using ILogger = Serilog.ILogger;
 
 namespace OnlineBanking.Application.Services
 {
-    public class UserService
+    public class UserService: IUserService
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Account> _accountRepository;
@@ -43,12 +46,6 @@ namespace OnlineBanking.Application.Services
                 var userProfileViewModel = await _userRepository.GetAll()
                     .Where(x => x.Username == userName)
                     .Include(x => x.Accounts)
-                    .Include(x => x.RecicipientTransactions)
-                        .ThenInclude(t => t.Recipient)
-                    .Include(x => x.SenderTransactions)
-                        .ThenInclude(t => t.Sender)
-                    .Include(x => x.SenderTransactions)
-                        .ThenInclude(t => t.PaymentMethod)
                     .Select(x => new UserProfileViewModel()
                     {
                         Id = x.Id,
@@ -57,22 +54,16 @@ namespace OnlineBanking.Application.Services
                         Surname = x.Surname,
                         Street = x.Street,
                         City = x.City,
+                        Role = x.Role,
                         ZipCode = x.ZipCode,
                         CreatedAt = x.CreatedAt,
+                        Image = x.Avatar,
                         UserAccounts = x.Accounts.Select(a => new AccountViewModel()
                         {
                             AccountName = a.AccountName,
                             AccountType = a.AccountType,
                             BalanceAmount = a.BalanceAmount,
                             CreatedAt = a.CreatedAt
-                        }).ToList(),
-                        UserTransactions = x.SenderTransactions.Select(t => new TransactionViewModel()
-                        {
-                            SenderName = t.Sender.Username,
-                            RecipientName = t.Recipient.Username,
-                            MoneyAmount = t.MoneyAmount,
-                            PaymentMethodName = t.PaymentMethod.Name,
-                            TransactionDate = t.TransactionDate
                         }).ToList()
                     })
                     .FirstOrDefaultAsync();
@@ -83,6 +74,34 @@ namespace OnlineBanking.Application.Services
                 };
 
 
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new Result<UserProfileViewModel>()
+                {
+                    ErrorMessage = ErrorMessage.InternalServerError,
+                    ErrorCode = (int)StatusCode.InternalServerError
+                };
+            }
+        }
+
+        public async Task<Result<UserProfileViewModel>> EditUserInfo(UserProfileViewModel model, byte[] imageData)
+        {
+            try
+            {
+                var user = await _userRepository.GetAll()
+                    .Where(x => x.Id == model.Id)
+                    .FirstOrDefaultAsync();
+
+                user.Avatar = imageData;
+
+                await _userRepository.UpdateAsync(user);
+
+                return new Result<UserProfileViewModel>()
+                {
+                    Data = model
+                };
             }
             catch (Exception ex)
             {

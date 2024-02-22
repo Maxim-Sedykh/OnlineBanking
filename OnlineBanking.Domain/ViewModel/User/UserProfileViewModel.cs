@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Transaction;
 using System;
@@ -25,6 +26,8 @@ namespace OnlineBanking.Domain.ViewModel.User
 
         public string ZipCode { get; set; }
 
+        public Role Role { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public IFormFile Avatar { get; set; }
@@ -32,7 +35,5 @@ namespace OnlineBanking.Domain.ViewModel.User
         public byte[] Image { get; set; }
 
         public List<AccountViewModel> UserAccounts { get; set; }
-
-        public List<TransactionViewModel> UserTransactions { get; set; }
     }
 }

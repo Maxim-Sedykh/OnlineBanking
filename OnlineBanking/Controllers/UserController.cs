@@ -1,24 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using OnlineBanking.Application.Services;
+using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Models;
 using System.Diagnostics;
+using System.Security.Claims;
+using OnlineBanking.Domain.ViewModel.User;
 
 namespace OnlineBanking.Controllers
 {
     public class UserController : Controller
     {
-        public UserController()
-        {
+        private readonly IUserService _userService;
 
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
         }
 
-        public IActionResult UserProfile()
+        [HttpGet]
+        public async Task<IActionResult> UserProfile()
         {
-            return View();
+            var response = await _userService.GetUserProfile(User.Identity.Name);
+            if (response.IsSuccess)
+            {
+                return View(response.Data);
+            }
+            return View("Error", $"{response.ErrorMessage}");
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public async Task<IActionResult> EditUserData(UserProfileViewModel viemModel)
         {
-            return View();
+            ModelState.Remove("Id");
+            ModelState.Remove("CreatedAt");
+            if (ModelState.IsValid)
+            {
+                byte[] imageData;
+                using (var binaryReader = new BinaryReader(viemModel.Avatar.OpenReadStream()))
+                {
+                    imageData = binaryReader.ReadBytes((int)viemModel.Avatar.Length);
+                }
+                await _userService.EditUserInfo(viemModel, imageData);
+            }
+            return RedirectToAction("UserProfile");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
