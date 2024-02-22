@@ -1,0 +1,59 @@
+﻿@using OnlineBanking.Domain.ViewModel.Auth
+@model RegisterUserViewModel
+
+@{
+    ViewData["Title"] = "Регистрация | SQLCourse";
+}
+
+<div class="container" style="width:50%; margin-top:100px;  min-height: 1050px;">
+    <div class="card mb-3 fs-4" style="height:100px;"><p class="m-auto">Данная форма предназначена для регистрации пользователя</p></div>
+    <div class="card px-5">
+        <p class="text-center fs-4 mt-3">Регистрация</p>
+        <form asp-controller="Auth" asp-action="Register">
+            <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    <label for="inputEmail4">Почта</label>
+                    <input asp-for="Email" type="email" class="form-control" id="inputEmail4" placeholder="Введите почту...">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputLogin4">Логин пользователя</label>
+                    <input asp-for="Username" type="text" class="form-control" id="inputLogin4" placeholder="Введите ваш логин...">
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="inputName4">Имя</label>
+                <input asp-for="Firstname" type="text" class="form-control" id="inputName4" placeholder="Введите ваше имя...">
+            </div>
+            <div class="form-group mb-3">
+                <label for="inputSurname4">Фамилия</label>
+                <input asp-for="Surname" type="text" class="form-control" id="inputSurname4" placeholder="Введите вашу фамилию...">
+            </div>
+            <div class="form-group mb-3">
+                <label for="inputPassword4">Пароль</label>
+                <input asp-for="Password" type="password" class="form-control" id="inputPassword4" placeholder="Введите пароль...">
+            </div>
+            <div class="form-group mb-3">
+                <label for="inputPasswordConfirm4">Подтверждение пароля</label>
+                <input asp-for="PasswordConfirm" type="password" class="form-control" id="inputPasswordConfirm4" placeholder="Введите пароль ещё раз...">
+            </div>
+            <div class="row mb-3">
+                <div class="form-group col-md-6">
+                    <label for="inputStreet">Улица</label>
+                    <input asp-for="Street" type="text" class="form-control" id="inputStreet">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputCity">Город</label>
+                    <select asp-for="City" id="inputCity" class="form-control">
+                        <option selected>Донецк</option>
+                        <option>Макеевка</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="inputZip">Zip</label>
+                    <input asp-for="ZipCode" type="text" class="form-control" id="inputZip">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>

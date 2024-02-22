@@ -1,17 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineBanking.Models;
 using System.Diagnostics;
 
 namespace OnlineBanking.Controllers
 {
-    public class HomeController : Controller
+    public class UserController : Controller
     {
-        public HomeController()
+        public UserController()
         {
 
         }
 
-        public IActionResult Index()
+        public IActionResult UserProfile()
         {
             return View();
         }

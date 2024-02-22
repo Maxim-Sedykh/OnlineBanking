@@ -1,5 +1,5 @@
 ﻿using OnlineBanking.DAL.Context;
-using OnlineBanking.DAL.Interfaces.Repositories;
+using OnlineBanking.Domain.Interfaces.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

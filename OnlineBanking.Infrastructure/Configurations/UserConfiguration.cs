@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineBanking.Domain.Entity;
-using OnlineBanking.Domain.ValueObjects.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace OnlineBanking.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasData(new List<User>() 
+            builder.HasData(new List<User>()
             {
                 new User
                 {
@@ -26,12 +25,10 @@ namespace OnlineBanking.DAL.Configurations
                     Password = "1234567",
                     Email = "max_se@bk.ru",
                     IsOnlineBankingUser = true,
-                    Address = new Address()
-                    {
-                        Street = "Октябрьская",
-                        City = "Макеевка",
-                        ZipCode = "43215"
-                    },
+                    Street = "Ленинская",
+                    City = "Донецк",
+                    ZipCode = "10011",
+                    Avatar = null,
                     CreatedAt = DateTime.UtcNow,
                 },
                 new User
@@ -43,12 +40,10 @@ namespace OnlineBanking.DAL.Configurations
                     Password = "43214321",
                     Email = "vit_de02_se@bk.ru",
                     IsOnlineBankingUser = true,
-                    Address = new Address()
-                    {
-                        Street = "Володинская",
-                        City = "Донецк",
-                        ZipCode = "11001"
-                    },
+                    Street = "Плеханова",
+                    City = "Макеевка",
+                    ZipCode = "324232",
+                    Avatar = null,
                     CreatedAt = DateTime.UtcNow,
                 }
             });
@@ -60,11 +55,12 @@ namespace OnlineBanking.DAL.Configurations
             builder.Property(x => x.Surname).HasMaxLength(50);
             builder.Property(x => x.Email).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Password).IsRequired();
+            builder.Property(x => x.City).IsRequired().HasMaxLength(50);
+            builder.Property(x => x.Street).IsRequired().HasMaxLength(50);
+            builder.Property(x => x.ZipCode).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.Avatar).IsRequired(false);
 
-            builder.ComplexProperty(x => x.Address);
-            builder.Property(x => x.Address.Street).IsRequired().HasMaxLength(50);
-            builder.Property(x => x.Address.City).IsRequired().HasMaxLength(50);
-            builder.Property(x => x.Address.ZipCode).IsRequired().HasMaxLength(10);
+
 
             builder.HasMany(x => x.Accounts)
                 .WithOne(x => x.User)

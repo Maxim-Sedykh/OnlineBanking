@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
-using OnlineBanking.Domain.ValueObjects.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,44 +20,25 @@ namespace OnlineBanking.DAL.Configurations
                 {
                     Id = 1,
                     UserId = 1,
-                    LoanSum = new Money()
-                    {
-                        Amount = 1000000,
-                        Currency = Currency.RUB
-                    },
+                    LoanSumAmount = 100000,
                     Percent = 12.5f,
-                    CreditTerm = DateTime.Now.AddYears(1),
-                    LoanRemainder = new Money()
-                    {
-                        Amount = 500000,
-                        Currency = Currency.RUB
-                    },
+                    CreditTerm = DateTime.UtcNow.AddYears(1),
+                    LoanRemainerAmount = 50000,
                     CreatedAt = DateTime.UtcNow
                 },
                 new Credit
                 {
                     Id = 2,
                     UserId = 2,
-                    LoanSum = new Money()
-                    {
-                        Amount = 100000,
-                        Currency = Currency.USD
-                    },
+                    LoanSumAmount = 50000,
                     Percent = 10.5f,
-                    CreditTerm = DateTime.Now.AddYears(2),
-                    LoanRemainder = new Money()
-                    {
-                        Amount = 50000,
-                        Currency = Currency.USD
-                    },
+                    CreditTerm = DateTime.UtcNow.AddYears(2),
+                    LoanRemainerAmount = 25000,
                     CreatedAt = DateTime.UtcNow
                 }
             });
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-
-            builder.ComplexProperty(x => x.LoanRemainder);
-            builder.ComplexProperty(x => x.LoanSum);
         }
     }
 }

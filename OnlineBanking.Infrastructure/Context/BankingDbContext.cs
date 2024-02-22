@@ -18,7 +18,6 @@ namespace OnlineBanking.DAL.Context
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserToken> UserTokens { get; set; }
 
         public BankingDbContext(DbContextOptions<BankingDbContext> options) : base(options)
         {

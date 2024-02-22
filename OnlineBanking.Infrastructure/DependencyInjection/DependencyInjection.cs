@@ -3,9 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineBanking.DAL.Context;
 using OnlineBanking.DAL.Interceptors;
-using OnlineBanking.DAL.Interfaces.Repositories;
 using OnlineBanking.DAL.Repositories;
 using OnlineBanking.Domain.Entity;
+using OnlineBanking.Domain.Interfaces.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ namespace OnlineBanking.DAL.DependencyInjection
                 typeof(Credit),
                 typeof(Account),
                 typeof(PaymentMethod),
-                typeof(Transaction)
+                typeof(User),
             };
 
             foreach (var type in types)

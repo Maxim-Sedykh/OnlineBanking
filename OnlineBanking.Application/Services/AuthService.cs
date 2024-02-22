@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OnlineBanking.Application.Resources;
-using OnlineBanking.DAL.Interfaces.Repositories;
+using OnlineBanking.DAL.Repositories;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
+using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Result;
-using OnlineBanking.Domain.ValueObjects.User;
 using OnlineBanking.Domain.ViewModel.Auth;
-using OnlineBanking.Security.UserTokenService.TokenViewModels;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -26,26 +25,22 @@ namespace OnlineBanking.Application.Services
     public class AuthService : IAuthService
     {
         private readonly IBaseRepository<User> _userRepository;
-        private readonly IBaseRepository<UserToken> _userTokenRepository;
-        private readonly IUserTokenService _userTokenService;
         private readonly ILogger _logger;
 
-        public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserToken> userTokenRepository, IUserTokenService userTokenService, ILogger logger)
+        public AuthService(IBaseRepository<User> userRepository, ILogger logger)
         {
             _userRepository = userRepository;
-            _userTokenRepository = userTokenRepository;
-            _userTokenService = userTokenService;
             _logger = logger;
         }
 
-        public async Task<Result<UserTokenViewModel>> Login(LoginUserViewModel model)
+        public async Task<Result<ClaimsIdentity>> Login(LoginUserViewModel model)
         {
             try
             {
-                var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.UserName);
+                var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Email == model.Email);
                 if (user == null)
                 {
-                    return new Result<UserTokenViewModel>()
+                    return new Result<ClaimsIdentity>()
                     {
                         ErrorMessage = ErrorMessage.UserNotFound,
                         ErrorCode = (int)StatusCode.UserNotFound,
@@ -54,56 +49,25 @@ namespace OnlineBanking.Application.Services
 
                 if (!IsVerifyPassword(user.Password, model.Password))
                 {
-                    return new Result<UserTokenViewModel>()
+                    return new Result<ClaimsIdentity>()
                     {
                         ErrorMessage = ErrorMessage.PasswordIsWrong,
                         ErrorCode = (int)StatusCode.PasswordIsWrong,
                     };
                 }
 
-                var claims = new List<Claim>()
+                var result = Authenticate(user);
+
+                return new Result<ClaimsIdentity>()
                 {
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
+                    Data = result,
                 };
-                var accessToken = await _userTokenService.GenerateAccessTokenAsync(claims);
 
-                var userToken = await _userTokenRepository.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
-                var refreshToken = await _userTokenService.GenerateRefreshTokenAsync();
-
-                if (userToken == null)
-                {
-                    userToken = new UserToken
-                    {
-                        UserId = user.Id,
-                        RefreshToken = refreshToken,
-                        RefreshTokenExpireTime = DateTime.UtcNow.AddDays(5)
-                    };
-
-                    await _userTokenRepository.CreateAsync(userToken);
-                }
-                else
-                {
-                    userToken.RefreshToken = refreshToken;
-                    userToken.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(5);
-
-                    await _userTokenRepository.UpdateAsync(userToken);
-                }
-
-                return new Result<UserTokenViewModel>()
-                {
-                    Data = new UserTokenViewModel()
-                    {
-                        AccessToken = accessToken,
-                        RefreshToken = refreshToken,
-                    }
-                };
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, ex.Message);
-                return new Result<UserTokenViewModel>()
+                return new Result<ClaimsIdentity>()
                 {
                     ErrorMessage = ErrorMessage.InternalServerError,
                     ErrorCode = (int)StatusCode.InternalServerError
@@ -111,11 +75,11 @@ namespace OnlineBanking.Application.Services
             }
         }
 
-        public async Task<Result<UserViewModel>> Register(RegisterUserViewModel model)
+        public async Task<Result<ClaimsIdentity>> Register(RegisterUserViewModel model)
         {
             if (model.Password != model.PasswordConfirm)
             {
-                return new Result<UserViewModel>()
+                return new Result<ClaimsIdentity>()
                 {
                     ErrorMessage = ErrorMessage.PasswordNotEqualsPasswordConfirm,
                     ErrorCode = (int)StatusCode.PasswordNotEqualsPasswordConfirm,
@@ -127,7 +91,7 @@ namespace OnlineBanking.Application.Services
                 var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.Username);
                 if (user != null)
                 {
-                    return new Result<UserViewModel>()
+                    return new Result<ClaimsIdentity>()
                     {
                         ErrorMessage = ErrorMessage.UserAlreadyExist,
                         ErrorCode = (int)StatusCode.UserAlreadyExist,
@@ -143,20 +107,24 @@ namespace OnlineBanking.Application.Services
                     IsOnlineBankingUser = true,
                     Password = hashUserPassword,
                     Role = Role.User,
-                    Address = model.Address,
+                    City = model.City,
+                    Street = model.Street,
+                    ZipCode = model.ZipCode,
                     CreatedAt = DateTime.UtcNow,
                 };
                 await _userRepository.CreateAsync(user);
 
-                return new Result<UserViewModel>()
+                var result = Authenticate(user);
+
+                return new Result<ClaimsIdentity>()
                 {
-                    Data = user.Adapt<UserViewModel>(),
+                    Data = result,
                 };
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, ex.Message);
-                return new Result<UserViewModel>()
+                return new Result<ClaimsIdentity>()
                 {
                     ErrorMessage = ErrorMessage.InternalServerError,
                     ErrorCode = (int)StatusCode.InternalServerError
@@ -174,6 +142,17 @@ namespace OnlineBanking.Application.Services
         {
             var hash = HashPassword(userPassword);
             return userPasswordHash == hash;
+        }
+
+        private ClaimsIdentity Authenticate(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Username),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
+            };
+            return new ClaimsIdentity(claims, "ApplicationCookie",
+                ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
     }
 }

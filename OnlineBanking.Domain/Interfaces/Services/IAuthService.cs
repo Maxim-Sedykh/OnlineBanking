@@ -1,6 +1,5 @@
 ﻿using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Auth;
-using OnlineBanking.Security.UserTokenService.TokenViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +19,13 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<Result<UserViewModel>> Register(RegisterUserViewModel dto);
+        Task<Result<ClaimsIdentity>> Register(RegisterUserViewModel dto);
 
         /// <summary>
         /// Авторизация пользователя
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<Result<UserTokenViewModel>> Login(LoginUserViewModel dto);
+        Task<Result<ClaimsIdentity>> Login(LoginUserViewModel model);
     }
 }

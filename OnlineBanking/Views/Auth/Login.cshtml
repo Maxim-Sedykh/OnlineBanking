@@ -1,0 +1,24 @@
+﻿@using OnlineBanking.Domain.ViewModel.Auth
+@model LoginUserViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-controller="Auth" asp-action="Login">
+                <div class="form-group mb-4">
+                    <label for="exampleInputEmail1">Почта</label>
+                    <input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите почту...">
+                    <small id="emailHelp" class="form-text text-muted">Мы не будем делится с другими вашим Email!</small>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="exampleInputPassword1">Пароль</label>
+                    <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Пароль...">
+                </div>
+                <p class="text-center mb-4">Все ещё нет своей учётной записи? <a class="text-decoration-underline"
+                    asp-controller="Auth" asp-action="Register">Зарегистрируйтесь!</a></p>
+                <button type="submit" class="btn btn-primary d-block mx-auto">Логин</button>
+            </form>
+        </div>
+    </div>
+</div>
+

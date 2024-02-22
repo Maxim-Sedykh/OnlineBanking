@@ -1,5 +1,4 @@
-﻿using OnlineBanking.Domain.ValueObjects.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +19,11 @@ namespace OnlineBanking.Domain.ViewModel.Auth
         public string Password { get; set; }  
         
         public string PasswordConfirm { get; set; }
-        
-        public Address Address { get; set; }
+
+        public string Street { get; set; }
+
+        public string City { get; set; }
+
+        public string ZipCode { get; set; }
     }
 }

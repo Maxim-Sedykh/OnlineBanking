@@ -1,11 +1,19 @@
 using Serilog;
+using OnlineBanking.Application.DependencyInjection;
+using OnlineBanking.DAL.DependencyInjection;
+using OnlineBanking;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthenticationAndAuthorization(builder);
+
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddDataAccessLayer(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

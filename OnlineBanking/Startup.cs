@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using OnlineBanking.Domain.Settings;
+using Microsoft.Extensions.Options;
 using System.Text;
 
 namespace OnlineBanking
@@ -16,30 +14,25 @@ namespace OnlineBanking
         public static void AddAuthenticationAndAuthorization(this IServiceCollection services, WebApplicationBuilder builder)
         {
             services.AddAuthorization();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                var options = builder.Configuration.GetSection(JwtSettings.DefaultSection).Get<JwtSettings>();
-                var jwtKey = options.JwtKey;
-                var issuer = options.Issuer;
-                var audience = options.Audience;
-                o.Authority = options.Authority;
-                o.RequireHttpsMetadata = false;
-                o.TokenValidationParameters = new TokenValidationParameters()
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
                 {
-                    ValidIssuer = issuer,
-                    ValidAudience = audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-                    ValidateAudience = true,
-                    ValidateIssuer = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true
-                };
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/Login");
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.Name = "OnlineBankingCookie";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    options.SlidingExpiration = true;
+                });
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
             });
         }
+
+
+
     }
 }

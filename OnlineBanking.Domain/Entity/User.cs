@@ -1,6 +1,5 @@
 ﻿using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Interfaces.Entity;
-using OnlineBanking.Domain.ValueObjects.User;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -29,7 +28,13 @@ namespace OnlineBanking.Domain.Entity
 
         public Role Role { get; set; }
 
-        public Address Address { get; set; }
+        public string Street { get; set; }
+
+        public string City { get; set; }
+
+        public string ZipCode { get; set; }
+
+        public byte[] Avatar { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -42,7 +47,5 @@ namespace OnlineBanking.Domain.Entity
         public List<Transaction> RecicipientTransactions { get; set; }
 
         public List<Credit> Credits { get; set; }
-
-        public UserToken UserToken { get; set; }
     }
 }

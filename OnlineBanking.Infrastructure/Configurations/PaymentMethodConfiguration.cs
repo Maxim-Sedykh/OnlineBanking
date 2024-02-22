@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
-using OnlineBanking.Domain.ValueObjects.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,4 @@
 ﻿using OnlineBanking.Domain.Interfaces.Entity;
-using OnlineBanking.Domain.ValueObjects.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -21,7 +20,7 @@ namespace OnlineBanking.Domain.Entity
 
         public User Recipient { get; set; }
 
-        public Money Money { get; set; }
+        public decimal MoneyAmount { get; set; }
 
         public byte PaymentMethodId { get; set; }
 

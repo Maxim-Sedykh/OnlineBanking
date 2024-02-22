@@ -8,17 +8,16 @@
 
   <ItemGroup>
     <Folder Include="Validations\" />
-    <Folder Include="DependencyInjection\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OnlineBanking.Domain\OnlineBanking.Domain.csproj" />
+    <ProjectReference Include="..\OnlineBanking.Infrastructure\OnlineBanking.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

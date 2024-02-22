@@ -1,5 +1,4 @@
 ﻿using OnlineBanking.Domain.Interfaces.Entity;
-using OnlineBanking.Domain.ValueObjects.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace OnlineBanking.Domain.Entity
 
         public User User { get; set; }
 
-        public Money LoanSum { get; set; }
+        public decimal LoanSumAmount { get; set; }
 
         public float Percent { get; set; }
 
@@ -24,7 +23,7 @@ namespace OnlineBanking.Domain.Entity
 
         public DateTime CreditTerm { get; set; }
 
-        public Money LoanRemainder { get; set; }
+        public decimal LoanRemainerAmount { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

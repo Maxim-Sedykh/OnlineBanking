@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineBanking.DAL.Interfaces.Repositories
+namespace OnlineBanking.Domain.Interfaces.Repository
 {
     public interface IBaseRepository<TEntity>
     {
