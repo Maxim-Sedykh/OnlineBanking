@@ -61,6 +61,33 @@ namespace OnlineBanking.Application.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Счёт с таким именем уже существует.
+        /// </summary>
+        internal static string AccountAlreadyExist {
+            get {
+                return ResourceManager.GetString("AccountAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Баланс счёта не пуст.
+        /// </summary>
+        internal static string AccountBalanceNotEmpty {
+            get {
+                return ResourceManager.GetString("AccountBalanceNotEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Счёт не найден.
+        /// </summary>
+        internal static string AccountNotFound {
+            get {
+                return ResourceManager.GetString("AccountNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Внутренняя ошибка сервера.
         /// </summary>
         internal static string InternalServerError {

@@ -1,0 +1,30 @@
+﻿@using OnlineBanking.Domain.Enum
+@using OnlineBanking.Domain.ViewModel.Accounts
+@model CreateAccountViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-controller="Account" asp-action="CreateAccount">
+                <div class="form-group my-3">
+                    <label for="exampleInputEmail1">Имя счёта</label>
+                    <input asp-for="AccountName" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите имя счёта...">
+                    <small class="form-text text-muted">Введите уникальное имя, не повторяющееся с именами других счётов</small>
+                </div>
+                <div class="form-group mt-3 mb-4">
+                    <label for="exampleFormControlSelect2">Выберите тип счёта</label>
+                    <select class="form-control" asp-for="AccountType" id="exampleFormControlSelect2">
+                        @foreach (var type in Enum.GetValues(typeof(AccountType)))
+                        {
+                            <option>
+                                @type
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary d-block mx-auto">Создать счёт</button>
+            </form>
+        </div>
+    </div>
+</div>

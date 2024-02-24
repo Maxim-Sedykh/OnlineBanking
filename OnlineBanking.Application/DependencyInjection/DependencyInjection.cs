@@ -20,6 +20,7 @@ namespace OnlineBanking.Application.DependencyInjection
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAccountService, AccountService>();
         }
     }
 }

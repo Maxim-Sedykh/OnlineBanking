@@ -1,0 +1,21 @@
+﻿@using OnlineBanking.Domain.ViewModel.Accounts
+@model AccountMoneyViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-controller="Account" asp-action="AddMoneyToAccount">
+                <div>
+                    <input type="hidden" asp-for="Id" value="@Model.Id" />
+                    <input type="hidden" asp-for="AccountName" value="@Model.AccountName"/>
+                </div>
+                <p>@Model.AccountName</p>
+                <div class="form-group mt-3 mb-4">
+                    <label for="balanceAmountInput">Введите сумму</label>
+                    <input class="form-control" asp-for="BalanceAmount" id="balanceAmountInput">
+                </div>
+                <button type="submit" class="btn btn-primary d-block mx-auto">Пополнить счёт</button>
+            </form>
+        </div>
+    </div>
+</div>

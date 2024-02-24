@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccountAlreadyExist" xml:space="preserve">
+    <value>Account with this name is already exist</value>
+  </data>
+  <data name="AccountBalanceNotEmpty" xml:space="preserve">
+    <value>Account balance is not empty</value>
+  </data>
+  <data name="AccountNotFound" xml:space="preserve">
+    <value>Account is not found</value>
+  </data>
   <data name="InternalServerError" xml:space="preserve">
     <value>Invalid server error</value>
   </data>

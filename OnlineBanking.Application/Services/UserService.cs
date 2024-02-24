@@ -60,6 +60,7 @@ namespace OnlineBanking.Application.Services
                         Image = x.Avatar,
                         UserAccounts = x.Accounts.Select(a => new AccountViewModel()
                         {
+                            Id = a.Id,
                             AccountName = a.AccountName,
                             AccountType = a.AccountType,
                             BalanceAmount = a.BalanceAmount,

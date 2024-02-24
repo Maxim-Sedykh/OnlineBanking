@@ -21,7 +21,7 @@ namespace OnlineBanking.DAL.Configurations
                     Id = 1,
                     AccountName = "Сберегательный счёт для кредита",
                     UserId = 1,
-                    AccountType = AccountType.Savings,
+                    AccountType = AccountType.Current,
                     BalanceAmount = 10000m,
                     CreatedAt = DateTime.UtcNow
                 },
@@ -30,7 +30,7 @@ namespace OnlineBanking.DAL.Configurations
                     Id = 2,
                     AccountName = "Сберегательный счёт",
                     UserId = 2,
-                    AccountType = AccountType.Check,
+                    AccountType = AccountType.Current,
                     BalanceAmount = 20000m,
                     CreatedAt = DateTime.UtcNow
                 }

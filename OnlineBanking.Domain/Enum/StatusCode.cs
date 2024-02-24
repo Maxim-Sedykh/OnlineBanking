@@ -14,6 +14,10 @@ namespace OnlineBanking.Domain.Enum
         PasswordIsWrong = 21,
         PasswordNotEqualsPasswordConfirm = 22,
 
+        AccountNotFound = 31,
+        AccountAlreadyExist = 32,
+        AccountBalanceNotEmpty = 33,
+
         InternalServerError = 500,
     }
 }
