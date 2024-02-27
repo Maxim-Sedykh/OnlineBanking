@@ -18,6 +18,10 @@ namespace OnlineBanking.Domain.Enum
         AccountAlreadyExist = 32,
         AccountBalanceNotEmpty = 33,
 
+        CardNotFound = 41,
+
+        TryAgain = 451,
+
         InternalServerError = 500,
     }
 }

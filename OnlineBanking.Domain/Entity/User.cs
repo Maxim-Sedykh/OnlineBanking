@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.Entity
 {
-    public class User:IEntityId<int>, IAuditable
+    public class User:IEntityId<long>, IAuditable
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string Username { get; set; }
 

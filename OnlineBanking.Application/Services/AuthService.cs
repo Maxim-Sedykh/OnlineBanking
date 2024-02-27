@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OnlineBanking.Application.Resources;
+using OnlineBanking.Application.Resources.Error;
 using OnlineBanking.DAL.Repositories;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
+using OnlineBanking.Domain.Helpers;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Result;
@@ -97,7 +99,7 @@ namespace OnlineBanking.Application.Services
                         ErrorCode = (int)StatusCode.UserAlreadyExist,
                     };
                 }
-                var hashUserPassword = HashPassword(model.Password);
+                var hashUserPassword = HashPasswordHelper.HashPassword(model.Password);
                 user = new User()
                 {
                     Username = model.Username,
@@ -132,15 +134,9 @@ namespace OnlineBanking.Application.Services
             }
         }
 
-        private string HashPassword(string password)
-        {
-            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(bytes);
-        }
-
         private bool IsVerifyPassword(string userPasswordHash, string userPassword)
         {
-            var hash = HashPassword(userPassword);
+            var hash = HashPasswordHelper.HashPassword(userPassword);
             return userPasswordHash == hash;
         }
 

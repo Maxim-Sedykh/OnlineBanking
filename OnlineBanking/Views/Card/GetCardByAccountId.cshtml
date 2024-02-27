@@ -1,0 +1,25 @@
+﻿@using OnlineBanking.Domain.ViewModel.Card
+@model CardViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <label asp-for="CardNumber">
+                Номер карты
+            </label>
+            <input class="form-control br-40 ms-2 mb-3" asp-for="@Model.CardNumber" type="text" disabled>
+            <label asp-for="Validity">
+                Годен до
+            </label>
+            <input class="form-control br-40 ms-2 mb-3" asp-for="@Model.Validity" type="date" disabled>
+            <label asp-for="CVV">
+                CVV
+            </label>
+            <input class="form-control br-40 ms-2 mb-3" asp-for="@Model.CVV" type="text" disabled>
+            <label asp-for="CreatedAt">
+                Создана 
+            </label>
+            <input class="form-control br-40 ms-2 mb-3" asp-for="@Model.CreatedAt" type="date" disabled>
+        </div>
+    </div>
+</div>

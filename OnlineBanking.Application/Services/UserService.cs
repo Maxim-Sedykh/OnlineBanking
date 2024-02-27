@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OnlineBanking.Application.Resources;
+using OnlineBanking.Application.Resources.Error;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Interfaces.Repository;
@@ -63,6 +64,7 @@ namespace OnlineBanking.Application.Services
                             Id = a.Id,
                             AccountName = a.AccountName,
                             AccountType = a.AccountType,
+                            IsCardLinked = a.IsCardLinked,
                             BalanceAmount = a.BalanceAmount,
                             CreatedAt = a.CreatedAt
                         }).ToList()

@@ -1,6 +1,8 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using OnlineBanking.Application.Resources;
+using OnlineBanking.Application.Resources.Error;
+using OnlineBanking.Application.Resources.Success;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Interfaces.Repository;
@@ -143,6 +145,7 @@ namespace OnlineBanking.Application.Services
 
                 return new Result<bool>()
                 {
+                    SuccessMessage = SuccessMessage.DeleteAccountMessage,
                     Data = true,
                 };
             }

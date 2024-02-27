@@ -12,7 +12,7 @@ namespace OnlineBanking.Domain.ViewModel.User
 {
     public class UserProfileViewModel
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         
         public string Username { get; set; }
 

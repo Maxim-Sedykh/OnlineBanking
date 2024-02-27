@@ -13,6 +13,8 @@ namespace OnlineBanking.Domain.Result
         public string ErrorMessage { get; set; }
 
         public int? ErrorCode { get; set; }
+
+        public string SuccessMessage { get; set; }
     }
 
     public class Result<T> : Result

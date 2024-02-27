@@ -8,7 +8,7 @@ namespace OnlineBanking.Domain.ViewModel.Accounts
 {
     public class AccountDeleteViewModel
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public decimal BalanceAmount { get; set; }
     }

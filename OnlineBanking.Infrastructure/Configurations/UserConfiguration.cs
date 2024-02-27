@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineBanking.Domain.Entity;
+using OnlineBanking.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace OnlineBanking.DAL.Configurations
                     Username = "Maximka",
                     Firstname = "Максим",
                     Surname = "Седых",
-                    Password = "1234567",
+                    Password = HashPasswordHelper.HashPassword("1234567"),
                     Email = "max_se@bk.ru",
                     IsOnlineBankingUser = true,
                     Street = "Ленинская",
@@ -37,7 +38,7 @@ namespace OnlineBanking.DAL.Configurations
                     Username = "Vitaliy23",
                     Firstname = "Евгений",
                     Surname = "Морщинов",
-                    Password = "43214321",
+                    Password = HashPasswordHelper.HashPassword("43214321"),
                     Email = "vit_de02_se@bk.ru",
                     IsOnlineBankingUser = true,
                     Street = "Плеханова",
@@ -73,10 +74,6 @@ namespace OnlineBanking.DAL.Configurations
             builder.HasMany(x => x.RecicipientTransactions)
                 .WithOne(x => x.Recipient)
                 .HasForeignKey(x => x.RecipientId);
-
-            builder.HasMany(x => x.Credits)
-                .WithOne(x => x.User)
-                .HasForeignKey(x => x.UserId);
         }
     }
 }

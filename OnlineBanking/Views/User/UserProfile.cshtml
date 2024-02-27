@@ -1,7 +1,7 @@
 ﻿@using OnlineBanking.Domain.ViewModel.User;
 @model UserProfileViewModel
 
-<div class="container" style="min-height:1600px;">
+<div class="container pb-5" style="min-height:2500px;">
     <p class="text-center fs-4 mt-2">Ваш аватар</p>
     <form asp-controller="User" asp-action="EditUserData" enctype="multipart/form-data" method="post">
         <div>
@@ -76,7 +76,30 @@
                     </div>
                     <div class="w-50 text-white pt-4">
                         <p>Имя счёта: @Model.UserAccounts[i].AccountName</p>
-                        <p>Баланс: @Model.UserAccounts[i].BalanceAmount.ToString("0.00")</p>
+                        <p class="mb-0">Баланс: @Model.UserAccounts[i].BalanceAmount.ToString("0.00") ₽</p>
+                        <div class="d-flex flex-row">
+                        <button type="button" class="btn @(Model.UserAccounts[i].IsCardLinked ? "btn-outline-success" : "btn-outline-danger") rounded-circle p-0 my-3"
+                                style="width:48px; height:48px;" disabled>
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                        </button>
+                        @if (Model.UserAccounts[i].IsCardLinked)
+                        {
+                            <button type="button" class="btn btn-outline-primary m-3 py-0" onclick="openModal({ url: '/Card/GetCardByAccountId/@Model.UserAccounts[i].Id',
+                                modalId: 'modalWindow', modalTitle:'Данные карты' })" data-toggle="ajax-modal" data-target="Modal">
+                                Данные карты
+                            </button>
+                        }
+                        else
+                        {
+                            <form id="linkCardForm-@i" class="w-50">
+                                <input type="hidden" name="id" id="linkCardId-@i" value="@Model.UserAccounts[i].Id" />
+                                <button type="button" class="btn btn-outline-primary m-3" onclick="linkCard(event, @i)">
+                                    Привязать карту
+                                </button>
+                            </form>
+
+                        }
+                        </div>
                     </div>
                     <div class="w-25 text-white pt-3">
                         <p>Тип счёта: @Model.UserAccounts[i].AccountType</p>
@@ -105,5 +128,5 @@
 
 </div>
 
+<script src="~/js/linkCard.js"></script>
 <script src="~/js/deleteAccount.js"></script>
-

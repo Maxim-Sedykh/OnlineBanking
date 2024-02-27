@@ -9,7 +9,7 @@ namespace OnlineBanking.Domain.ViewModel.Auth
 {
     public class UserViewModel
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string Username { get; set; }
 

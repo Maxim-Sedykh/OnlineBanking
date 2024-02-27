@@ -1,4 +1,5 @@
-﻿using OnlineBanking.Domain.Enum;
+﻿using OnlineBanking.Domain.Entity;
+using OnlineBanking.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace OnlineBanking.Domain.ViewModel.Accounts
     {
         public string AccountName { get; set; }
 
-        public AccountType AccountType { get; set; }
+        public List<string> AccountTypes { get; set; }
     }
 }

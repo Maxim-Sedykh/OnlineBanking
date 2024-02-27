@@ -40,7 +40,10 @@ namespace OnlineBanking.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreateAccount() => PartialView();
+        public IActionResult CreateAccount()
+        { 
+            PartialView(); 
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateAccount(CreateAccountViewModel viewModel)
@@ -59,7 +62,7 @@ namespace OnlineBanking.Controllers
             var response = await _accountService.DeleteAccountById(model);
             if (response.IsSuccess)
             {
-                return Ok();
+                return Ok(new { message = response.SuccessMessage });
             }
             return BadRequest(new { message = response.ErrorMessage });
         }

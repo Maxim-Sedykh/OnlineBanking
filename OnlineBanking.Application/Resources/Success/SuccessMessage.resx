@@ -117,34 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AccountAlreadyExist" xml:space="preserve">
-    <value>Account with this name is already exist</value>
+  <data name="DeleteAccountMessage" xml:space="preserve">
+    <value>Ваш счёт успешно удалён!</value>
   </data>
-  <data name="AccountBalanceNotEmpty" xml:space="preserve">
-    <value>Account balance is not empty</value>
+  <data name="LinkCardMessage" xml:space="preserve">
+    <value>Карта была успешно привязана к счёту, вы можете забрать её в ближашем пункте выдачи!</value>
   </data>
-  <data name="AccountNotFound" xml:space="preserve">
-    <value>Account is not found</value>
-  </data>
-  <data name="InternalServerError" xml:space="preserve">
-    <value>Invalid server error</value>
-  </data>
-  <data name="InvalidClientRequest" xml:space="preserve">
-    <value>Invalid client request</value>
-  </data>
-  <data name="InvalidToken" xml:space="preserve">
-    <value>Invalid token</value>
-  </data>
-  <data name="PasswordIsWrong" xml:space="preserve">
-    <value>Password is wrong</value>
-  </data>
-  <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
-    <value>Password not equals password confirm</value>
-  </data>
-  <data name="UserAlreadyExist" xml:space="preserve">
-    <value>User already exist</value>
-  </data>
-  <data name="UserNotFound" xml:space="preserve">
-    <value>User is not found</value>
+  <data name="UnlinkCardMessage" xml:space="preserve">
+    <value>Карта была успешно удалена, больше данная карта не валидна для этого счёта!</value>
   </data>
 </root>
