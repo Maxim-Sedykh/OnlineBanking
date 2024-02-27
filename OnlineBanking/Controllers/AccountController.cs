@@ -40,9 +40,14 @@ namespace OnlineBanking.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreateAccount()
-        { 
-            PartialView(); 
+        public async Task<IActionResult> CreateAccount()
+        {
+            var response = await _accountService.GetAccountTypeNames();
+            if (response.IsSuccess)
+            {
+                return PartialView(response.Data);
+            }
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         [HttpPost]
@@ -65,6 +70,17 @@ namespace OnlineBanking.Controllers
                 return Ok(new { message = response.SuccessMessage });
             }
             return BadRequest(new { message = response.ErrorMessage });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountTypes()
+        {
+            var response = await _accountService.GetAccountTypes();
+            if (response.IsSuccess)
+            {
+                return View(response.Data);
+            }
+            return View("Error", $"{response.ErrorMessage}");
         }
     }
 }

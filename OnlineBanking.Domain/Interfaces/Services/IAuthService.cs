@@ -19,13 +19,13 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<Result<ClaimsIdentity>> Register(RegisterUserViewModel dto);
+        Task<Result<ClaimsIdentity>> Register(RegisterUserViewModel viewModel);
 
         /// <summary>
         /// Авторизация пользователя
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<Result<ClaimsIdentity>> Login(LoginUserViewModel model);
+        Task<Result<ClaimsIdentity>> Login(LoginUserViewModel viewModel);
     }
 }

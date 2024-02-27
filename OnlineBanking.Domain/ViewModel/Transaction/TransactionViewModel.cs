@@ -8,6 +8,8 @@ namespace OnlineBanking.Domain.ViewModel.Transaction
 {
     public class TransactionViewModel
     {
+        public long Id { get; set; }
+
         public string SenderName { get; set; }
 
         public string RecipientName { get; set; }
@@ -16,6 +18,6 @@ namespace OnlineBanking.Domain.ViewModel.Transaction
 
         public string PaymentMethodName { get; set; }
 
-        public DateTime TransactionDate { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

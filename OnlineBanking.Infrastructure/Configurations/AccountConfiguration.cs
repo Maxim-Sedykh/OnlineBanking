@@ -16,7 +16,7 @@ namespace OnlineBanking.DAL.Configurations
         {
             builder.HasData(new List<Account>()
             {
-                new Account
+                new()
                 {
                     Id = 1,
                     AccountName = "Сберегательный счёт для кредита",
@@ -26,7 +26,7 @@ namespace OnlineBanking.DAL.Configurations
                     IsCardLinked = true,
                     CreatedAt = DateTime.UtcNow
                 },
-                new Account
+                new()
                 {
                     Id = 2,
                     AccountName = "Сберегательный счёт",

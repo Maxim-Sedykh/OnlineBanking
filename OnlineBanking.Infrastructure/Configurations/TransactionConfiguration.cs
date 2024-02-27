@@ -16,22 +16,20 @@ namespace OnlineBanking.DAL.Configurations
         {
             builder.HasData(new List<Transaction>() 
             {
-                new Transaction()
+                new()
                 {
                     Id = 1,
                     SenderId = 1,
                     RecipientId = 2,
-                    TransactionDate = DateTime.UtcNow.AddDays(3),
                     MoneyAmount = 500,
                     CreatedAt = DateTime.UtcNow,
                     PaymentMethodId = 3
                 },
-                new Transaction()
+                new()
                 {
                     Id = 2,
                     SenderId = 2,
                     RecipientId = 1,
-                    TransactionDate = DateTime.UtcNow.AddDays(4),
                     MoneyAmount = 10000,
                     CreatedAt = DateTime.UtcNow,
                     PaymentMethodId = 1

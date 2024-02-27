@@ -35,11 +35,11 @@ namespace OnlineBanking.Application.Services
             _logger = logger;
         }
 
-        public async Task<Result<ClaimsIdentity>> Login(LoginUserViewModel model)
+        public async Task<Result<ClaimsIdentity>> Login(LoginUserViewModel viewModel)
         {
             try
             {
-                var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Email == model.Email);
+                var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Email == viewModel.Email);
                 if (user == null)
                 {
                     return new Result<ClaimsIdentity>()
@@ -49,7 +49,7 @@ namespace OnlineBanking.Application.Services
                     };
                 }
 
-                if (!IsVerifyPassword(user.Password, model.Password))
+                if (!IsVerifyPassword(user.Password, viewModel.Password))
                 {
                     return new Result<ClaimsIdentity>()
                     {
@@ -144,8 +144,8 @@ namespace OnlineBanking.Application.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Username),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
+                new(ClaimsIdentity.DefaultNameClaimType, user.Username),
+                new(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
             };
             return new ClaimsIdentity(claims, "ApplicationCookie",
                 ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

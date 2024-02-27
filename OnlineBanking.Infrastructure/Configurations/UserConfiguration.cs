@@ -17,7 +17,7 @@ namespace OnlineBanking.DAL.Configurations
         {
             builder.HasData(new List<User>()
             {
-                new User
+                new()
                 {
                     Id = 1,
                     Username = "Maximka",
@@ -32,7 +32,7 @@ namespace OnlineBanking.DAL.Configurations
                     Avatar = null,
                     CreatedAt = DateTime.UtcNow,
                 },
-                new User
+                new()
                 {
                     Id = 2,
                     Username = "Vitaliy23",

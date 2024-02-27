@@ -16,21 +16,21 @@ namespace OnlineBanking.DAL.Configurations
         {
             builder.HasData(new List<PaymentMethod>()
             {
-                new PaymentMethod
+                new()
                 {
                     Id = 1,
                     Name = "Карта Visa",
                     Description = "Банковская карта Visa",
                     CreatedAt = DateTime.UtcNow,
                 },
-                new PaymentMethod
+                new()
                 {
                     Id = 2,
                     Name = "Online-сервис VkPay",
                     Description = "Онлайн сервис в мессенджере VK - VkPay",
                     CreatedAt = DateTime.UtcNow,
                 },
-                new PaymentMethod
+                new()
                 {
                     Id = 3,
                     Name = "Интернет-кошелёк Qiwi",

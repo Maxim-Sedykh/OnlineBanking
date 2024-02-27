@@ -1,0 +1,53 @@
+﻿@using OnlineBanking.Domain.ViewModel.Transaction
+@model TransactionPageViewModel
+
+
+@{
+    ViewBag.Title = "Транзакции";
+}
+
+<div class="container">
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <div class="input-group">
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var transaction in Model.Transactions)
+        {
+            <div class="col-md-12 bg-dark br-15 my-3 d-flex justify-content-between">
+                <div>
+                    <label>
+                        Имя отправителя:
+                    </label>
+                    <p>@transaction.SenderName</p>
+                    <label>
+                        Имя получателя:
+                    </label>
+                    <p>@transaction.RecipientName</p>
+                </div>
+                <div>
+                    <label>
+                        Количество денег (₽)
+                    </label>
+                    <p>@transaction.MoneyAmount</p>
+                </div>
+                <div>
+                    <label>
+                        Платежный метод:
+                    </label>
+                    <p>@transaction.PaymentMethodName</p>
+                    <label>
+                        Дата транзакции
+                    </label>
+                    <p>@transaction.CreatedAt</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,8 +1,8 @@
 ﻿@using OnlineBanking.Domain.ViewModel.User;
 @model UserProfileViewModel
 
-<div class="container pb-5" style="min-height:2500px;">
-    <p class="text-center fs-4 mt-2">Ваш аватар</p>
+<div class="container pb-5" style="min-height:1300px;">
+    <p class="text-center fs-4 mt-2">Аватар</p>
     <form asp-controller="User" asp-action="EditUserData" enctype="multipart/form-data" method="post">
         <div>
             <input asp-for="Id" type="hidden" value="@Model.Id">
@@ -28,34 +28,38 @@
                          class="img-fluid rounded-circle d-block mx-auto my-4">
                 }
             </div>
+            <div class="col-md-12 my-5 text-center">
+                <a class="btn btn-primary" href="#" role="button">История транзакций</a>
+                <a class="btn btn-primary" href="#" role="button">Кредиты</a>
+            </div>
         </div>
         <div class="row border my-3 py-3">
             <p class="text-center fs-4">Личные данные</p>
-            <div class="col-md-6 ps-5 m-auto">
-                <div class="my-3 d-flex">
-                    <label>Логин</label>  <input class="form-control br-40 w-50 ms-2 mx-auto" asp-for="@Model.Username" type="text" disabled>
+            <div class="col-md-6 ps-5 m-auto" style="padding-right:15%;">
+                <div class="my-3 d-flex justify-content-end">
+                    <label>Логин</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Username" type="text" disabled>
                 </div>
-                <div class="mb-3 d-flex">
+                <div class="mb-3 d-flex justify-content-end">
                     <label>Имя</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Firstname" type="text" disabled>
                 </div>
-                <div class="mb-3 d-flex">
+                <div class="mb-3 d-flex justify-content-end">
                     <label>Фамилия</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Surname" type="text" disabled>
                 </div>
-                <div class="mb-3 d-flex">
+                <div class="mb-3 d-flex justify-content-end">
                     <label>Роль</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Role" type="text" disabled>
                 </div>
             </div>
-            <div class="col-md-6 ps-5">
-                <div class="my-3 d-flex">
+            <div class="col-md-6 ps-5" style="padding-right:15%;">
+                <div class="my-3 d-flex justify-content-end">
                     <label>Город</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.City" type="text" disabled>
                 </div>
-                <div class="mb-3 d-flex">
+                <div class="mb-3 d-flex justify-content-end">
                     <label>Улица</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.Street" type="text" disabled>
                 </div>
-                <div class="mb-3 d-flex">
+                <div class="mb-3 d-flex justify-content-end">
                     <label>Zip</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.ZipCode" type="text" disabled>
                 </div>
-                <div class="mb-3 d-flex">
+                <div class="mb-3 d-flex justify-content-end">
                     <label>Создан</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.CreatedAt" type="date" disabled>
                 </div>
             </div>
@@ -102,14 +106,14 @@
                         </div>
                     </div>
                     <div class="w-25 text-white pt-3">
-                        <p>Тип счёта: @Model.UserAccounts[i].AccountType</p>
+                        <p>Тип счёта: @Model.UserAccounts[i].AccountTypeName</p>
                         <p>Создан: @Model.UserAccounts[i].CreatedAt</p>
                     </div>
                 </div>
                 <div class="col-md-2 br-15 my-3">
                     <div class="bg-dark h-100 br-15 text-center">
                     <button type="button" class="btn btn-outline-success rounded-circle px-2 my-3" style="width:48px; height:48px;"
-                            onclick="openModal({ url: '/Account/AddMoneyToAccount/@Model.Id', modalId: 'modalWindow', modalTitle:'Пополнение счёта' })"
+                            onclick="openModal({ url: '/Account/AddMoneyToAccount/@Model.UserAccounts[i].Id', modalId: 'modalWindow', modalTitle:'Пополнение счёта' })"
                             data-toggle="ajax-modal" data-target="Modal">
                         <i class="fa fa-cart-plus" aria-hidden="true"></i>
                     </button>
@@ -124,7 +128,7 @@
                     </div>
                 </div>
             }
-         </div>
+        </div>
 
 </div>
 

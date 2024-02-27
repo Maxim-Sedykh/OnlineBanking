@@ -16,7 +16,7 @@ namespace OnlineBanking.DAL.Configurations
         {
             builder.HasData(new List<Card>()
             {
-                new Card
+                new()
                 {
                     Id = 1,
                     CardNumber = "2003536478934176",

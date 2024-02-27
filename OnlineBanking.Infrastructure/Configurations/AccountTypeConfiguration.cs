@@ -16,7 +16,7 @@ namespace OnlineBanking.DAL.Configurations
         {
             builder.HasData(new List<AccountType>()
             {
-                new AccountType
+                new()
                 {
                     Id = 1,
                     AccountTypeName = "Сберегательный",
@@ -25,7 +25,7 @@ namespace OnlineBanking.DAL.Configurations
                     AnnualInterestRate = 20.5f,
                     CreatedAt = DateTime.UtcNow
                 },
-                new AccountType
+                new()
                 {
                     Id = 2,
                     AccountTypeName = "Текущий",
@@ -34,7 +34,7 @@ namespace OnlineBanking.DAL.Configurations
                     AnnualInterestRate = 2.5f,
                     CreatedAt = DateTime.UtcNow
                 },
-                new AccountType
+                new()
                 {
                     Id = 3,
                     AccountTypeName = "Кредитный",

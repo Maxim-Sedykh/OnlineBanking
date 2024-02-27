@@ -126,6 +126,12 @@
   <data name="AccountNotFound" xml:space="preserve">
     <value>Account is not found</value>
   </data>
+  <data name="AccountTypeNotFound" xml:space="preserve">
+    <value>This account type is not found</value>
+  </data>
+  <data name="AccountTypesNotFound" xml:space="preserve">
+    <value>Account types if not found</value>
+  </data>
   <data name="CardNotFound" xml:space="preserve">
     <value>Card is not found</value>
   </data>
@@ -143,6 +149,9 @@
   </data>
   <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
     <value>Password not equals password confirm</value>
+  </data>
+  <data name="PaymentMethodsNotfound" xml:space="preserve">
+    <value>Payment methods is not found</value>
   </data>
   <data name="TryAgain" xml:space="preserve">
     <value>Try later to create card</value>

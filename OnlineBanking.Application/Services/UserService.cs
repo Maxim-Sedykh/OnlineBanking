@@ -27,17 +27,12 @@ namespace OnlineBanking.Application.Services
     public class UserService: IUserService
     {
         private readonly IBaseRepository<User> _userRepository;
-        private readonly IBaseRepository<Account> _accountRepository;
-        private readonly IBaseRepository<Transaction> _transactionRepository;
         private readonly ILogger _logger;
 
-        public UserService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<Account> accountRepository,
-            IBaseRepository<Transaction> transactionRepository)
+        public UserService(IBaseRepository<User> userRepository, ILogger logger)
         {
             _userRepository = userRepository;
             _logger = logger;
-            _accountRepository = accountRepository;
-            _transactionRepository = transactionRepository;
         }
 
         public async Task<Result<UserProfileViewModel>> GetUserProfile(string userName)
@@ -47,6 +42,7 @@ namespace OnlineBanking.Application.Services
                 var userProfileViewModel = await _userRepository.GetAll()
                     .Where(x => x.Username == userName)
                     .Include(x => x.Accounts)
+                    .ThenInclude(x => x.AccountType)
                     .Select(x => new UserProfileViewModel()
                     {
                         Id = x.Id,
@@ -63,7 +59,7 @@ namespace OnlineBanking.Application.Services
                         {
                             Id = a.Id,
                             AccountName = a.AccountName,
-                            AccountType = a.AccountType,
+                            AccountTypeName = a.AccountType.AccountTypeName,
                             IsCardLinked = a.IsCardLinked,
                             BalanceAmount = a.BalanceAmount,
                             CreatedAt = a.CreatedAt
@@ -89,12 +85,12 @@ namespace OnlineBanking.Application.Services
             }
         }
 
-        public async Task<Result<UserProfileViewModel>> EditUserInfo(UserProfileViewModel model, byte[] imageData)
+        public async Task<Result<UserProfileViewModel>> EditUserInfo(UserProfileViewModel viewModel, byte[] imageData)
         {
             try
             {
                 var user = await _userRepository.GetAll()
-                    .Where(x => x.Id == model.Id)
+                    .Where(x => x.Id == viewModel.Id)
                     .FirstOrDefaultAsync();
 
                 user.Avatar = imageData;
@@ -103,7 +99,7 @@ namespace OnlineBanking.Application.Services
 
                 return new Result<UserProfileViewModel>()
                 {
-                    Data = model
+                    Data = viewModel
                 };
             }
             catch (Exception ex)

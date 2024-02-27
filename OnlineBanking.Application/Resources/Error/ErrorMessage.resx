@@ -126,6 +126,12 @@
   <data name="AccountNotFound" xml:space="preserve">
     <value>Счёт не найден</value>
   </data>
+  <data name="AccountTypeNotFound" xml:space="preserve">
+    <value>Данный тип счёта не найден</value>
+  </data>
+  <data name="AccountTypesNotFound" xml:space="preserve">
+    <value>Типы счётов не найдены</value>
+  </data>
   <data name="CardNotFound" xml:space="preserve">
     <value>Карта не найдена</value>
   </data>
@@ -143,6 +149,9 @@
   </data>
   <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
     <value>Пароль не совпадает с подтверждением пароля</value>
+  </data>
+  <data name="PaymentMethodsNotfound" xml:space="preserve">
+    <value>Платёжные способы не найдены</value>
   </data>
   <data name="TryAgain" xml:space="preserve">
     <value>Попробуйте ещё раз создать карту</value>

@@ -18,7 +18,12 @@ namespace OnlineBanking.Domain.Enum
         AccountAlreadyExist = 32,
         AccountBalanceNotEmpty = 33,
 
-        CardNotFound = 41,
+        AccountTypesNotFound = 41,
+        AccountTypeNotFound = 42,
+
+        CardNotFound = 51,
+
+        PaymentMethodsNotFound = 61,
 
         TryAgain = 451,
 

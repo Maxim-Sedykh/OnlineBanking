@@ -22,6 +22,7 @@ namespace OnlineBanking.Application.DependencyInjection
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICardService, CardService>();
+            services.AddScoped<ITransactionService, TransactionService>();
         }
     }
 }

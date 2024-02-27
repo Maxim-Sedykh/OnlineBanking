@@ -53,7 +53,7 @@ namespace OnlineBanking.Application.Services
 
                 var cards = await _cardRepository.GetAll().ToListAsync();
 
-                Card currentCard = new Card
+                Card currentCard = new()
                 {
                     CardNumber = BankCardDataGenerator.GenerateCardNumber(),
                     Validity = DateTime.UtcNow.AddYears(7),

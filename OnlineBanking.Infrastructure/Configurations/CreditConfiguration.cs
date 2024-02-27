@@ -16,7 +16,7 @@ namespace OnlineBanking.DAL.Configurations
         {
             builder.HasData(new List<Credit>()
             {
-                new Credit
+                new()
                 {
                     Id = 1,
                     UserId = 1,
@@ -26,7 +26,7 @@ namespace OnlineBanking.DAL.Configurations
                     LoanRemainerAmount = 50000,
                     CreatedAt = DateTime.UtcNow
                 },
-                new Credit
+                new()
                 {
                     Id = 2,
                     UserId = 2,

@@ -1,0 +1,85 @@
+﻿@using OnlineBanking.Domain.ViewModel.AccountType
+@model IEnumerable<AccountTypeViewModel>
+
+@{
+    ViewBag.Title = "Счёт и карта";
+}
+
+<div class="container">
+    <div class="row" style="padding: 170px 0px 100px 0px;">
+        <p class="fs-3 text-center">Счета и банковские карты</p>
+        <div class="col-md-6" style="padding-top:5%;">
+            <p class="fs-5 my-auto lh-lg" align="justify">
+                Для добавления новой банковской карты к определенному счету в нашем онлайн-банкинге, пожалуйста, убедитесь, что у вас под рукой новая карта 
+                и необходимая информация для успешной привязки. После успешной привязки ваша новая карта будет автоматически связана с выбранным счетом 
+                и готова к использованию для осуществления финансовых транзакций. Спасибо за доверие и пользование нашими услугами онлайн-банкинга!
+            </p>
+        </div>
+        <div class="col-md-6">
+            <img src="https://sun9-37.userapi.com/impg/D9LhzrKqosb3NvPjHJxQf7_1xHgznYjHWYsIYQ/Ewu3CyeJ2ck.jpg?size=660x502&quality=96&sign=1fedeb64110feb31078e397371e4ba6a&c_uniq_tag=RdPeWp6tZN17ox_oXErGodng7n2Pp1bENupLk0IWThg&type=album" class="img-fluid" />
+        </div>
+        <div class="icon mx-auto mt-5">
+            <a href="#section-2"><i class="fa fa-angle-double-down fa-3x" aria-hidden="true"></i></a>
+        </div>
+    </div>
+    <p class="text-center my-5 fs-3" id="section-2">
+        Типы счётов, которые поддерживает даннный банк
+    </p>
+    <img src="https://thumbs.dreamstime.com/b/bank-check-banknotes-flat-icon-white-blank-generic-golden-coins-isolated-background-eps-file-available-91596475.jpg" 
+    class="img-fluid mx-auto d-block mb-5" style="height:300px; width:300px;"/>
+    <div class="row">
+        @foreach (var accountType in Model)
+        {
+            <div class="col-md-4">
+                <p class="text-center fs-4">
+                    @accountType.AccountTypeName
+                </p>
+                <p align="justify">
+                    <label class="me-2 fw-bold">Описание: </label>@accountType.Description
+                </p>
+                <p>
+                    <label class="me-2 fw-bold">Годовая процентная ставка: </label>@accountType.AnnualInterestRate %
+                </p>
+                <p>
+                    <label class="me-2 fw-bold">Тип создан: </label>@accountType.CreatedAt
+                </p>
+            </div>
+        }
+    </div>
+    <div class="row mb-5">
+        <p class="text-center my-5 fs-3">
+            Типы банковских карт, которые поддерживает даннный банк
+        </p>
+        <div class="col-md-6">
+            <img src="https://www.digiseller.ru/preview/1035416/p1_3334105_43dc6afb.png" class="img-fluid d-block mx-auto" style="width:300px;"/>
+            <p class="text-center fs-4">
+                Кредитная карта
+            </p>
+            <p align="justify">
+                <label class="me-2 fw-bold">Описание: </label>Кредитная карта - это банковская пластиковая карта, которая предоставляет вам возможность оформлять кредит
+                и расходовать деньги, превышающие доступные средства на вашем банковском счете. Кредитные карты могут быть полезны для управления финансами, создания кредитной истории
+                и обеспечения финансовой поддержки в случае неожиданных расходов.
+            </p>
+            <p>
+                <b>
+                    Может быть оформлена для счётов типа:
+                </b>
+                 Кредитный
+            </p>
+        </div>
+        <div class="col-md-6">
+            <img src="https://pngimg.com/uploads/credit_card/credit_card_PNG207.png" class="img-fluid d-block mx-auto" style="width:300px;" />
+            <p class="text-center fs-4">
+                Дебетовая карта
+            </p>
+            <p align="justify">
+                <label class="me-2 fw-bold">Описание: </label> Дебетовая карта - это банковская пластиковая карта, связанная с вашим банковским счетом, с которой вы можете совершать покупки,
+                снимать наличные и осуществлять другие финансовые операции. Она не предоставляет возможность кредита или
+                овердрафта. Дебетовая карта часто используется для управления ежедневными финансами, оплаты счетов и покупок в магазинах и онлайн.
+            </p>
+            <p>
+                <b>Может быть оформлена для счётов типа:</b> Сберегательный, Текущий
+            </p>
+        </div>
+    </div>
+</div>

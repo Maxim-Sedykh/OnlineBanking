@@ -12,6 +12,8 @@ namespace OnlineBanking.Domain.ViewModel.Accounts
     {
         public string AccountName { get; set; }
 
+        public string SelectedAccountType { get; set; }
+
         public List<string> AccountTypes { get; set; }
     }
 }

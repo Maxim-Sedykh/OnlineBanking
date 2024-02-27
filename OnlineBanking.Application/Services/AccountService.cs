@@ -9,6 +9,7 @@ using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
+using OnlineBanking.Domain.ViewModel.AccountType;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -21,14 +22,17 @@ namespace OnlineBanking.Application.Services
     public class AccountService : IAccountService
     {
         private readonly IBaseRepository<Account> _accountReporisoty;
+        private readonly IBaseRepository<AccountType> _accountTypeReporisoty;
         private readonly IBaseRepository<User> _userReporisoty;
         private readonly ILogger _logger;
 
-        public AccountService(IBaseRepository<Account> accountReporisoty, ILogger logger, IBaseRepository<User> userReporisoty)
+        public AccountService(IBaseRepository<Account> accountReporisoty, ILogger logger, IBaseRepository<User> userReporisoty,
+            IBaseRepository<AccountType> accountTypeReporisoty)
         {
             _accountReporisoty = accountReporisoty;
             _logger = logger;
             _userReporisoty = userReporisoty;
+            _accountTypeReporisoty = accountTypeReporisoty;
         }
 
         public async Task<Result<Account>> AddMoneyToAccount(AccountMoneyViewModel viewModel)
@@ -89,12 +93,22 @@ namespace OnlineBanking.Application.Services
                     };
                 }
 
+                var accountType = await _accountTypeReporisoty.GetAll().FirstOrDefaultAsync(x => x.AccountTypeName == viewModel.SelectedAccountType);
+                if (accountType == null)
+                {
+                    return new Result<Account>
+                    {
+                        ErrorCode = (int)StatusCode.AccountTypeNotFound,
+                        ErrorMessage = ErrorMessage.AccountTypeNotFound,
+                    };
+                }
+
 
                 account = new Account()
                 {
                     AccountName = viewModel.AccountName,
                     UserId = user.Id,
-                    AccountType = viewModel.AccountType,
+                    AccountTypeId = accountType.Id,
                     BalanceAmount = 0.00m,
                     CreatedAt = DateTime.UtcNow,
                 };
@@ -189,6 +203,83 @@ namespace OnlineBanking.Application.Services
                     ErrorMessage = ErrorMessage.InternalServerError,
                 };
             }
+        }
+
+        public async Task<Result<CreateAccountViewModel>> GetAccountTypeNames()
+        {
+            try
+            {
+                var accountTypes = await _accountTypeReporisoty.GetAll()
+                    .Select(u => u.AccountTypeName).ToListAsync();
+                if (accountTypes == null)
+                {
+                    return new Result<CreateAccountViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.AccountTypesNotFound,
+                        ErrorMessage = ErrorMessage.AccountTypesNotFound,
+                    };
+                }
+
+                return new Result<CreateAccountViewModel>()
+                {
+                    Data = new CreateAccountViewModel
+                    {
+                        AccountTypes = accountTypes,
+                    },
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new Result<CreateAccountViewModel>()
+                {
+                    ErrorCode = (int)StatusCode.InternalServerError,
+                    ErrorMessage = ErrorMessage.InternalServerError,
+                };
+            }
+        }
+
+        public async Task<CollectionResult<AccountTypeViewModel>> GetAccountTypes()
+        {
+            AccountTypeViewModel[] accountTypes;
+            try
+            {
+                accountTypes = await _accountTypeReporisoty.GetAll()
+                    .Select(x => new AccountTypeViewModel
+                    {
+                        Id = x.Id,
+                        AccountTypeName = x.AccountTypeName,
+                        Description = x.Description,
+                        AnnualInterestRate  = x.AnnualInterestRate,
+                        CreatedAt = x.CreatedAt,
+                    })
+                    .ToArrayAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new CollectionResult<AccountTypeViewModel>()
+                {
+                    ErrorMessage = ErrorMessage.InternalServerError,
+                    ErrorCode = (int)StatusCode.InternalServerError
+                };
+            }
+
+            if (!accountTypes.Any())
+            {
+                _logger.Warning(ErrorMessage.AccountTypesNotFound, accountTypes.Length);
+                return new CollectionResult<AccountTypeViewModel>()
+                {
+                    ErrorMessage = ErrorMessage.AccountTypesNotFound,
+                    ErrorCode = (int)StatusCode.AccountTypesNotFound
+                };
+            }
+
+            return new CollectionResult<AccountTypeViewModel>()
+            {
+                Data = accountTypes,
+                Count = accountTypes.Length
+            };
         }
     }
 }

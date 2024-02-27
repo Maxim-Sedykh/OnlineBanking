@@ -13,6 +13,6 @@ namespace OnlineBanking.Domain.Interfaces.Services
     {
         Task<Result<UserProfileViewModel>> GetUserProfile(string userName);
 
-        Task<Result<UserProfileViewModel>> EditUserInfo(UserProfileViewModel model, byte[] imageData);
+        Task<Result<UserProfileViewModel>> EditUserInfo(UserProfileViewModel viewModel, byte[] imageData);
     }
 }

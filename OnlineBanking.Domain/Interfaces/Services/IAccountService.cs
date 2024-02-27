@@ -1,6 +1,7 @@
 ﻿using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
+using OnlineBanking.Domain.ViewModel.AccountType;
 using OnlineBanking.Domain.ViewModel.Auth;
 using System;
 using System.Collections.Generic;
@@ -43,5 +44,17 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// <param name="id"></param>
         /// <returns></returns>
         Task<Result<AccountMoneyViewModel>> GetAccountById(int id);
+
+        /// <summary>
+        /// Получение списка типов счётов
+        /// </summary>
+        /// <returns></returns>
+        Task<Result<CreateAccountViewModel>> GetAccountTypeNames();
+
+        /// <summary>
+        /// Получение списка типов счёта с подробной информацией
+        /// </summary>
+        /// <returns></returns>
+        Task<CollectionResult<AccountTypeViewModel>> GetAccountTypes();
     }
 }

@@ -88,6 +88,24 @@ namespace OnlineBanking.Application.Resources.Error {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Данный тип счёта не найден.
+        /// </summary>
+        internal static string AccountTypeNotFound {
+            get {
+                return ResourceManager.GetString("AccountTypeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Типы счётов не найдены.
+        /// </summary>
+        internal static string AccountTypesNotFound {
+            get {
+                return ResourceManager.GetString("AccountTypesNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Карта не найдена.
         /// </summary>
         internal static string CardNotFound {
@@ -138,6 +156,15 @@ namespace OnlineBanking.Application.Resources.Error {
         internal static string PasswordNotEqualsPasswordConfirm {
             get {
                 return ResourceManager.GetString("PasswordNotEqualsPasswordConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Платёжные способы не найдены.
+        /// </summary>
+        internal static string PaymentMethodsNotfound {
+            get {
+                return ResourceManager.GetString("PaymentMethodsNotfound", resourceCulture);
             }
         }
         

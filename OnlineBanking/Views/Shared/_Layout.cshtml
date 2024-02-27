@@ -26,7 +26,7 @@
                                     <a class="nav-link text-black my-auto text-white" asp-controller="Home" asp-action="Privacy">Кредиты</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-black my-auto text-white" asp-controller="Home" asp-action="Privacy">Счёт и карта</a>
+                                    <a class="nav-link text-black my-auto text-white" asp-controller="Account" asp-action="GetAccountTypes">Счёт и карта</a>
                                 </li>
                                 <li class="nav-item">
                                     @if (User.Identity.IsAuthenticated)
@@ -70,28 +70,14 @@
     <footer class="bg-grey-100 footer text-muted mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-3">
-                    <p class="fs-3 mt-5">
+                <div class="col-md-6 text-center">
+                    <p class="fs-3">
                         ONLINE-BANKING
                     </p>
                 </div>
-                <div class="col-md-3">
-                    <p class="my-2">Продукты и услуги</p>
-                    <p class="mb-0"><a href="/">Кредитные карты</a></p>
-                    <p class="mb-0"><a href="/">Наши кредиты</a></p>
-                    <p class="mb-0"><a href="/">Ваш профиль</a></p>
-                </div>
-                <div class="col-md-3">
-                    <p class="my-2">Полезная информация</p>
-                    <p class="mb-0"><a href="/">Финансовые советы</a></p>
-                    <p class="mb-0"><a href="/">Статьи</a></p>
-                    <p class="mb-0"><a href="/">FAQ</a></p>
-                </div>
-                <div class="col-md-3">
-                    <p class="my-2">Безопасность и конфиденциальность</p>
-                    <p class="mb-0"><a href="/">Политика безопасности</a></p>
-                    <p class="mb-0"><a href="/">Условия использования</a></p>
-                    <p class="mb-0"><a href="/">Защита данных</a></p>
+                <div class="col-md-6 d-flex justify-content-center">
+                    <p class="my-2">some_email@mail.ru</p>
+                    <p class="my-2 ms-2"><a href="/">+99999999999</a></p>
                 </div>
             </div>
         </div>
