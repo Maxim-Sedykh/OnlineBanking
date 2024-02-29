@@ -20,20 +20,20 @@ namespace OnlineBanking.DAL.Configurations
                 {
                     Id = 1,
                     UserId = 1,
-                    LoanSumAmount = 100000,
+                    CreditSumAmount = 100000,
                     Percent = 12.5f,
                     CreditTerm = DateTime.UtcNow.AddYears(1),
-                    LoanRemainerAmount = 50000,
+                    CreditRemainerAmount = 50000,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
                 {
                     Id = 2,
                     UserId = 2,
-                    LoanSumAmount = 50000,
+                    CreditSumAmount = 50000,
                     Percent = 10.5f,
                     CreditTerm = DateTime.UtcNow.AddYears(2),
-                    LoanRemainerAmount = 25000,
+                    CreditRemainerAmount = 25000,
                     CreatedAt = DateTime.UtcNow
                 }
             });

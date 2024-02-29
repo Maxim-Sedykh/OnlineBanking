@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineBanking.Domain.ViewModel.PaymentMethod
+namespace OnlineBanking.Domain.ViewModel.CreditType
 {
-    public class SelectPaymentMethodViewModel
+    public class SelectCreditTypeViewModel
     {
         public byte Id { get; set; }
 
-        public string Name { get; set; }
+        public string CreditTypeName { get; set; }
     }
 }

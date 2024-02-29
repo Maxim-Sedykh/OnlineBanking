@@ -40,6 +40,7 @@ namespace OnlineBanking.DAL.DependencyInjection
                 typeof(Card),
                 typeof(User),
                 typeof(AccountType),
+                typeof(CreditType),
             };
 
             foreach (var type in types)

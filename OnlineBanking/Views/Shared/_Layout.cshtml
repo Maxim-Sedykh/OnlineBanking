@@ -23,7 +23,7 @@
                         <div class="ms-auto" style="margin-left:auto;">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
                                 <li class="nav-item">
-                                    <a class="nav-link text-black my-auto text-white" asp-controller="Home" asp-action="Privacy">Кредиты</a>
+                                    <a class="nav-link text-black my-auto text-white" asp-controller="Credit" asp-action="GetCreditData">Кредиты</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-black my-auto text-white" asp-controller="Account" asp-action="GetAccountTypes">Счёт и карта</a>
@@ -57,7 +57,7 @@
                 <div class="modal-header d-flex">
                     <div class="mx-auto"><p class="modal-title fs-3"></p></div> 
                     <div class="float-end">
-                        <button type="button" class="btn-close btn-close-white"
+                        <button type="button" class="btn-close"
                                 data-bs-dismiss="modal" aria-label="Закрыть"></button>
                     </div>
                 </div>
@@ -87,7 +87,6 @@
     <script src="~/js/modal.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

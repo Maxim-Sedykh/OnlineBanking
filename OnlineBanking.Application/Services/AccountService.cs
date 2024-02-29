@@ -69,21 +69,11 @@ namespace OnlineBanking.Application.Services
             }
         }
 
-        public async Task<Result<Account>> CreateNewAccount(CreateAccountViewModel viewModel, string Username)
+        public async Task<Result<Account>> CreateNewAccount(CreateAccountViewModel viewModel, string userName)
         {
             try
             {
-                var account = await _accountReporisoty.GetAll().FirstOrDefaultAsync(x => x.AccountName == viewModel.AccountName);
-                if (account != null)
-                {
-                    return new Result<Account>
-                    {
-                        ErrorCode = (int)StatusCode.AccountAlreadyExist,
-                        ErrorMessage = ErrorMessage.AccountAlreadyExist,
-                    };
-                }
-
-                var user = await _userReporisoty.GetAll().FirstOrDefaultAsync(x => x.Username == Username);
+                var user = await _userReporisoty.GetAll().FirstOrDefaultAsync(x => x.Username == userName);
                 if (user == null)
                 {
                     return new Result<Account>
@@ -93,22 +83,11 @@ namespace OnlineBanking.Application.Services
                     };
                 }
 
-                var accountType = await _accountTypeReporisoty.GetAll().FirstOrDefaultAsync(x => x.AccountTypeName == viewModel.SelectedAccountType);
-                if (accountType == null)
-                {
-                    return new Result<Account>
-                    {
-                        ErrorCode = (int)StatusCode.AccountTypeNotFound,
-                        ErrorMessage = ErrorMessage.AccountTypeNotFound,
-                    };
-                }
-
-
-                account = new Account()
+                Account account = new Account()
                 {
                     AccountName = viewModel.AccountName,
                     UserId = user.Id,
-                    AccountTypeId = accountType.Id,
+                    AccountTypeId = viewModel.SelectedAccountTypeId,
                     BalanceAmount = 0.00m,
                     CreatedAt = DateTime.UtcNow,
                 };
@@ -210,7 +189,11 @@ namespace OnlineBanking.Application.Services
             try
             {
                 var accountTypes = await _accountTypeReporisoty.GetAll()
-                    .Select(u => u.AccountTypeName).ToListAsync();
+                    .Select(x => new SelectAccountTypeViewModel
+                    {
+                        Id = x.Id,
+                        AccountTypeName = x.AccountTypeName,
+                    }).ToListAsync();
                 if (accountTypes == null)
                 {
                     return new Result<CreateAccountViewModel>()

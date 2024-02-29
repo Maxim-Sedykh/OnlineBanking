@@ -24,7 +24,16 @@ namespace OnlineBanking.DAL.Configurations
                     CVV = "356",
                     AccountId = 1,
                     CreatedAt = DateTime.UtcNow
-                }
+                },
+                new()
+                {
+                    Id = 2,
+                    CardNumber = "2003536345565564",
+                    Validity = DateTime.UtcNow.AddYears(7),
+                    CVV = "445",
+                    AccountId = 2,
+                    CreatedAt = DateTime.UtcNow
+                },
             });
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();

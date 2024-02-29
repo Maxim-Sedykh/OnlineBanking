@@ -61,6 +61,15 @@ namespace OnlineBanking.Application.Resources.Success {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Транзакция была успешно выполнена.
+        /// </summary>
+        internal static string CompleteTransaction {
+            get {
+                return ResourceManager.GetString("CompleteTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ваш счёт успешно удалён!.
         /// </summary>
         internal static string DeleteAccountMessage {

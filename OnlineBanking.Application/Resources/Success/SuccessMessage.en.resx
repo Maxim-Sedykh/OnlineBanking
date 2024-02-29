@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CompleteTransaction" xml:space="preserve">
+    <value>The transaction was successfully completed</value>
+  </data>
   <data name="DeleteAccount" xml:space="preserve">
     <value>Your account has been deleted!</value>
   </data>

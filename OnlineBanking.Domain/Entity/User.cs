@@ -28,6 +28,10 @@ namespace OnlineBanking.Domain.Entity
 
         public Role Role { get; set; }
 
+        public decimal Income { get; set; }
+
+        public bool IsIncomeVerified { get; set; }
+
         public string Street { get; set; }
 
         public string City { get; set; }

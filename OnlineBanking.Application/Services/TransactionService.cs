@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineBanking.Application.Resources.Error;
+using OnlineBanking.Application.Resources.Success;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Interfaces.Repository;
@@ -7,6 +8,7 @@ using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Auth;
+using OnlineBanking.Domain.ViewModel.PaymentMethod;
 using OnlineBanking.Domain.ViewModel.Transaction;
 using Serilog;
 
@@ -18,15 +20,18 @@ namespace OnlineBanking.Application.Services
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<PaymentMethod> _paymentMethodRepository;
         private readonly IBaseRepository<Account> _accountRepository;
+        private readonly IBaseRepository<Card> _cardRepository;
         private readonly ILogger _logger;
 
         public TransactionService(IBaseRepository<Transaction> transactionRepository, IBaseRepository<User> userRepository, ILogger logger,
-            IBaseRepository<Account> accountRepository)
+            IBaseRepository<Account> accountRepository, IBaseRepository<PaymentMethod> paymentMethodRepository, IBaseRepository<Card> cardRepository)
         {
             _transactionRepository = transactionRepository;
             _userRepository = userRepository;
             _logger = logger;
             _accountRepository = accountRepository;
+            _paymentMethodRepository = paymentMethodRepository;
+            _cardRepository = cardRepository;
         }
 
         public async Task<Result<CreateTransactionViewModel>> GetDataToMakeTransaction(string userName)
@@ -46,7 +51,11 @@ namespace OnlineBanking.Application.Services
                 }
 
                 var paymentMethodsNames = await _paymentMethodRepository.GetAll()
-                    .Select(x => x.Name)
+                    .Select(x => new SelectPaymentMethodViewModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                    })
                     .ToListAsync();
 
                 if (paymentMethodsNames.Count == 0)
@@ -89,7 +98,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
-        public async Task<Result<TransactionPageViewModel>> GetUserTransactions(LoginUserViewModel viewModel, string userName)
+        public async Task<Result<TransactionPageViewModel>> GetUserTransactions(string userName)
         {
             try
             {
@@ -106,9 +115,10 @@ namespace OnlineBanking.Application.Services
                         SenderName = x.Sender.Username,
                         RecipientName = x.Recipient.Username,
                         MoneyAmount = x.MoneyAmount,
-                        PaymentMethodName = x.PaymentMethod.ToString(),
+                        PaymentMethodName = x.PaymentMethod.Name,
                         CreatedAt = x.CreatedAt,
                     })
+                    .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync();
 
                 if (user == null)
@@ -143,25 +153,31 @@ namespace OnlineBanking.Application.Services
         {
             try
             {
-                var user = await _userRepository.GetAll()
+                var account = await _accountRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Id == viewModel.SelectedUserAccountId);
+
+                if (account == null)
+                {
+                    return new Result<Transaction>()
+                    {
+                        ErrorCode = (int)StatusCode.AccountNotFound,
+                        ErrorMessage = ErrorMessage.AccountNotFound,
+                    };
+                }
+
+                if (account.BalanceAmount < viewModel.MoneyAmount)
+                {
+                    return new Result<Transaction>()
+                    {
+                        ErrorCode = (int)StatusCode.NotEnoughFunds,
+                        ErrorMessage = ErrorMessage.NotEnoughFunds,
+                    };
+                }
+
+                var sender = await _userRepository.GetAll()
                     .FirstOrDefaultAsync(x => x.Username == userName);
 
-                var userTransactions = await _transactionRepository.GetAll()
-                    .Where(x => x.SenderId == user.Id || x.RecipientId == user.Id)
-                    .Include(x => x.Recipient)
-                    .Include(x => x.Sender)
-                    .Select(x => new TransactionViewModel
-                    {
-                        Id = x.Id,
-                        SenderName = x.Sender.Username,
-                        RecipientName = x.Recipient.Username,
-                        MoneyAmount = x.MoneyAmount,
-                        PaymentMethodName = x.PaymentMethod.ToString(),
-                        CreatedAt = x.CreatedAt,
-                    })
-                    .ToListAsync();
-
-                if (user == null)
+                if (sender == null)
                 {
                     return new Result<Transaction>()
                     {
@@ -170,12 +186,42 @@ namespace OnlineBanking.Application.Services
                     };
                 }
 
+                var recipientCard = await _cardRepository.GetAll()
+                    .Include(x => x.Account)
+                    .ThenInclude(x => x.User)
+                    .FirstOrDefaultAsync(x => x.CardNumber == viewModel.RecipientCardNumber);
+
+                if (recipientCard == null)
+                {
+                    return new Result<Transaction>()
+                    {
+                        ErrorCode = (int)StatusCode.CardNotFound,
+                        ErrorMessage = ErrorMessage.CardNotFound,
+                    };
+                }
+
+                account.BalanceAmount -= viewModel.MoneyAmount;
+
+                recipientCard.Account.BalanceAmount += viewModel.MoneyAmount;
+
+                Transaction transaction = new Transaction()
+                {
+                    SenderId = sender.Id,
+                    RecipientId = recipientCard.Account.UserId,
+                    MoneyAmount = viewModel.MoneyAmount,
+                    PaymentMethodId = viewModel.SelectedPaymentMethodId,
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                await _accountRepository.UpdateAsync(account);
+                await _cardRepository.UpdateAsync(recipientCard);
+
+                await _transactionRepository.CreateAsync(transaction);
+
                 return new Result<Transaction>()
                 {
-                    Data = new Transaction()
-                    {
-                        Transactions = userTransactions,
-                    }
+                    Data = transaction,
+                    SuccessMessage = SuccessMessage.CompleteTransaction,
                 };
             }
             catch (Exception ex)

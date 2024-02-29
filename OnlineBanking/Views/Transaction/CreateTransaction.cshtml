@@ -1,0 +1,58 @@
+﻿@using OnlineBanking.Domain.ViewModel.Transaction
+@model CreateTransactionViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-common-tab" data-bs-toggle="tab" data-bs-target="#nav-common" type="button" role="tab" aria-controls="nav-common" aria-selected="true">Обычная транзакция</button>
+                    <button class="nav-link" id="nav-credit-tab" data-bs-toggle="tab" data-bs-target="#nav-credit" type="button" role="tab" aria-controls="nav-credit" aria-selected="false">Кредитная транзакция</button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-common" role="tabpanel" aria-labelledby="nav-common-tab">
+                    <form id="commonTransactionForm">
+                        <div class="form-group my-3">
+                            <label asp-for="RecipientCardNumber">Карта получателя</label>
+                            <input type="text" asp-for="RecipientCardNumber" class="form-control" placeholder="Введите номер карты получателя...">
+                        </div>
+                        <div class="form-group my-3">
+                            <label asp-for="MoneyAmount">Количество денег</label>
+                            <input class="form-control" asp-for="MoneyAmount" value="0,00" type="number" placeholder="Введите количество денег...">
+                        </div>
+                        <div class="form-group my-3">
+                            <label asp-for="SelectedPaymentMethodId">Платёжный метод</label>
+                            <select class="form-control" asp-for="SelectedPaymentMethodId">
+                                @foreach (var paymentMethod in Model.PaymentMethodNames)
+                                {
+                                    <option value="@paymentMethod.Id">
+                                        @paymentMethod.Name
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group my-3">
+                            <label asp-for="SelectedUserAccountId">Выберите счёт</label>
+                            <select class="form-control" asp-for="SelectedUserAccountId">
+                                @foreach (var account in Model.UserAccounts)
+                                {
+                                    <option value="@account.Id">
+                                        @account.AccountName: @account.BalanceAmount.ToString("0.00")
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary my-3" type="submit" onclick="makeTransaction(event)">
+                                Совершить транзакцию
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="nav-credit" role="tabpanel" aria-labelledby="nav-credit-tab">...</div>
+            </div>
+        </div>
+    </div>
+</div>
+

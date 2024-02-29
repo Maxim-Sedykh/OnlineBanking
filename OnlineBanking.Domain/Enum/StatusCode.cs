@@ -25,6 +25,8 @@ namespace OnlineBanking.Domain.Enum
 
         PaymentMethodsNotFound = 61,
 
+        NotEnoughFunds = 71,
+
         TryAgain = 451,
 
         InternalServerError = 500,

@@ -7,20 +7,40 @@
 }
 
 <div class="container">
-    <div class="row">
-
-    </div>
-    <div class="row">
-        <div class="input-group">
-            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-            <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+    <div class="row mt-4">
+        <p class="fs-4 text-center">Услуги</p>
+        <div class="col-md-12 bg-dark br-15 py-5" style="min-height: 100px;">
+            <p class="fs-4 text-center text-white">
+                На данный момент транзакции для услуг не доступны, попробуйте позже...
+            </p>
         </div>
     </div>
-    <div class="row">
+    <div class="row my-4">
+        <div class="text-center">
+            <button class="btn btn-primary" type="button" onclick="openModal({ url: '/Transaction/CreateTransaction', modalId: 'modalWindow', modalTitle:'Совершить транзакцию' })"
+                    data-toggle="ajax-modal" data-target="Modal">
+                Совершить транзакцию
+            </button>
+        </div>
+    </div>
+    <div class="row row-margin mb-5">
+        <p class="text-center fs-4">
+            Ваша история транзакций
+        </p>
         @foreach (var transaction in Model.Transactions)
         {
-            <div class="col-md-12 bg-dark br-15 my-3 d-flex justify-content-between">
-                <div>
+            <div class="col-md-12 bg-dark br-15 my-3 d-flex justify-content-between text-white">
+                <div class="p-5">
+                    @if (@transaction.SenderName == User.Identity.Name)
+                    {
+                        <i class="fa fa-arrow-left fa-3x" aria-hidden="true"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
+                    }
+                </div>
+                <div class="pt-3">
                     <label>
                         Имя отправителя:
                     </label>
@@ -30,13 +50,13 @@
                     </label>
                     <p>@transaction.RecipientName</p>
                 </div>
-                <div>
+                <div class="pt-3">
                     <label>
                         Количество денег (₽)
                     </label>
-                    <p>@transaction.MoneyAmount</p>
+                    <p>@transaction.MoneyAmount.ToString("0.00")</p>
                 </div>
-                <div>
+                <div class="pt-3 w-25">
                     <label>
                         Платежный метод:
                     </label>
@@ -51,3 +71,5 @@
     </div>
 </div>
 
+
+<script src="~/js/makeTransaction.js"></script>

@@ -144,6 +144,9 @@
   <data name="InvalidToken" xml:space="preserve">
     <value>Не валидный токен</value>
   </data>
+  <data name="NotEnoughFunds" xml:space="preserve">
+    <value>Недостаточно средств на вашем счёте</value>
+  </data>
   <data name="PasswordIsWrong" xml:space="preserve">
     <value>Неправильный пароль</value>
   </data>

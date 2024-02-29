@@ -37,6 +37,6 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// <param name="viewModel"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        Task<Result<TransactionPageViewModel>> GetUserTransactions(LoginUserViewModel viewModel, string userName);
+        Task<Result<TransactionPageViewModel>> GetUserTransactions(string userName);
     }
 }

@@ -142,6 +142,15 @@ namespace OnlineBanking.Application.Resources.Error {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Недостаточно средств на вашем счёте.
+        /// </summary>
+        internal static string NotEnoughFunds {
+            get {
+                return ResourceManager.GetString("NotEnoughFunds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Неправильный пароль.
         /// </summary>
         internal static string PasswordIsWrong {
