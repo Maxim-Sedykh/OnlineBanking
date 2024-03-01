@@ -1,5 +1,7 @@
 ﻿using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.ViewModel.Accounts;
+using OnlineBanking.Domain.ViewModel.Credit;
+using OnlineBanking.Domain.ViewModel.CreditType;
 using OnlineBanking.Domain.ViewModel.PaymentMethod;
 using System;
 using System.Collections.Generic;
@@ -22,5 +24,9 @@ namespace OnlineBanking.Domain.ViewModel.Transaction
         public long SelectedUserAccountId { get; set; }
 
         public List<AccountMoneyViewModel> UserAccounts { get; set; }
+
+        public long SelectedUserCreditId { get; set; }
+
+        public List<SelectCreditViewModel> UserCredits { get; set; }
     }
 }

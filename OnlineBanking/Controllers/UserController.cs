@@ -7,11 +7,13 @@ using OnlineBanking.Models;
 using System.Diagnostics;
 using System.Security.Claims;
 using OnlineBanking.Domain.ViewModel.User;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineBanking.Controllers
 {
     public class UserController : Controller
     {
+        [Authorize]
         private readonly IUserService _userService;
 
         public UserController(IUserService userService)

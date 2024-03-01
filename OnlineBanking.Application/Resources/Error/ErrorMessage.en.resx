@@ -135,11 +135,26 @@
   <data name="CardNotFound" xml:space="preserve">
     <value>Card is not found</value>
   </data>
+  <data name="CreditNotApproved" xml:space="preserve">
+    <value>The credit is not approved, your income does not allow you to take this credit</value>
+  </data>
+  <data name="CreditNotFound" xml:space="preserve">
+    <value>Credit is not found</value>
+  </data>
+  <data name="CreditTypeNotFound" xml:space="preserve">
+    <value>Тип кредита не найден</value>
+  </data>
+  <data name="CreditTypesNotFound" xml:space="preserve">
+    <value>Типы кредита не найдены</value>
+  </data>
   <data name="InternalServerError" xml:space="preserve">
     <value>Invalid server error</value>
   </data>
   <data name="InvalidClientRequest" xml:space="preserve">
     <value>Invalid client request</value>
+  </data>
+  <data name="InvalidCreditTerm" xml:space="preserve">
+    <value>Incorrect credit term specified</value>
   </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Invalid token</value>
@@ -161,6 +176,9 @@
   </data>
   <data name="UserAlreadyExist" xml:space="preserve">
     <value>User already exist</value>
+  </data>
+  <data name="UserIncomeNotVerified" xml:space="preserve">
+    <value>User income is not verified</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>User is not found</value>

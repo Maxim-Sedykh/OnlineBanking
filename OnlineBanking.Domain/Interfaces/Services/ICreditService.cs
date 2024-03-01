@@ -41,5 +41,20 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// <param name="viewModel"></param>
         /// <returns></returns>
         Task<Result<User>> SetUserIncome(SetIncomeViewModel viewModel, string userName);
+
+        /// <summary>
+        /// Получить информацию о том, подтверждён ли доход пользователя
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        Task<Result<SetIncomeViewModel>> GetIncomeViewModel(string userName);
+
+        /// <summary>
+        /// Получить список типов кредита, для того чтобы выбрать тип при создании кредита
+        /// </summary>
+        /// <returns></returns>
+        Task<Result<CreateCreditViewModel>> GetCreditTypesToSelect();
+
+
     }
 }

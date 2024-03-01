@@ -1,0 +1,34 @@
+﻿@using OnlineBanking.Domain.ViewModel.Credit
+@model CreateCreditViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-controller="Credit">
+                <div class="form-group">
+                    <label asp-for="MoneyLenderReceiveAmount">Сколько средств вы хотите взять в кредит?</label>
+                    <input asp-for="MoneyLenderReceiveAmount" type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите количетство денег">
+                </div>
+                <div class="form-group">
+                    <label asp-for="SelectedCreditTypeId">Выберите тип кредита</label>
+                    <select class="form-control" asp-for="SelectedCreditTypeId">
+                        @foreach (var creditType in Model.CreditTypes)
+                        {
+                            <option value="@creditType.Id">
+                                @creditType.CreditTypeName
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CreditTerm">Срок кредита</label>
+                    <input type="date" class="form-control" asp-for="CreditTerm" placeholder="Введите дату окончания кредита" value="@DateTime.UtcNow">
+                    <small id="emailHelp" class="form-text text-muted">Вы должны выбрать срок кредита в соответствии с характеристиками типа кредита, который вы выберете</small>
+                </div>
+                <button class="btn btn-primary mt-3" type="submit">
+                    Подтвердить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

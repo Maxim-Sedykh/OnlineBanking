@@ -19,7 +19,7 @@ namespace OnlineBanking.Domain.Entity
 
         public short MaxCreaditTermInMonths { get; set; }
 
-        public float InterestRate { get; set; }
+        public float YearPercent { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

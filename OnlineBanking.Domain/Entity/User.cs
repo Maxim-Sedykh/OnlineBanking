@@ -22,6 +22,10 @@ namespace OnlineBanking.Domain.Entity
 
         public string Email { get; set; }
 
+        public decimal MonthlyCreditsPayment { get; set; }
+
+        public byte CreditsCount { get; set; }
+
         public string Password { get; set; }
 
         public bool IsOnlineBankingUser { get; set; }

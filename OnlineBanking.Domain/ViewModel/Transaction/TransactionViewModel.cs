@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineBanking.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,8 @@ namespace OnlineBanking.Domain.ViewModel.Transaction
         public decimal MoneyAmount { get; set; }
 
         public string PaymentMethodName { get; set; }
+
+        public TransactionType TransactionType { get; set; }
 
         public DateTime CreatedAt { get; set; }
     }

@@ -1,7 +1,7 @@
 ﻿async function deleteAccount(event, number) {
     event.preventDefault();
     Swal.fire({
-        title: "Вы действительно хотите удалить этот счёт?",
+        title: "Вы действительно хотите удалить счёт?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#042b76",

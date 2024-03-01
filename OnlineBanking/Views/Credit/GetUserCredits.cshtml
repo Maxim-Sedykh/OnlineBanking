@@ -1,0 +1,40 @@
+﻿@using OnlineBanking.Domain.ViewModel.Credit
+
+@model IEnumerable<CreditViewModel>
+
+<div class="container">
+    <div class="row">
+        @foreach (var credit in Model)
+        {
+            <div class="col-md-12 bg-dark text-white br-15 my-3 p-3">
+                <p class="text-center fs-5">
+                    ID кредита: @credit.Id
+                </p>
+                <p>
+                    Тип кредита: @credit.CreditTypeName
+                </p>
+                <p>
+                    Сумма вашего кредита: @credit.CreditSumAmount
+                </p>
+                <p>
+                    Вы получили: @credit.MoneyLenderReceiveAmount
+                </p>
+                <p>
+                    Осталось заплатить по кредиту: @credit.CreditRemainerAmount
+                </p>
+                <p>
+                    Месячная оплата кредита: @credit.MonthlyPayment
+                </p>
+                <p>
+                    Годовой процент вашего кредита: @credit.Percent
+                </p>
+                <p>
+                    Дата окончания кредита: @credit.CreditTerm
+                </p>
+                <p>
+                    Кредит был взят: @credit.CreatedAt
+                </p>
+            </div>
+        }
+    </div>
+</div>

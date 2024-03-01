@@ -1,0 +1,46 @@
+﻿@using OnlineBanking.Domain.ViewModel.CreditType
+@model IEnumerable<CreditTypeViewModel>
+
+@{
+    ViewBag.Title = "Информация по кредиту";
+}
+
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <p class="fs-3 mb-5 mt-4">
+                Информация по кредиту
+            </p>
+            <img src="~/images/credit-info-default.jpg" class="img-fluid w-50 br-15" />
+        </div>
+        <div class="row row-margin mt-5">
+            @foreach (var creditType in Model)
+            {
+                <div class="col-md-6">
+                    <p class=" text-center fs-4">
+                        Тип кредита: @creditType.CreditTypeName
+                    </p>
+                    <p class="fw-bold fs-5">
+                        Характеристики:
+                    </p>
+                    <p>
+                        - Процентная ставка: @creditType.InterestRate% годовых.
+                    </p>
+                    <p>
+                        - Срок кредита: от @(creditType.MinCreaditTermInMonths) месяцев до @(creditType.MaxCreaditTermInMonths / 12) лет.
+                    </p>
+                    <p>
+                        - График погашения: ежемесячное погашение кредита, включающее основной долг и проценты.
+                    </p>
+                    <p>
+                        - Решение по заявке: автоматизированное принятие решения по заявке.
+                    </p>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+

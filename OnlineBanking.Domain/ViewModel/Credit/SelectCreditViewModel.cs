@@ -6,24 +6,16 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Credit
 {
-    public class CreditViewModel
+    public class SelectCreditViewModel
     {
         public long Id { get; set; }
 
         public string CreditTypeName { get; set; }
 
-        public decimal CreditSumAmount { get; set; }
-
-        public decimal MoneyLenderReceiveAmount { get; set; }
-
         public decimal CreditRemainerAmount { get; set; }
 
         public decimal MonthlyPayment { get; set; }
 
-        public float Percent { get; set; }
-
         public DateTime CreditTerm { get; set; }
-
-        public DateTime CreatedAt { get; set; }
     }
 }

@@ -11,5 +11,7 @@ namespace OnlineBanking.Domain.ViewModel.Credit
     {
         [Required]
         public decimal UserIncome { get; set; }
+
+        public bool IsIncomeVerified { get; set; }
     }
 }

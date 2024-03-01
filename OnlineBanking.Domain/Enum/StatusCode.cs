@@ -27,6 +27,15 @@ namespace OnlineBanking.Domain.Enum
 
         NotEnoughFunds = 71,
 
+        UserIncomeNotVerified = 82,
+
+        CreditTypeNotFound = 91,
+        CreditTypesNotFound = 92,
+
+        InvalidCreditTerm = 101,
+        CreditNotApproved = 102,
+        CreditNotFound = 103,
+
         TryAgain = 451,
 
         InternalServerError = 500,

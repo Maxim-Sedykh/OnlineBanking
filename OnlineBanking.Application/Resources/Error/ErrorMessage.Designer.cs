@@ -115,6 +115,42 @@ namespace OnlineBanking.Application.Resources.Error {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Кредит не утверждён, ваш доход не позволяет взять этот кредит..
+        /// </summary>
+        internal static string CreditNotApproved {
+            get {
+                return ResourceManager.GetString("CreditNotApproved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кредит не найден.
+        /// </summary>
+        internal static string CreditNotFound {
+            get {
+                return ResourceManager.GetString("CreditNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тип кредита не найден.
+        /// </summary>
+        internal static string CreditTypeNotFound {
+            get {
+                return ResourceManager.GetString("CreditTypeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Типы кредитов не найдены.
+        /// </summary>
+        internal static string CreditTypesNotFound {
+            get {
+                return ResourceManager.GetString("CreditTypesNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Внутренняя ошибка сервера.
         /// </summary>
         internal static string InternalServerError {
@@ -129,6 +165,15 @@ namespace OnlineBanking.Application.Resources.Error {
         internal static string InvalidClientRequest {
             get {
                 return ResourceManager.GetString("InvalidClientRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Указан не правильный срок кредита.
+        /// </summary>
+        internal static string InvalidCreditTerm {
+            get {
+                return ResourceManager.GetString("InvalidCreditTerm", resourceCulture);
             }
         }
         
@@ -192,6 +237,15 @@ namespace OnlineBanking.Application.Resources.Error {
         internal static string UserAlreadyExist {
             get {
                 return ResourceManager.GetString("UserAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Доход пользователя не подтверждён.
+        /// </summary>
+        internal static string UserIncomeNotVerified {
+            get {
+                return ResourceManager.GetString("UserIncomeNotVerified", resourceCulture);
             }
         }
         

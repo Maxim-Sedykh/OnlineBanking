@@ -1,0 +1,48 @@
+﻿@using OnlineBanking.Domain.ViewModel.Credit
+@model SetIncomeViewModel
+
+<div class="container">
+    <div class="row mb-5" style="margin-top:75px;">
+        <p class="text-center fs-4">Ваши кредиты</p>
+        <div class="col-md-12 text-center">
+            <img src="/images/user-credits-default.jpg" class="img-fluid w-50 br-15">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 text-center">
+            @if (Model.IsIncomeVerified)
+            {
+                <button class="btn btn-success" readonly>
+                    <i class="fa fa-check"></i> Ваш доход потверждён: @Model.UserIncome.ToString("0.00")
+                </button>
+                <br />
+                <small>Вы должны подтвердить свой доход, пришлите вашу налоговую справку на почту online_bank@mail.ru</small>
+            }
+            else
+            {
+                <form class="mx-auto" asp-controller="Credit" asp-action="SetUserIncome">
+                    <div class="form-group text-center">
+                        <label asp-for="UserIncome">Подтвердите Ваш доход</label><br />
+                        <input type="number" asp-for="UserIncome" class="form-control my-3 w-50 mx-auto" placeholder="Введите ваш доход">
+                        <button class="btn btn-primary" type="submit">
+                            Подтвердить доход
+                        </button>
+                    </div>
+                </form>
+            }
+            
+        </div>
+        <div class="col-md-4 text-center">
+            <button class="btn btn-primary" type="button" onclick="openModal({ url: '/Credit/CreateCredit', modalId: 'modalWindow', modalTitle:'Взять кредит' })"
+                    data-toggle="ajax-modal" data-target="Modal">
+                Взять кредит
+            </button>
+        </div>
+        <div class="col-md-4  text-center">
+            <button class="btn btn-primary" type="button" onclick="openModal({ url: '/Credit/GetUserCredits', modalId: 'modalWindow', modalTitle:'Ваши кредиты' })"
+                    data-toggle="ajax-modal" data-target="Modal">
+                Посмотреть ваши кредиты
+            </button>
+        </div>
+    </div>
+</div>

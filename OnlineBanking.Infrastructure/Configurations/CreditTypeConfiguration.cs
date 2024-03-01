@@ -22,7 +22,7 @@ namespace OnlineBanking.DAL.Configurations
                     Description = "Предназначен для покупки товаров, услуг, оплаты отпуска и других личных потребностей",
                     MinCreaditTermInMonths = 6,
                     MaxCreaditTermInMonths = 60,
-                    InterestRate = 15,
+                    YearPercent = 15,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
@@ -32,7 +32,7 @@ namespace OnlineBanking.DAL.Configurations
                     Description = "Предоставляется для покупки или строительства жилой недвижимости",
                     MinCreaditTermInMonths = 60,
                     MaxCreaditTermInMonths = 360,
-                    InterestRate = 5,
+                    YearPercent = 5,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
@@ -42,7 +42,7 @@ namespace OnlineBanking.DAL.Configurations
                     Description = "Используется для покупки автомобиля",
                     MinCreaditTermInMonths = 12,
                     MaxCreaditTermInMonths = 84,
-                    InterestRate = 10,
+                    YearPercent = 10,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
@@ -52,7 +52,7 @@ namespace OnlineBanking.DAL.Configurations
                     Description = "Выдается компаниям для развития бизнеса",
                     MinCreaditTermInMonths = 6,
                     MaxCreaditTermInMonths = 60,
-                    InterestRate = 15,
+                    YearPercent = 15,
                     CreatedAt = DateTime.UtcNow
                 }
             });
@@ -64,7 +64,7 @@ namespace OnlineBanking.DAL.Configurations
 
             builder.HasMany(x => x.Credits)
                 .WithOne(x => x.CreditType)
-                .HasForeignKey(x => x.Cred);
+                .HasForeignKey(x => x.CreditTypeId);
         }
     }
 }

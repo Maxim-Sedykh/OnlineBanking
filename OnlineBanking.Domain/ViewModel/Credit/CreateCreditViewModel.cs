@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineBanking.Domain.ViewModel.CreditType;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,11 @@ namespace OnlineBanking.Domain.ViewModel.Credit
 {
     public class CreateCreditViewModel
     {
-        public decimal CreditSumAmount { get; set; }
+        public decimal MoneyLenderReceiveAmount { get; set; }
 
-        public float Percent { get; set; }
+        public List<SelectCreditTypeViewModel> CreditTypes { get; set; }
+
+        public byte SelectedCreditTypeId { get; set; }
 
         public DateTime CreditTerm { get; set; }
     }

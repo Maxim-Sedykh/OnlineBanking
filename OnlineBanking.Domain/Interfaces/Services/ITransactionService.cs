@@ -38,5 +38,14 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// <param name="userName"></param>
         /// <returns></returns>
         Task<Result<TransactionPageViewModel>> GetUserTransactions(string userName);
+
+        /// <summary>
+        /// Совершение выплаты по кредиту
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        Task<Result<Transaction>> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName);
+        
     }
 }

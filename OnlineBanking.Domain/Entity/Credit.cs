@@ -19,15 +19,17 @@ namespace OnlineBanking.Domain.Entity
 
         public decimal MoneyLenderReceiveAmount { get; set; }
 
-        public float Percent { get; set; }
-
         public DateTime CreditTerm { get; set; }
 
         public decimal CreditRemainerAmount { get; set; }
 
+        public decimal MonthlyPayment { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set; }
+
+        public byte CreditTypeId { get; set; }
 
         public CreditType CreditType { get; set; }
     }

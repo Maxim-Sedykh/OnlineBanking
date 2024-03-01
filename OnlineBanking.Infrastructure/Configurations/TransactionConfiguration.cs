@@ -23,6 +23,7 @@ namespace OnlineBanking.DAL.Configurations
                     RecipientId = 2,
                     MoneyAmount = 500,
                     CreatedAt = DateTime.UtcNow,
+                    TransactionType = TransactionType.Common,
                     PaymentMethodId = 3
                 },
                 new()
@@ -31,6 +32,7 @@ namespace OnlineBanking.DAL.Configurations
                     SenderId = 2,
                     RecipientId = 1,
                     MoneyAmount = 10000,
+                    TransactionType = TransactionType.Common,
                     CreatedAt = DateTime.UtcNow,
                     PaymentMethodId = 1
                 }

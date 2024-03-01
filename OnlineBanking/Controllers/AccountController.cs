@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OnlineBanking.Application.Services;
 using OnlineBanking.Domain.Entity;
@@ -8,6 +9,7 @@ using OnlineBanking.Domain.ViewModel.Auth;
 
 namespace OnlineBanking.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;

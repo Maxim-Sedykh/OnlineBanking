@@ -7,9 +7,11 @@ using System.Security.Claims;
 using System.Diagnostics.Contracts;
 using OnlineBanking.Application.Services;
 using OnlineBanking.Domain.ViewModel.Card;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineBanking.Controllers
 {
+    [Authorize]
     public class CardController : Controller
     {
         private readonly ICardService _cardService;

@@ -24,6 +24,7 @@ namespace OnlineBanking.DAL.Context
 
         public BankingDbContext(DbContextOptions<BankingDbContext> options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 

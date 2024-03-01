@@ -20,21 +20,24 @@ namespace OnlineBanking.DAL.Configurations
                 {
                     Id = 1,
                     UserId = 1,
-                    CreditSumAmount = 100000,
-                    Percent = 12.5f,
+                    CreditSumAmount = 110000,
+                    MoneyLenderReceiveAmount = 100000,
                     CreditTerm = DateTime.UtcNow.AddYears(1),
                     CreditRemainerAmount = 50000,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    MonthlyPayment = 9167,
+                    CreditTypeId = 1,
                 },
                 new()
                 {
                     Id = 2,
                     UserId = 2,
                     CreditSumAmount = 50000,
-                    Percent = 10.5f,
-                    CreditTerm = DateTime.UtcNow.AddYears(2),
+                    CreditTerm = DateTime.UtcNow.AddYears(12),
                     CreditRemainerAmount = 25000,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    MonthlyPayment = 4167,
+                    CreditTypeId = 1,
                 }
             });
 

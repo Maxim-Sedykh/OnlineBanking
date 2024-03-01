@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using OnlineBanking.Application.Resources.Error;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
@@ -13,35 +14,184 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OnlineBanking.Application.Services
 {
     public class CreditService : ICreditService
     {
+        private const decimal MIN_LIVING_WAGE = 12000;
+        private const string DEFAULT_CREDIT_NAME = "Кредитный";
+
         private readonly IBaseRepository<Credit> _creditRepository;
         private readonly IBaseRepository<CreditType> _creditTypeRepository;
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IBaseRepository<Account> _accountRepository;
+        private readonly IBaseRepository<AccountType> _accountTypeRepository;
         private readonly ILogger _logger;
 
-        public CreditService(IBaseRepository<Credit> creditRepository, IBaseRepository<CreditType> creditTypeRepository, ILogger logger, 
-            IBaseRepository<User> userRepository)
+        public CreditService(IBaseRepository<Credit> creditRepository, IBaseRepository<CreditType> creditTypeRepository, ILogger logger,
+            IBaseRepository<User> userRepository, IBaseRepository<Account> accountRepository, IBaseRepository<AccountType> accountTypeRepository)
         {
             _creditRepository = creditRepository;
             _creditTypeRepository = creditTypeRepository;
             _logger = logger;
             _userRepository = userRepository;
+            _accountRepository = accountRepository;
+            _accountTypeRepository = accountTypeRepository;
         }
 
-        public Task<Result<CreditViewModel>> CreateCredit(CreateCreditViewModel viewModel)
+        public async Task<Result<CreditViewModel>> CreateCredit(CreateCreditViewModel viewModel, string userName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _userRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Username == userName);
+
+                if (user == null)
+                {
+                    return new Result<CreditViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.UserNotFound,
+                        ErrorMessage = ErrorMessage.UserNotFound,
+                    };
+                }
+
+                if (!user.IsIncomeVerified)
+                {
+                    return new Result<CreditViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.UserIncomeNotVerified,
+                        ErrorMessage = ErrorMessage.UserIncomeNotVerified,
+                    };
+                }
+
+                var creditType = await _creditTypeRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Id == viewModel.SelectedCreditTypeId);
+
+                if (creditType == null)
+                {
+                    return new Result<CreditViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.CreditTypeNotFound,
+                        ErrorMessage = ErrorMessage.CreditTypeNotFound,
+                    };
+                }
+
+                if (viewModel.CreditTerm > DateTime.UtcNow.AddMonths(creditType.MaxCreaditTermInMonths) ||
+                    viewModel.CreditTerm < DateTime.UtcNow.AddMonths(creditType.MinCreaditTermInMonths))
+                {
+                    return new Result<CreditViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.InvalidCreditTerm,
+                        ErrorMessage = ErrorMessage.InvalidCreditTerm, 
+                    };
+                }
+
+                decimal newCreditSumAmount = viewModel.MoneyLenderReceiveAmount + viewModel.MoneyLenderReceiveAmount * (decimal)(creditType.YearPercent / 100);
+                decimal newCreditMounthPayment = Math.Round((newCreditSumAmount / GetMounthsDifference(DateTime.UtcNow, viewModel.CreditTerm)), 2, MidpointRounding.AwayFromZero);
+
+                user.MonthlyCreditsPayment += newCreditMounthPayment;
+                user.CreditsCount++;
+
+                if (user.Income - (user.MonthlyCreditsPayment) < MIN_LIVING_WAGE)
+                {
+                    return new Result<CreditViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.CreditNotApproved,
+                        ErrorMessage = ErrorMessage.CreditNotApproved,
+                    };
+                }
+
+                var creditAccountType = await _accountTypeRepository.GetAll().FirstOrDefaultAsync(x => x.AccountTypeName == DEFAULT_CREDIT_NAME);
+
+                Account account = new Account()
+                {
+                    AccountName = DEFAULT_CREDIT_NAME + user.CreditsCount,
+                    UserId = user.Id,
+                    BalanceAmount = viewModel.MoneyLenderReceiveAmount,
+                    AccountTypeId = creditAccountType.Id,
+                    IsCardLinked = false,
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                Credit credit = new Credit()
+                {
+                    UserId = user.Id,
+                    CreditSumAmount = newCreditSumAmount,
+                    MoneyLenderReceiveAmount = viewModel.MoneyLenderReceiveAmount,
+                    CreditTerm = DateTime.SpecifyKind(viewModel.CreditTerm, DateTimeKind.Utc),
+                    CreditRemainerAmount = newCreditSumAmount,
+                    MonthlyPayment = newCreditMounthPayment,
+                    CreditTypeId = viewModel.SelectedCreditTypeId,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _userRepository.UpdateAsync(user);
+                await _accountRepository.CreateAsync(account);
+                await _creditRepository.CreateAsync(credit);
+
+                return new Result<CreditViewModel>()
+                {
+                    Data = credit.Adapt<CreditViewModel>(),
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new Result<CreditViewModel>()
+                {
+                    ErrorCode = (int)StatusCode.InternalServerError,
+                    ErrorMessage = ErrorMessage.InternalServerError,
+                };
+            }
         }
 
-        public async Task<CollectionResult<CreditTypeViewModel>> GetCreditTypes()
+        public async Task<Result<CreateCreditViewModel>> GetCreditTypesToSelect()
         {
             try
             {
                 var creditTypes = await _creditTypeRepository.GetAll()
+                    .Select(x => new SelectCreditTypeViewModel
+                    {
+                        Id = x.Id,
+                        CreditTypeName = x.CreditTypeName,
+                    })
+                    .ToListAsync();
+
+                if (creditTypes == null)
+                {
+                    return new Result<CreateCreditViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.CreditTypeNotFound,
+                        ErrorMessage = ErrorMessage.CreditTypeNotFound
+                    };
+                }
+
+                return new Result<CreateCreditViewModel>()
+                {
+                    Data = new CreateCreditViewModel()
+                    {
+                        CreditTypes = creditTypes
+                    },
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new Result<CreateCreditViewModel>()
+                {
+                    ErrorMessage = ErrorMessage.InternalServerError,
+                    ErrorCode = (int)StatusCode.InternalServerError,
+                };
+            }
+        }
+
+        public Task<CollectionResult<CreditTypeViewModel>> GetCreditTypes()
+        {
+            try
+            {
+                var creditTypes = _creditTypeRepository.GetAll()
                     .Select(x => new CreditTypeViewModel
                     {
                         Id = x.Id,
@@ -49,24 +199,33 @@ namespace OnlineBanking.Application.Services
                         Description = x.Description,
                         MinCreaditTermInMonths = x.MinCreaditTermInMonths,
                         MaxCreaditTermInMonths = x.MaxCreaditTermInMonths,
-                        InterestRate = x.InterestRate,
+                        InterestRate = x.YearPercent,
                     })
-                    .ToArrayAsync();
+                    .AsEnumerable();
 
-                return new CollectionResult<CreditTypeViewModel>()
+                if (creditTypes == null)
+                {
+                    return Task.FromResult(new CollectionResult<CreditTypeViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.CreditTypesNotFound,
+                        ErrorMessage = ErrorMessage.CreditTypesNotFound
+                    });
+                }
+
+                return Task.FromResult(new CollectionResult<CreditTypeViewModel>()
                 {
                     Data = creditTypes,
-                    Count = creditTypes.Length,
-                };
+                    Count = creditTypes.Count(),
+                });
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, ex.Message);
-                return new CollectionResult<CreditTypeViewModel>()
+                return Task.FromResult(new CollectionResult<CreditTypeViewModel>()
                 {
-                    ErrorCode = (int)StatusCode.InternalServerError,
                     ErrorMessage = ErrorMessage.InternalServerError,
-                };
+                    ErrorCode = (int)StatusCode.InternalServerError,
+                });
             }
         }
 
@@ -87,16 +246,19 @@ namespace OnlineBanking.Application.Services
                 }
 
                 var userCredits = await _creditRepository.GetAll()
+                    .Include(x => x.CreditType)
                     .Where(x => x.UserId == user.Id)
                     .Select(x => new CreditViewModel
                     {
                         Id = x.Id,
+                        CreditTypeName = x.CreditType.CreditTypeName,
                         CreditSumAmount = x.CreditSumAmount,
                         MoneyLenderReceiveAmount = x.MoneyLenderReceiveAmount,
                         CreditTerm = x.CreditTerm,
-                        Percent = x.Percent,
+                        Percent = x.CreditType.YearPercent,
                         CreatedAt = x.CreatedAt,
                         CreditRemainerAmount = x.CreditRemainerAmount,
+                        MonthlyPayment = x.MonthlyPayment
                     })
                     .ToArrayAsync();
 
@@ -153,6 +315,48 @@ namespace OnlineBanking.Application.Services
                     ErrorMessage = ErrorMessage.InternalServerError,
                 };
             }
+        }
+
+        public async Task<Result<SetIncomeViewModel>> GetIncomeViewModel(string userName)
+        {
+            try
+            {
+                var user = await _userRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Username == userName);
+
+                if (user == null)
+                {
+                    return new Result<SetIncomeViewModel>()
+                    {
+                        ErrorCode = (int)StatusCode.UserNotFound,
+                        ErrorMessage = ErrorMessage.UserNotFound,
+                    };
+                }
+
+                return new Result<SetIncomeViewModel>()
+                {
+                    Data = new SetIncomeViewModel()
+                    {
+                        IsIncomeVerified = user.IsIncomeVerified,
+                        UserIncome = user.IsIncomeVerified ? user.Income : default,
+                    },
+                };
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new Result<SetIncomeViewModel>()
+                {
+                    ErrorCode = (int)StatusCode.InternalServerError,
+                    ErrorMessage = ErrorMessage.InternalServerError,
+                };
+            }
+        }
+
+        private int GetMounthsDifference(DateTime first, DateTime second)
+        { 
+            return ((second.Year - first.Year) * 12) + second.Month - first.Month;
         }
     }
 }

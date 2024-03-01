@@ -8,6 +8,7 @@ using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Auth;
+using OnlineBanking.Domain.ViewModel.Credit;
 using OnlineBanking.Domain.ViewModel.PaymentMethod;
 using OnlineBanking.Domain.ViewModel.Transaction;
 using Serilog;
@@ -21,10 +22,12 @@ namespace OnlineBanking.Application.Services
         private readonly IBaseRepository<PaymentMethod> _paymentMethodRepository;
         private readonly IBaseRepository<Account> _accountRepository;
         private readonly IBaseRepository<Card> _cardRepository;
+        private readonly IBaseRepository<Credit> _creditRepository;
         private readonly ILogger _logger;
 
         public TransactionService(IBaseRepository<Transaction> transactionRepository, IBaseRepository<User> userRepository, ILogger logger,
-            IBaseRepository<Account> accountRepository, IBaseRepository<PaymentMethod> paymentMethodRepository, IBaseRepository<Card> cardRepository)
+            IBaseRepository<Account> accountRepository, IBaseRepository<PaymentMethod> paymentMethodRepository, IBaseRepository<Card> cardRepository,
+            IBaseRepository<Credit> creditRepository)
         {
             _transactionRepository = transactionRepository;
             _userRepository = userRepository;
@@ -32,6 +35,7 @@ namespace OnlineBanking.Application.Services
             _accountRepository = accountRepository;
             _paymentMethodRepository = paymentMethodRepository;
             _cardRepository = cardRepository;
+            _creditRepository = creditRepository;
         }
 
         public async Task<Result<CreateTransactionViewModel>> GetDataToMakeTransaction(string userName)
@@ -77,13 +81,27 @@ namespace OnlineBanking.Application.Services
                     })
                     .ToListAsync();
 
-              
+                var userCreditsToSelect = await _creditRepository.GetAll()
+                    .Include(x => x.CreditType)
+                    .Where(x => x.UserId == user.Id)
+                    .Select(x => new SelectCreditViewModel
+                    {
+                        Id = x.Id,
+                        CreditTypeName = x.CreditType.CreditTypeName,
+                        CreditRemainerAmount = x.CreditRemainerAmount,
+                        MonthlyPayment = x.MonthlyPayment,
+                        CreditTerm = x.CreditTerm
+                    })
+                    .ToListAsync();
+
+
                 return new Result<CreateTransactionViewModel>()
                 {
                     Data = new CreateTransactionViewModel()
                     {
                         PaymentMethodNames = paymentMethodsNames,
                         UserAccounts = userAccounts,
+                        UserCredits = userCreditsToSelect,
                     }
                 };
             }
@@ -117,6 +135,7 @@ namespace OnlineBanking.Application.Services
                         MoneyAmount = x.MoneyAmount,
                         PaymentMethodName = x.PaymentMethod.Name,
                         CreatedAt = x.CreatedAt,
+                        TransactionType = x.TransactionType
                     })
                     .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync();
@@ -142,6 +161,91 @@ namespace OnlineBanking.Application.Services
             {
                 _logger.Error(ex, ex.Message);
                 return new Result<TransactionPageViewModel>()
+                {
+                    ErrorCode = (int)StatusCode.InternalServerError,
+                    ErrorMessage = ErrorMessage.InternalServerError,
+                };
+            }
+        }
+
+        public async Task<Result<Transaction>> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName)
+        {
+            try
+            {
+                var user = await _userRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Username == userName);
+
+                if (user == null)
+                {
+                    return new Result<Transaction>()
+                    {
+                        ErrorCode = (int)StatusCode.UserNotFound,
+                        ErrorMessage = ErrorMessage.UserNotFound,
+                    };
+                }
+
+                var userAccount = await _accountRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Id == viewModel.SelectedUserAccountId);
+
+                if (userAccount == null)
+                {
+                    return new Result<Transaction>()
+                    {
+                        ErrorCode = (int)StatusCode.AccountNotFound,
+                        ErrorMessage = ErrorMessage.AccountNotFound,
+                    };
+                }
+
+                var credit = await _creditRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Id == viewModel.SelectedUserCreditId);
+
+                if (userAccount.BalanceAmount < credit.MonthlyPayment)
+                {
+                    return new Result<Transaction>()
+                    {
+                        ErrorCode = (int)StatusCode.NotEnoughFunds,
+                        ErrorMessage = ErrorMessage.NotEnoughFunds,
+                    };
+                }
+
+                if (credit == null)
+                {
+                    return new Result<Transaction>()
+                    {
+                        ErrorCode = (int)StatusCode.CreditNotFound,
+                        ErrorMessage = ErrorMessage.CreditNotFound,
+                    };
+                }
+
+                userAccount.BalanceAmount -= viewModel.MoneyAmount;
+
+                credit.CreditRemainerAmount -= viewModel.MoneyAmount;
+
+                Transaction transaction = new Transaction()
+                {
+                    SenderId = user.Id,
+                    RecipientId = user.Id,
+                    MoneyAmount = viewModel.MoneyAmount,
+                    PaymentMethodId = viewModel.SelectedPaymentMethodId,
+                    TransactionType = TransactionType.Credit,
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                await _accountRepository.UpdateAsync(userAccount);
+                await _creditRepository.UpdateAsync(credit);
+
+                await _transactionRepository.CreateAsync(transaction);
+
+                return new Result<Transaction>()
+                {
+                    Data = transaction,
+                    SuccessMessage = SuccessMessage.CompleteTransaction,
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, ex.Message);
+                return new Result<Transaction>()
                 {
                     ErrorCode = (int)StatusCode.InternalServerError,
                     ErrorMessage = ErrorMessage.InternalServerError,
@@ -210,6 +314,7 @@ namespace OnlineBanking.Application.Services
                     RecipientId = recipientCard.Account.UserId,
                     MoneyAmount = viewModel.MoneyAmount,
                     PaymentMethodId = viewModel.SelectedPaymentMethodId,
+                    TransactionType = TransactionType.Common,
                     CreatedAt = DateTime.UtcNow,
                 };
 
