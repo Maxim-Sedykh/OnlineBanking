@@ -15,6 +15,7 @@ using Serilog;
 
 namespace OnlineBanking.Application.Services
 {
+    /// <inheritdoc/>
     public class TransactionService : ITransactionService
     {
         private readonly IBaseRepository<Transaction> _transactionRepository;
@@ -38,6 +39,7 @@ namespace OnlineBanking.Application.Services
             _creditRepository = creditRepository;
         }
 
+        /// <inheritdoc/>
         public async Task<Result<CreateTransactionViewModel>> GetDataToMakeTransaction(string userName)
         {
             try
@@ -116,6 +118,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<TransactionPageViewModel>> GetUserTransactions(string userName)
         {
             try
@@ -168,6 +171,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<Transaction>> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName)
         {
             try
@@ -253,6 +257,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<Transaction>> MakeTransaction(CreateTransactionViewModel viewModel, string userName)
         {
             try

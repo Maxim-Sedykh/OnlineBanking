@@ -29,7 +29,7 @@ namespace OnlineBanking.DAL.Configurations
                 new()
                 {
                     Id = 2,
-                    AccountName = "Сберегательный счёт",
+                    AccountName = "Сберегательный счёт", 
                     UserId = 2,
                     IsCardLinked = false,
                     AccountTypeId = 2,
@@ -46,8 +46,6 @@ namespace OnlineBanking.DAL.Configurations
                     .WithOne(x => x.Account)
                     .HasPrincipalKey<Account>(x => x.Id)
                     .OnDelete(DeleteBehavior.Cascade);
-
-
         }
     }
 }

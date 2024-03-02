@@ -19,6 +19,11 @@ namespace OnlineBanking.Controllers
             _accountService = accountService;
         }
 
+        /// <summary>
+        /// Переход на модальное окно, для того, чтобы положить деньги на счёт (GET)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> AddMoneyToAccount(int id)
         {
@@ -30,7 +35,12 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Пополнить баланс счёта (PUT)
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPut]
         public async Task<IActionResult> AddMoneyToAccount(AccountMoneyViewModel viewModel)
         {
             var response = await _accountService.AddMoneyToAccount(viewModel);
@@ -41,6 +51,10 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Переход на модальное окно, для того, чтобы создать счёт (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> CreateAccount()
         {
@@ -52,6 +66,10 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Создание счёта (POST)
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateAccount(CreateAccountViewModel viewModel)
         {
@@ -63,7 +81,12 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Удаление счёта, если баланс счёта пуст (DELETE)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpDelete]
         public async Task<IActionResult> DeleteAccountById([FromBody] AccountDeleteViewModel model)
         {
             var response = await _accountService.DeleteAccountById(model);
@@ -74,6 +97,10 @@ namespace OnlineBanking.Controllers
             return BadRequest(new { message = response.ErrorMessage });
         }
 
+        /// <summary>
+        /// Переход на страницу для получения информации по типам счётов (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAccountTypes()
         {

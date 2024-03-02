@@ -15,7 +15,9 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -24,17 +26,21 @@ using ILogger = Serilog.ILogger;
 
 namespace OnlineBanking.Application.Services
 {
+    /// <inheritdoc/>
     public class AuthService : IAuthService
     {
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IBaseRepository<UserProfile> _userProfileRepository;
         private readonly ILogger _logger;
 
-        public AuthService(IBaseRepository<User> userRepository, ILogger logger)
+        public AuthService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<UserProfile> userProfileRepository)
         {
             _userRepository = userRepository;
             _logger = logger;
+            _userProfileRepository = userProfileRepository;
         }
 
+        /// <inheritdoc/>
         public async Task<Result<ClaimsIdentity>> Login(LoginUserViewModel viewModel)
         {
             try
@@ -77,6 +83,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<ClaimsIdentity>> Register(RegisterUserViewModel model)
         {
             if (model.Password != model.PasswordConfirm)
@@ -99,22 +106,29 @@ namespace OnlineBanking.Application.Services
                         ErrorCode = (int)StatusCode.UserAlreadyExist,
                     };
                 }
-                var hashUserPassword = HashPasswordHelper.HashPassword(model.Password);
+
                 user = new User()
                 {
                     Username = model.Username,
+                    Email = model.Email,
+                    Password = HashPasswordHelper.HashPassword(model.Password),
+                    Role = Role.User,
+                    CreatedAt = DateTime.UtcNow,
+                };
+
+                UserProfile userProfile = new UserProfile()
+                {
                     Firstname = model.Firstname,
                     Surname = model.Surname,
-                    Email = model.Email,
                     IsOnlineBankingUser = true,
-                    Password = hashUserPassword,
-                    Role = Role.User,
                     City = model.City,
                     Street = model.Street,
                     ZipCode = model.ZipCode,
-                    CreatedAt = DateTime.UtcNow,
                 };
+                
+
                 await _userRepository.CreateAsync(user);
+                await _userProfileRepository.CreateAsync(userProfile);
 
                 var result = Authenticate(user);
 

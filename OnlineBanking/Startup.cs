@@ -31,8 +31,5 @@ namespace OnlineBanking
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
         }
-
-
-
     }
 }

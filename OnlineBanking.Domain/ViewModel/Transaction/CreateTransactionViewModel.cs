@@ -5,14 +5,20 @@ using OnlineBanking.Domain.ViewModel.CreditType;
 using OnlineBanking.Domain.ViewModel.PaymentMethod;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Transaction
 {
-    public class CreateTransactionViewModel
+    /// <summary>
+    /// Модель представления для создания транзакций разных типов
+    /// </summary>
+    public record CreateTransactionViewModel
     {
+        [Required(ErrorMessage = "Карта должна быть обязательно указана")]
+        [MaxLength]
         public string RecipientCardNumber { get; set; }
 
         public decimal MoneyAmount { get; set; }

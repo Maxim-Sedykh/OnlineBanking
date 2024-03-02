@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Accounts
 {
-    public class AccountDeleteViewModel
+    /// <summary>
+    /// Модель представления для удаления счёта
+    /// </summary>
+    public record AccountDeleteViewModel
     {
         public long Id { get; set; }
 

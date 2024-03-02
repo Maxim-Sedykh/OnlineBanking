@@ -14,9 +14,11 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.DAL.DependencyInjection
 {
+    /// <summary>
+    /// Внедрение зависимостей слоя Data Access Layer
+    /// </summary>
     public static class DependencyInjection
     {
-
         public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DbConnectionString");
@@ -41,6 +43,7 @@ namespace OnlineBanking.DAL.DependencyInjection
                 typeof(User),
                 typeof(AccountType),
                 typeof(CreditType),
+                typeof(UserProfile),
             };
 
             foreach (var type in types)

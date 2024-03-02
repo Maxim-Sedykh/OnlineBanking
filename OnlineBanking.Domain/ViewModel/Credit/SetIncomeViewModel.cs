@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Credit
 {
-    public class SetIncomeViewModel
+    /// <summary>
+    /// Модель представления для предоставления информации о доходе пользователя и о том, подтвержён ли доход
+    /// </summary>
+    public record SetIncomeViewModel
     {
         [Required]
         public decimal UserIncome { get; set; }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Card
 {
-    public class CardActionViewModel
+    /// <summary>
+    /// Модель представления для получения информации о банковской карте
+    /// </summary>
+    public record CardActionViewModel
     {
         public int id { get; set; }
     }

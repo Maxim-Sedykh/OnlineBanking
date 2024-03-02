@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Auth
 {
-    public class LoginUserViewModel
+    /// <summary>
+    /// Модель представления для логина пользователя
+    /// </summary>
+    public record LoginUserViewModel
     {
         [EmailAddress]
         public string Email { get; set; }
 
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Введите пароль")]
+        [MinLength(5, ErrorMessage = "Длина пароля должна быть больше пяти символов")]
+        [MaxLength(20, ErrorMessage = "Длина пароля должна быть меньше двадцати символов")]
         public string Password { get; set; }
     }
 }

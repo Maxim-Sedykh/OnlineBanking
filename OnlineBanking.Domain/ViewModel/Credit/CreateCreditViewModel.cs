@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Credit
 {
-    public class CreateCreditViewModel
+    /// <summary>
+    /// Модель представления для создания кредита
+    /// </summary>
+    public record CreateCreditViewModel
     {
         public decimal MoneyLenderReceiveAmount { get; set; }
 

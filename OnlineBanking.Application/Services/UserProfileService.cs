@@ -24,37 +24,40 @@ using ILogger = Serilog.ILogger;
 
 namespace OnlineBanking.Application.Services
 {
-    public class UserService: IUserService
+    /// <inheritdoc/>
+    public class UserProfileService: IUserProfileService
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly ILogger _logger;
 
-        public UserService(IBaseRepository<User> userRepository, ILogger logger)
+        public UserProfileService(IBaseRepository<User> userRepository, ILogger logger)
         {
             _userRepository = userRepository;
             _logger = logger;
         }
 
+        /// <inheritdoc/>
         public async Task<Result<UserProfileViewModel>> GetUserProfile(string userName)
         {
             try
             {
                 var userProfileViewModel = await _userRepository.GetAll()
                     .Where(x => x.Username == userName)
+                    .Include(x => x.UserProfile)
                     .Include(x => x.Accounts)
                     .ThenInclude(x => x.AccountType)
                     .Select(x => new UserProfileViewModel()
                     {
                         Id = x.Id,
                         Username = x.Username,
-                        Firstname = x.Firstname,
-                        Surname = x.Surname,
-                        Street = x.Street,
-                        City = x.City,
+                        Firstname = x.UserProfile.Firstname,
+                        Surname = x.UserProfile.Surname,
+                        Street = x.UserProfile.Street,
+                        City = x.UserProfile.City,
                         Role = x.Role,
-                        ZipCode = x.ZipCode,
+                        ZipCode = x.UserProfile.ZipCode,
                         CreatedAt = x.CreatedAt,
-                        Image = x.Avatar,
+                        Image = x.UserProfile.Avatar,
                         UserAccounts = x.Accounts.Select(a => new AccountViewModel()
                         {
                             Id = a.Id,
@@ -85,15 +88,17 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<UserProfileViewModel>> EditUserInfo(UserProfileViewModel viewModel, byte[] imageData)
         {
             try
             {
                 var user = await _userRepository.GetAll()
+                    .Include(x => x.UserProfile)
                     .Where(x => x.Id == viewModel.Id)
                     .FirstOrDefaultAsync();
 
-                user.Avatar = imageData;
+                user.UserProfile.Avatar = imageData;
 
                 await _userRepository.UpdateAsync(user);
 

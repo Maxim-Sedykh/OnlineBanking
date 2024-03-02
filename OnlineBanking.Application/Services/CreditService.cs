@@ -18,6 +18,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OnlineBanking.Application.Services
 {
+    /// <inheritdoc/>
     public class CreditService : ICreditService
     {
         private const decimal MIN_LIVING_WAGE = 12000;
@@ -41,11 +42,13 @@ namespace OnlineBanking.Application.Services
             _accountTypeRepository = accountTypeRepository;
         }
 
+        /// <inheritdoc/>
         public async Task<Result<CreditViewModel>> CreateCredit(CreateCreditViewModel viewModel, string userName)
         {
             try
             {
                 var user = await _userRepository.GetAll()
+                    .Include(x => x.UserProfile)
                     .FirstOrDefaultAsync(x => x.Username == userName);
 
                 if (user == null)
@@ -57,7 +60,7 @@ namespace OnlineBanking.Application.Services
                     };
                 }
 
-                if (!user.IsIncomeVerified)
+                if (!user.UserProfile.IsIncomeVerified)
                 {
                     return new Result<CreditViewModel>()
                     {
@@ -91,10 +94,10 @@ namespace OnlineBanking.Application.Services
                 decimal newCreditSumAmount = viewModel.MoneyLenderReceiveAmount + viewModel.MoneyLenderReceiveAmount * (decimal)(creditType.YearPercent / 100);
                 decimal newCreditMounthPayment = Math.Round((newCreditSumAmount / GetMounthsDifference(DateTime.UtcNow, viewModel.CreditTerm)), 2, MidpointRounding.AwayFromZero);
 
-                user.MonthlyCreditsPayment += newCreditMounthPayment;
-                user.CreditsCount++;
+                user.UserProfile.MonthlyCreditsPayment += newCreditMounthPayment;
+                user.UserProfile.CreditsCount++;
 
-                if (user.Income - (user.MonthlyCreditsPayment) < MIN_LIVING_WAGE)
+                if (user.UserProfile.Income - (user.UserProfile.MonthlyCreditsPayment) < MIN_LIVING_WAGE)
                 {
                     return new Result<CreditViewModel>()
                     {
@@ -107,7 +110,7 @@ namespace OnlineBanking.Application.Services
 
                 Account account = new Account()
                 {
-                    AccountName = DEFAULT_CREDIT_NAME + user.CreditsCount,
+                    AccountName = DEFAULT_CREDIT_NAME + user.UserProfile.CreditsCount,
                     UserId = user.Id,
                     BalanceAmount = viewModel.MoneyLenderReceiveAmount,
                     AccountTypeId = creditAccountType.Id,
@@ -147,6 +150,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<CreateCreditViewModel>> GetCreditTypesToSelect()
         {
             try
@@ -187,6 +191,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public Task<CollectionResult<CreditTypeViewModel>> GetCreditTypes()
         {
             try
@@ -229,6 +234,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<CollectionResult<CreditViewModel>> GetUserCredits(string userName)
         {
             try
@@ -279,11 +285,13 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<User>> SetUserIncome(SetIncomeViewModel viewModel, string userName)
         {
             try
             {
                 var user = await _userRepository.GetAll()
+                    .Include(x => x.UserProfile)
                     .FirstOrDefaultAsync(x => x.Username == userName);
 
                 if (user == null)
@@ -295,8 +303,8 @@ namespace OnlineBanking.Application.Services
                     };
                 }
 
-                user.Income = viewModel.UserIncome;
-                user.IsIncomeVerified = true; //Изначально подразумевается, что пользователь должен подтвердить свой доход различными справками,
+                user.UserProfile.Income = viewModel.UserIncome;
+                user.UserProfile.IsIncomeVerified = true; //Изначально подразумевается, что пользователь должен подтвердить свой доход различными справками,
                                     //в качестве теста, доход будет сразу утверждён
                 await _userRepository.UpdateAsync(user);
 
@@ -317,6 +325,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<SetIncomeViewModel>> GetIncomeViewModel(string userName)
         {
             try
@@ -337,8 +346,8 @@ namespace OnlineBanking.Application.Services
                 {
                     Data = new SetIncomeViewModel()
                     {
-                        IsIncomeVerified = user.IsIncomeVerified,
-                        UserIncome = user.IsIncomeVerified ? user.Income : default,
+                        IsIncomeVerified = user.UserProfile.IsIncomeVerified,
+                        UserIncome = user.UserProfile.IsIncomeVerified ? user.UserProfile.Income : default,
                     },
                 };
 

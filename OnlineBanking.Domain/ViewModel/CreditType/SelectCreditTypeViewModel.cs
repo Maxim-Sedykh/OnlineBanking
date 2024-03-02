@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.CreditType
 {
-    public class SelectCreditTypeViewModel
+    /// <summary>
+    /// Модель представления для поля для выбора типа кредита при его создании
+    /// </summary>
+    public record SelectCreditTypeViewModel
     {
         public byte Id { get; set; }
 

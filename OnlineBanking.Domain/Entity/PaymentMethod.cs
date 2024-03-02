@@ -11,14 +11,23 @@ namespace OnlineBanking.Domain.Entity
     {
         public byte Id { get; set; }
 
+        /// <summary>
+        /// Название платёжного метода
+        /// </summary>
         public string Name { get; set; }
 
-        public string Description { get; set; } 
+        /// <summary>
+        /// Описание платёжного метода
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Транзакции, которые были совершены данным платежным методом
+        /// </summary>
+        public List<Transaction> Transactions { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set; }
-
-        public List<Transaction> Transactions { get; set; }
     }
 }

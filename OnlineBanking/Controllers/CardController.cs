@@ -21,6 +21,11 @@ namespace OnlineBanking.Controllers
             _cardService = cardService;
         }
 
+        /// <summary>
+        /// Создание банковской карты для определённого счёта по идентификатору (POST) 
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateCardForAccount([FromBody] long accountId)
         {
@@ -32,6 +37,11 @@ namespace OnlineBanking.Controllers
             return BadRequest(new { message = response.ErrorMessage });
         }
 
+        /// <summary>
+        /// Переход для модального окна для того, чтобы посмотреть данные банковской карты (GET)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetCardByAccountId(long id)
         {

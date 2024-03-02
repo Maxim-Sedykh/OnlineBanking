@@ -18,6 +18,10 @@ namespace OnlineBanking.Controllers
             _transactionService = transactionService;
         }
 
+        /// <summary>
+        /// Переход на страницу с информацией о транзакциях пользователя (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetUserTransaction()
         {
@@ -29,6 +33,10 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Переход на модальное окно для создания транзакций разного типа (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> CreateTransaction()
         {
@@ -40,6 +48,11 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Создание обычной транзакции (POST)
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionViewModel viewModel)
         {
@@ -58,6 +71,11 @@ namespace OnlineBanking.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = errorMessage });
         }
 
+        /// <summary>
+        /// Создание кредитной транзакции (POST)
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateCreditTransaction(CreateTransactionViewModel viewModel)
         {

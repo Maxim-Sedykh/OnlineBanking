@@ -14,6 +14,10 @@ namespace OnlineBanking.Controllers
             _creditService = creditService;
         }
 
+        /// <summary>
+        /// Переход на страницу для получения информации по типам кредита (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetCreditTypes()
         {
@@ -25,6 +29,10 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Переход на модальное окно для создания кредита (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> CreateCredit()
         {
@@ -36,6 +44,11 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Создание кредита (POST)
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateCredit(CreateCreditViewModel viewModel)
         {
@@ -46,8 +59,13 @@ namespace OnlineBanking.Controllers
             }
             return View("Error", $"{response.ErrorMessage}");
         }
-
-        [HttpPost]
+        
+        /// <summary>
+        /// Выставить доход пользователя (PUT)
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        [HttpPut]
         public async Task<IActionResult> SetUserIncome(SetIncomeViewModel viewModel)
         {
             var response = await _creditService.SetUserIncome(viewModel, User.Identity.Name);
@@ -58,6 +76,10 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Переход на страницу для получения информации по кредитам пользователя (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetCreditInfo()
         {
@@ -69,6 +91,10 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Получение кредитов пользователя (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetUserCredits()
         {

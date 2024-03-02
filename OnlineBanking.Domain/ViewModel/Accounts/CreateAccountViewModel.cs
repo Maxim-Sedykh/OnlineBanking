@@ -9,7 +9,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Accounts
 {
-    public class CreateAccountViewModel
+    /// <summary>
+    /// Модель представления для создания нового счёта пользователя
+    /// </summary>
+    public record CreateAccountViewModel
     {
         public string AccountName { get; set; }
 

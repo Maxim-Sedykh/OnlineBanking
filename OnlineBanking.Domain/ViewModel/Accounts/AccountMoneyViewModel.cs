@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Accounts
 {
-    public class AccountMoneyViewModel
+    /// <summary>
+    /// Модель представления для различных методов, предосталяет информацию о денежных средствах на счётах
+    /// </summary>
+    public record AccountMoneyViewModel
     {
         public long Id { get; set; }
 

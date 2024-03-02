@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Transaction
 {
-    public class TransactionViewModel
+    /// <summary>
+    /// Модель представления для получения подробной информации по транзакциям
+    /// </summary>
+    public record TransactionViewModel
     {
         public long Id { get; set; }
 

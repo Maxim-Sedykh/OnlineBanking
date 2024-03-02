@@ -14,46 +14,53 @@ namespace OnlineBanking.Domain.Entity
     {
         public long Id { get; set; }
 
+        /// <summary>
+        /// Логин пользователя
+        /// </summary>
         public string Username { get; set; }
 
-        public string Firstname { get; set; }
-
-        public string Surname { get; set; }
-
+        /// <summary>
+        /// Почта пользователя
+        /// </summary>
         public string Email { get; set; }
 
-        public decimal MonthlyCreditsPayment { get; set; }
-
-        public byte CreditsCount { get; set; }
-
+        /// <summary>
+        /// Пароль пользователя
+        /// </summary>
         public string Password { get; set; }
 
-        public bool IsOnlineBankingUser { get; set; }
-
+        /// <summary>
+        /// Роль пользователя (Обычный пользователь, Админ)
+        /// </summary>
         public Role Role { get; set; }
 
-        public decimal Income { get; set; }
+        /// <summary>
+        /// Все счета пользователя
+        /// </summary>
+        public List<Account> Accounts { get; set; }
 
-        public bool IsIncomeVerified { get; set; }
+        /// <summary>
+        /// Все транзакции пользователя в качестве отправителя
+        /// </summary>
+        public List<Transaction> SenderTransactions { get; set; }
 
-        public string Street { get; set; }
+        /// <summary>
+        /// Все транзакции пользователя в качестве получателя
+        /// </summary>
+        public List<Transaction> RecicipientTransactions { get; set; }
 
-        public string City { get; set; }
+        /// <summary>
+        /// Все кредиты пользователя
+        /// </summary>
+        public List<Credit> Credits { get; set; }
 
-        public string ZipCode { get; set; }
-
-        public byte[] Avatar { get; set; }
+        /// <summary>
+        /// Профиль пользователя
+        /// </summary>
+        public UserProfile UserProfile { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set; }
-
-        public List<Account> Accounts { get; set; }
-
-        public List<Transaction> SenderTransactions { get; set; }
-
-        public List<Transaction> RecicipientTransactions { get; set; }
-
-        public List<Credit> Credits { get; set; }
     }
 }

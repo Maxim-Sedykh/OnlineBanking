@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Application.Services
 {
+    /// <inheritdoc/>
     public class CardService : ICardService
     {
         private readonly IBaseRepository<Card> _cardRepository;
@@ -34,6 +35,7 @@ namespace OnlineBanking.Application.Services
             _logger = logger;
         }
 
+        /// <inheritdoc/>
         public async Task<Result<Card>> CreateCardForAccount(long accountId)
         {
             try
@@ -94,6 +96,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<CardViewModel>> GetCardByAccountId(long accountId)
         {
             try

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.AccountType
 {
-    public class AccountTypeViewModel
+    /// <summary>
+    /// Модель представления для получения подробной информации по типам счёта
+    /// </summary>
+    public record AccountTypeViewModel
     {
         public byte Id { get; set; }
 

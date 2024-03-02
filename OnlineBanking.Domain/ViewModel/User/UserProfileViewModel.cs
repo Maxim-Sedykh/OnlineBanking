@@ -10,7 +10,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.User
 {
-    public class UserProfileViewModel
+    /// <summary>
+    /// Модель представления для получения всей информации пользователя
+    /// </summary>
+    public record UserProfileViewModel
     {
         public long Id { get; set; }
         

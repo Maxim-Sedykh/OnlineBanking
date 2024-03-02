@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Application.Services
 {
+    /// <inheritdoc/>
     public class AccountService : IAccountService
     {
         private readonly IBaseRepository<Account> _accountReporisoty;
@@ -35,6 +36,7 @@ namespace OnlineBanking.Application.Services
             _accountTypeReporisoty = accountTypeReporisoty;
         }
 
+        /// <inheritdoc/>
         public async Task<Result<Account>> AddMoneyToAccount(AccountMoneyViewModel viewModel)
         {
             try
@@ -69,6 +71,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<Account>> CreateNewAccount(CreateAccountViewModel viewModel, string userName)
         {
             try
@@ -110,6 +113,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<bool>> DeleteAccountById(AccountDeleteViewModel viewModel)
         {
             try
@@ -153,6 +157,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<AccountMoneyViewModel>> GetAccountById(int id)
         {
             try
@@ -184,6 +189,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<Result<CreateAccountViewModel>> GetAccountTypeNames()
         {
             try
@@ -222,6 +228,7 @@ namespace OnlineBanking.Application.Services
             }
         }
 
+        /// <inheritdoc/>
         public async Task<CollectionResult<AccountTypeViewModel>> GetAccountTypes()
         {
             AccountTypeViewModel[] accountTypes;

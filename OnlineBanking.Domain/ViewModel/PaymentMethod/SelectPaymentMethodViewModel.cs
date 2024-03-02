@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.PaymentMethod
 {
-    public class SelectPaymentMethodViewModel
+    /// <summary>
+    /// Модель представления для поля для выбора метода платежа при совершении транзакции
+    /// </summary>
+    public record SelectPaymentMethodViewModel
     {
         public byte Id { get; set; }
 

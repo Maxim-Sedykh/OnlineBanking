@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Auth
 {
-    public class UserViewModel
+    /// <summary>
+    /// Модель представления для получения подробное информации о пользователе
+    /// </summary>
+    public record UserViewModel
     {
         public long Id { get; set; }
 

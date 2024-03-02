@@ -11,20 +11,24 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineBanking.Controllers
 {
-    public class UserController : Controller
+    [Authorize]
+    public class UserProfileController : Controller
     {
-        [Authorize]
-        private readonly IUserService _userService;
+        private readonly IUserProfileService _userProfileService;
 
-        public UserController(IUserService userService)
+        public UserProfileController(IUserProfileService userService)
         {
-            _userService = userService;
+            _userProfileService = userService;
         }
 
+        /// <summary>
+        /// Переход на страницу профиля пользователя (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> UserProfile()
+        public async Task<IActionResult> GetUserProfile()
         {
-            var response = await _userService.GetUserProfile(User.Identity.Name);
+            var response = await _userProfileService.GetUserProfile(User.Identity.Name);
             if (response.IsSuccess)
             {
                 return View(response.Data);
@@ -32,7 +36,12 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Редактировать данные пользователя (PUT)
+        /// </summary>
+        /// <param name="viemModel"></param>
+        /// <returns></returns>
+        [HttpPut]
         public async Task<IActionResult> EditUserData(UserProfileViewModel viemModel)
         {
             ModelState.Remove("Id");
@@ -44,15 +53,9 @@ namespace OnlineBanking.Controllers
                 {
                     imageData = binaryReader.ReadBytes((int)viemModel.Avatar.Length);
                 }
-                await _userService.EditUserInfo(viemModel, imageData);
+                await _userProfileService.EditUserInfo(viemModel, imageData);
             }
             return RedirectToAction("UserProfile");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineBanking.Domain.ViewModel.Auth
 {
-    public class RegisterUserViewModel
+    /// <summary>
+    /// Модель представления для регистрации пользователя
+    /// </summary>
+    public record RegisterUserViewModel
     {
         public string Username { get; set; }
 

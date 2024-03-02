@@ -11,6 +11,10 @@ namespace OnlineBanking.Application.DependencyInjection
 {
     public static class DependencyInjection
     {
+        /// <summary>
+        /// Внедрение зависимостей слоя Application
+        /// </summary>
+        /// <param name="services"></param>
         public static void AddApplication(this IServiceCollection services)
         {
             InitServices(services);
@@ -19,7 +23,7 @@ namespace OnlineBanking.Application.DependencyInjection
         private static void InitServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<ITransactionService, TransactionService>();

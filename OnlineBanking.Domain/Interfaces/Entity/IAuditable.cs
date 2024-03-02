@@ -8,8 +8,14 @@ namespace OnlineBanking.Domain.Interfaces.Entity
 {
     public interface IAuditable
     {
+        /// <summary>
+        /// Когда создан 
+        /// </summary>
         public DateTime CreatedAt { get; set; }
 
+        /// <summary>
+        /// Когда в последний раз был обновлён
+        /// </summary>
         public DateTime LastUpdatedAt { get; set; }
     }
 }

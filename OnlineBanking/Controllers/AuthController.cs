@@ -20,9 +20,18 @@ namespace OnlineBanking.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Переход на модальное окно логина пользователя (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Login() => PartialView();
 
+        /// <summary>
+        /// Логин пользователя (POST)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Login(LoginUserViewModel model)
         {
@@ -37,9 +46,18 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Переход на страницу для регистрации (GET)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Register() => View();
 
+        /// <summary>
+        /// Регистрация пользователя (POST)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Register(RegisterUserViewModel model)
         {
@@ -54,6 +72,10 @@ namespace OnlineBanking.Controllers
             return View("Error", $"{response.ErrorMessage}");
         }
 
+        /// <summary>
+        /// Выход пользователя из аккаунта
+        /// </summary>
+        /// <returns></returns>
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {

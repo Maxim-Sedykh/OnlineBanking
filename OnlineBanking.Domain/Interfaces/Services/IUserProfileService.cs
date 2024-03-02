@@ -9,7 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OnlineBanking.Domain.Interfaces.Services
 {
-    public interface IUserService
+    public interface IUserProfileService
     {
         Task<Result<UserProfileViewModel>> GetUserProfile(string userName);
 
