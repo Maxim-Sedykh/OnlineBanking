@@ -22,11 +22,15 @@
             <a href="#section-2"><i class="fa fa-angle-double-down fa-3x" aria-hidden="true"></i></a>
         </div>
     </div>
-    <p class="text-center my-5 fs-3" id="section-2">
-        Типы счётов, которые поддерживает даннный банк
-    </p>
-    <img src="https://thumbs.dreamstime.com/b/bank-check-banknotes-flat-icon-white-blank-generic-golden-coins-isolated-background-eps-file-available-91596475.jpg" 
-    class="img-fluid mx-auto d-block mb-5" style="height:300px; width:300px;"/>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <p class="text-center my-5 fs-3" id="section-2">
+                Типы счётов, которые поддерживает даннный банк
+            </p>
+            <img src="https://thumbs.dreamstime.com/b/bank-check-banknotes-flat-icon-white-blank-generic-golden-coins-isolated-background-eps-file-available-91596475.jpg"
+                 class="img-fluid mb-5" style="height:300px; width:300px;" />
+        </div>
+    </div>
     <div class="row">
         @foreach (var accountType in Model)
         {
@@ -51,7 +55,9 @@
             Типы банковских карт, которые поддерживает даннный банк
         </p>
         <div class="col-md-6">
-            <img src="https://www.digiseller.ru/preview/1035416/p1_3334105_43dc6afb.png" class="img-fluid d-block mx-auto" style="width:300px;"/>
+            <div class="text-center">
+                <img src="https://www.digiseller.ru/preview/1035416/p1_3334105_43dc6afb.png" class="img-fluid" style="width:300px;" />
+            </div>
             <p class="text-center fs-4">
                 Кредитная карта
             </p>
@@ -68,7 +74,9 @@
             </p>
         </div>
         <div class="col-md-6">
-            <img src="https://pngimg.com/uploads/credit_card/credit_card_PNG207.png" class="img-fluid d-block mx-auto" style="width:300px;" />
+            <div class="text-center">
+                <img src="https://pngimg.com/uploads/credit_card/credit_card_PNG207.png" class="img-fluid" style="width:300px;" />
+            </div>
             <p class="text-center fs-4">
                 Дебетовая карта
             </p>

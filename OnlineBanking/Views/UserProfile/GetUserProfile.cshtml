@@ -3,7 +3,7 @@
 
 <div class="container pb-5" style="min-height:1300px;">
     <p class="text-center fs-4 mt-2">Аватар</p>
-    <form asp-controller="User" asp-action="EditUserData" enctype="multipart/form-data" method="post">
+    <form asp-controller="UserProfile" asp-action="EditUserData" enctype="multipart/form-data" method="post">
         <div>
             <input asp-for="Id" type="hidden" value="@Model.Id">
             <input asp-for="Username" type="hidden" value="@Model.Username">
@@ -16,16 +16,16 @@
             <input asp-for="CreatedAt" type="hidden" value="@Model.CreatedAt">
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 text-center">
                 @if (Model.Avatar == null && Model.Image == null)
                 {
-                    <img class="img-fluid rounded-circle d-block mx-auto my-4" src="~/images/\default-avatar.jpeg" style="width:300px;">
+                    <img class="img-fluid rounded-circle my-4" src="~/images/\default-avatar.jpeg" style="width:300px;">
                     <input asp-for="@Model.Avatar" class="form-control w-50 mx-auto" type="file">
                 }
                 else
                 {
                     <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())" style="height: 300px; width:300px;"
-                         class="img-fluid rounded-circle d-block mx-auto my-4">
+                         class="img-fluid rounded-circle my-4">
                 }
             </div>
             <div class="col-md-12 my-5 text-center">
@@ -33,7 +33,7 @@
                 <a class="btn btn-primary" asp-controller="Credit" asp-action="GetCreditInfo" role="button">Кредиты</a>
             </div>
         </div>
-        <div class="row border my-3 py-3">
+        <div class="row border my-3 py-3 text-center">
             <p class="text-center fs-4">Личные данные</p>
             <div class="col-md-6 ps-5 m-auto" style="padding-right:15%;">
                 <div class="my-3 d-flex justify-content-end">
@@ -63,25 +63,27 @@
                     <label>Создан</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.CreatedAt" type="date" disabled>
                 </div>
             </div>
-            <div class="col-md-12"><button type="submit" class="btn btn-primary  d-block mx-auto">Редактировать</button></div>
+            <div class="col-md-12"><button type="submit" class="btn btn-primary">Редактировать</button></div>
         </div>
     </form>
-        <div class="row" style="margin: 0px 150px 0px 150px;">
-            <p class="fs-4 text-center">Ваши счета</p>
-            <div>
-            <button class="btn btn-success mt-2 ms-2 d-block" type="button" onclick="openModal({ url: '/Account/CreateAccount', modalId: 'modalWindow', modalTitle:'Создание счёта' })" 
-            data-toggle="ajax-modal" data-target="Modal"><i class="fa fa-plus-square me-2" aria-hidden="true"></i>Создать счёт</button>
-            </div>
-            @for (int i = 0; i < Model.UserAccounts.Count; i++)
-            {
-                <div class="col-md-10 my-3 bg-dark d-flex justify-content-between br-15 pe-5">
-                    <div class="py-5 ps-5">
-                        <img src="/images/default-account.png" class="img-fluid rounded-circle" style="height:50px; width:50px;">
-                    </div>
-                    <div class="w-50 text-white pt-4">
-                        <p>Имя счёта: @Model.UserAccounts[i].AccountName</p>
-                        <p class="mb-0">Баланс: @Model.UserAccounts[i].BalanceAmount.ToString("0.00") ₽</p>
-                        <div class="d-flex flex-row">
+    <div class="row" style="margin: 0px 150px 0px 150px;">
+        <p class="fs-4 text-center">Ваши счета</p>
+        <div>
+            <button class="btn btn-success mt-2 ms-2" type="button" onclick="openModal({ url: '/Account/CreateAccount', modalId: 'modalWindow', modalTitle:'Создание счёта' })"
+                    data-toggle="ajax-modal" data-target="Modal">
+                <i class="fa fa-plus-square me-2" aria-hidden="true"></i>Создать счёт
+            </button>
+        </div>
+        @for (int i = 0; i < Model.UserAccounts.Count; i++)
+        {
+            <div class="col-md-10 my-3 bg-dark d-flex justify-content-between br-15 pe-5">
+                <div class="py-5 ps-5">
+                    <img src="/images/default-account.png" class="img-fluid rounded-circle" style="height:50px; width:50px;">
+                </div>
+                <div class="w-50 text-white pt-4">
+                    <p>Имя счёта: @Model.UserAccounts[i].AccountName</p>
+                    <p class="mb-0">Баланс: @Model.UserAccounts[i].BalanceAmount.ToString("0.00") ₽</p>
+                    <div class="d-flex flex-row">
                         <button type="button" class="btn @(Model.UserAccounts[i].IsCardLinked ? "btn-outline-success" : "btn-outline-danger") rounded-circle p-0 my-3"
                                 style="width:48px; height:48px;" disabled>
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
@@ -103,32 +105,32 @@
                             </form>
 
                         }
-                        </div>
-                    </div>
-                    <div class="w-25 text-white pt-3">
-                        <p>Тип счёта: @Model.UserAccounts[i].AccountTypeName</p>
-                        <p>Создан: @Model.UserAccounts[i].CreatedAt</p>
                     </div>
                 </div>
-                <div class="col-md-2 br-15 my-3">
-                    <div class="bg-dark h-100 br-15 text-center">
+                <div class="w-25 text-white pt-3">
+                    <p>Тип счёта: @Model.UserAccounts[i].AccountTypeName</p>
+                    <p>Создан: @Model.UserAccounts[i].CreatedAt</p>
+                </div>
+            </div>
+            <div class="col-md-2 br-15 my-3">
+                <div class="bg-dark h-100 br-15 text-center">
                     <button type="button" class="btn btn-outline-success rounded-circle px-2 my-3" style="width:48px; height:48px;"
                             onclick="openModal({ url: '/Account/AddMoneyToAccount/@Model.UserAccounts[i].Id', modalId: 'modalWindow', modalTitle:'Пополнение счёта' })"
                             data-toggle="ajax-modal" data-target="Modal">
                         <i class="fa fa-cart-plus" aria-hidden="true"></i>
                     </button>
-                        <br />
-                        <form id="deleteAccountForm-@i">
-                            <input type="hidden" name="id" id="id-@i" value="@Model.UserAccounts[i].Id">
-                            <input type="hidden" name="balance" id="balance-@i" value="@Model.UserAccounts[i].BalanceAmount">
-                            <button type="submit" class="btn btn-outline-danger rounded-circle" onclick="deleteAccount(event, @i)" style="width:48px; height:48px;">
-                                <i class="fa fa-times fa-2x"></i>
-                            </button>
-                        </form>
-                    </div>
+                    <br />
+                    <form id="deleteAccountForm-@i">
+                        <input type="hidden" name="id" id="id-@i" value="@Model.UserAccounts[i].Id">
+                        <input type="hidden" name="balance" id="balance-@i" value="@Model.UserAccounts[i].BalanceAmount">
+                        <button type="submit" class="btn btn-outline-danger rounded-circle" onclick="deleteAccount(event, @i)" style="width:48px; height:48px;">
+                            <i class="fa fa-times fa-2x"></i>
+                        </button>
+                    </form>
                 </div>
-            }
-        </div>
+            </div>
+        }
+    </div>
 
 </div>
 

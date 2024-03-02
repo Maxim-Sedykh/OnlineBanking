@@ -331,6 +331,7 @@ namespace OnlineBanking.Application.Services
             try
             {
                 var user = await _userRepository.GetAll()
+                    .Include(x => x.UserProfile)
                     .FirstOrDefaultAsync(x => x.Username == userName);
 
                 if (user == null)

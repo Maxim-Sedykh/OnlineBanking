@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Auth;
-using OnlineBanking.Models;
 using System.Diagnostics;
 using System.Security.Claims;
 

@@ -31,7 +31,7 @@
                                 <li class="nav-item">
                                     @if (User.Identity.IsAuthenticated)
                                     {
-                                        <a asp-controller="User" asp-action="UserProfile"><i class="far fa-user-circle fa-2x text-white mx-2" aria-hidden="true"></i></a>
+                                        <a asp-controller="UserProfile" asp-action="GetUserProfile"><i class="far fa-user-circle fa-2x text-white mx-2" aria-hidden="true"></i></a>
                                     }
                                     else
                                     {

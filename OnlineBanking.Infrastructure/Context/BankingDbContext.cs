@@ -21,6 +21,7 @@ namespace OnlineBanking.DAL.Context
         public DbSet<Card> Cards { get; set; }
         public DbSet<AccountType> AccountTypes { get; set; }
         public DbSet<CreditType> CreditTypes { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
         public BankingDbContext(DbContextOptions<BankingDbContext> options) : base(options)
         {

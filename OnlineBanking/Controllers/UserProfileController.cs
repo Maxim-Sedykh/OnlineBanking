@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBanking.Application.Services;
 using OnlineBanking.Domain.Interfaces.Services;
-using OnlineBanking.Models;
 using System.Diagnostics;
 using System.Security.Claims;
 using OnlineBanking.Domain.ViewModel.User;
