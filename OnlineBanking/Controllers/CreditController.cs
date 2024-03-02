@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.ViewModel.Credit;
+using System.Net;
 using System.Reflection.Metadata.Ecma335;
 
 namespace OnlineBanking.Controllers
@@ -26,7 +27,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace OnlineBanking.Controllers
             {
                 return RedirectToAction("GetCreditInfo", "Credit");
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
         
         /// <summary>
@@ -73,7 +74,7 @@ namespace OnlineBanking.Controllers
             {
                 return RedirectToAction("GetCreditInfo", "Credit");
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
         /// <summary>
@@ -103,7 +104,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

@@ -39,221 +39,151 @@ namespace OnlineBanking.Application.Services
         /// <inheritdoc/>
         public async Task<Result<Account>> AddMoneyToAccount(AccountMoneyViewModel viewModel)
         {
-            try
+            var account = await _accountReporisoty.GetAll().FirstOrDefaultAsync(x => x.Id == viewModel.Id);
+            if (account == null)
             {
-                var account = await _accountReporisoty.GetAll().FirstOrDefaultAsync(x => x.Id == viewModel.Id);
-                if (account == null)
-                {
-                    return new Result<Account>
-                    {
-                        ErrorCode = (int)StatusCode.AccountAlreadyExist,
-                        ErrorMessage = ErrorMessage.AccountAlreadyExist,
-                    };
-                }
-
-                account.BalanceAmount += viewModel.BalanceAmount;
-
-                await _accountReporisoty.UpdateAsync(account);
-
                 return new Result<Account>
                 {
-                    Data = account,
+                    ErrorCode = (int)StatusCode.AccountAlreadyExist,
+                    ErrorMessage = ErrorMessage.AccountAlreadyExist,
                 };
             }
-            catch (Exception ex)
+
+            account.BalanceAmount += viewModel.BalanceAmount;
+
+            await _accountReporisoty.UpdateAsync(account);
+
+            return new Result<Account>
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<Account>()
-                {
-                    ErrorCode = (int)StatusCode.InternalServerError,
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                };
-            }
+                Data = account,
+            };
         }
 
         /// <inheritdoc/>
         public async Task<Result<Account>> CreateNewAccount(CreateAccountViewModel viewModel, string userName)
         {
-            try
+            var user = await _userReporisoty.GetAll().FirstOrDefaultAsync(x => x.Username == userName);
+            if (user == null)
             {
-                var user = await _userReporisoty.GetAll().FirstOrDefaultAsync(x => x.Username == userName);
-                if (user == null)
-                {
-                    return new Result<Account>
-                    {
-                        ErrorCode = (int)StatusCode.UserNotFound,
-                        ErrorMessage = ErrorMessage.UserNotFound,
-                    };
-                }
-
-                Account account = new Account()
-                {
-                    AccountName = viewModel.AccountName,
-                    UserId = user.Id,
-                    AccountTypeId = viewModel.SelectedAccountTypeId,
-                    BalanceAmount = 0.00m,
-                    CreatedAt = DateTime.UtcNow,
-                };
-
-                await _accountReporisoty.CreateAsync(account);
-
                 return new Result<Account>
                 {
-                    Data = account,
+                    ErrorCode = (int)StatusCode.UserNotFound,
+                    ErrorMessage = ErrorMessage.UserNotFound,
                 };
             }
-            catch (Exception ex)
+
+            Account account = new Account()
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<Account>()
-                {
-                    ErrorCode = (int)StatusCode.InternalServerError,
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                };
-            }
+                AccountName = viewModel.AccountName,
+                UserId = user.Id,
+                AccountTypeId = viewModel.SelectedAccountTypeId,
+                BalanceAmount = 0.00m,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            await _accountReporisoty.CreateAsync(account);
+
+            return new Result<Account>
+            {
+                Data = account,
+            };
         }
 
         /// <inheritdoc/>
         public async Task<Result<bool>> DeleteAccountById(AccountDeleteViewModel viewModel)
         {
-            try
+            var account = await _accountReporisoty.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == viewModel.Id);
+            if (account == null)
             {
-                var account = await _accountReporisoty.GetAll()
-                    .FirstOrDefaultAsync(x => x.Id == viewModel.Id);
-                if (account == null)
-                {
-                    return new Result<bool>()
-                    {
-                        ErrorCode = (int)StatusCode.AccountNotFound,
-                        ErrorMessage = ErrorMessage.AccountNotFound,
-                    };
-                }
-
-                if (account.BalanceAmount != 0.00m)
-                {
-                    return new Result<bool>()
-                    {
-                        ErrorCode = (int)StatusCode.AccountBalanceNotEmpty,
-                        ErrorMessage = ErrorMessage.AccountBalanceNotEmpty,
-                    };
-                }
-
-                await _accountReporisoty.RemoveAsync(account);
-
                 return new Result<bool>()
                 {
-                    SuccessMessage = SuccessMessage.DeleteAccountMessage,
-                    Data = true,
+                    ErrorCode = (int)StatusCode.AccountNotFound,
+                    ErrorMessage = ErrorMessage.AccountNotFound,
                 };
             }
-            catch (Exception ex)
+
+            if (account.BalanceAmount != 0.00m)
             {
-                _logger.Error(ex, ex.Message);
                 return new Result<bool>()
                 {
-                    ErrorCode = (int)StatusCode.InternalServerError,
-                    ErrorMessage = ErrorMessage.InternalServerError,
+                    ErrorCode = (int)StatusCode.AccountBalanceNotEmpty,
+                    ErrorMessage = ErrorMessage.AccountBalanceNotEmpty,
                 };
             }
+
+            await _accountReporisoty.RemoveAsync(account);
+
+            return new Result<bool>()
+            {
+                SuccessMessage = SuccessMessage.DeleteAccountMessage,
+                Data = true,
+            };
         }
 
         /// <inheritdoc/>
         public async Task<Result<AccountMoneyViewModel>> GetAccountById(int id)
         {
-            try
+            var account = await _accountReporisoty.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (account == null)
             {
-                var account = await _accountReporisoty.GetAll()
-                    .FirstOrDefaultAsync(x => x.Id == id);
-                if (account == null)
+                return new Result<AccountMoneyViewModel>()
                 {
-                    return new Result<AccountMoneyViewModel>()
-                    {
-                        ErrorCode = (int)StatusCode.AccountNotFound,
-                        ErrorMessage = ErrorMessage.AccountNotFound,
-                    };
-                }
+                    ErrorCode = (int)StatusCode.AccountNotFound,
+                    ErrorMessage = ErrorMessage.AccountNotFound,
+                };
+            }
 
-                return new Result<AccountMoneyViewModel>()
-                {
-                    Data = account.Adapt<AccountMoneyViewModel>(),
-                };
-            }
-            catch (Exception ex)
+            return new Result<AccountMoneyViewModel>()
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<AccountMoneyViewModel>()
-                {
-                    ErrorCode = (int)StatusCode.InternalServerError,
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                };
-            }
+                Data = account.Adapt<AccountMoneyViewModel>(),
+            };
         }
 
         /// <inheritdoc/>
         public async Task<Result<CreateAccountViewModel>> GetAccountTypeNames()
         {
-            try
-            {
-                var accountTypes = await _accountTypeReporisoty.GetAll()
-                    .Select(x => new SelectAccountTypeViewModel
-                    {
-                        Id = x.Id,
-                        AccountTypeName = x.AccountTypeName,
-                    }).ToListAsync();
-                if (accountTypes == null)
+            var accountTypes = await _accountTypeReporisoty.GetAll()
+                .Select(x => new SelectAccountTypeViewModel
                 {
-                    return new Result<CreateAccountViewModel>()
-                    {
-                        ErrorCode = (int)StatusCode.AccountTypesNotFound,
-                        ErrorMessage = ErrorMessage.AccountTypesNotFound,
-                    };
-                }
+                    Id = x.Id,
+                    AccountTypeName = x.AccountTypeName,
+                }).ToListAsync();
+            if (accountTypes == null)
+            {
+                return new Result<CreateAccountViewModel>()
+                {
+                    ErrorCode = (int)StatusCode.AccountTypesNotFound,
+                    ErrorMessage = ErrorMessage.AccountTypesNotFound,
+                };
+            }
 
-                return new Result<CreateAccountViewModel>()
-                {
-                    Data = new CreateAccountViewModel
-                    {
-                        AccountTypes = accountTypes,
-                    },
-                };
-            }
-            catch (Exception ex)
+            return new Result<CreateAccountViewModel>()
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<CreateAccountViewModel>()
+                Data = new CreateAccountViewModel
                 {
-                    ErrorCode = (int)StatusCode.InternalServerError,
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                };
-            }
+                    AccountTypes = accountTypes,
+                },
+            };
         }
 
         /// <inheritdoc/>
         public async Task<CollectionResult<AccountTypeViewModel>> GetAccountTypes()
         {
             AccountTypeViewModel[] accountTypes;
-            try
-            {
-                accountTypes = await _accountTypeReporisoty.GetAll()
-                    .Select(x => new AccountTypeViewModel
-                    {
-                        Id = x.Id,
-                        AccountTypeName = x.AccountTypeName,
-                        Description = x.Description,
-                        AnnualInterestRate  = x.AnnualInterestRate,
-                        CreatedAt = x.CreatedAt,
-                    })
-                    .ToArrayAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, ex.Message);
-                return new CollectionResult<AccountTypeViewModel>()
+
+            accountTypes = await _accountTypeReporisoty.GetAll()
+                .Select(x => new AccountTypeViewModel
                 {
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                    ErrorCode = (int)StatusCode.InternalServerError
-                };
-            }
+                    Id = x.Id,
+                    AccountTypeName = x.AccountTypeName,
+                    Description = x.Description,
+                    AnnualInterestRate  = x.AnnualInterestRate,
+                    CreatedAt = x.CreatedAt,
+                })
+                .ToArrayAsync();
+            
 
             if (!accountTypes.Any())
             {

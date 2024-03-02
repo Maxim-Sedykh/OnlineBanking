@@ -39,8 +39,8 @@ namespace OnlineBanking.Application.Services
         /// <inheritdoc/>
         public async Task<Result<UserProfileViewModel>> GetUserProfile(string userName)
         {
-            try
-            {
+            throw new Exception("ОШИБОЧКА ВЫШЛА");
+
                 var userProfileViewModel = await _userRepository.GetAll()
                     .Where(x => x.Username == userName)
                     .Include(x => x.UserProfile)
@@ -74,18 +74,6 @@ namespace OnlineBanking.Application.Services
                 {
                     Data = userProfileViewModel
                 };
-
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, ex.Message);
-                return new Result<UserProfileViewModel>()
-                {
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                    ErrorCode = (int)StatusCode.InternalServerError
-                };
-            }
         }
 
         /// <inheritdoc/>

@@ -43,44 +43,31 @@ namespace OnlineBanking.Application.Services
         /// <inheritdoc/>
         public async Task<Result<ClaimsIdentity>> Login(LoginUserViewModel viewModel)
         {
-            try
+            var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Email == viewModel.Email);
+            if (user == null)
             {
-                var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Email == viewModel.Email);
-                if (user == null)
-                {
-                    return new Result<ClaimsIdentity>()
-                    {
-                        ErrorMessage = ErrorMessage.UserNotFound,
-                        ErrorCode = (int)StatusCode.UserNotFound,
-                    };
-                }
-
-                if (!IsVerifyPassword(user.Password, viewModel.Password))
-                {
-                    return new Result<ClaimsIdentity>()
-                    {
-                        ErrorMessage = ErrorMessage.PasswordIsWrong,
-                        ErrorCode = (int)StatusCode.PasswordIsWrong,
-                    };
-                }
-
-                var result = Authenticate(user);
-
                 return new Result<ClaimsIdentity>()
                 {
-                    Data = result,
+                    ErrorMessage = ErrorMessage.UserNotFound,
+                    ErrorCode = (int)StatusCode.UserNotFound,
                 };
-
             }
-            catch (Exception ex)
+
+            if (!IsVerifyPassword(user.Password, viewModel.Password))
             {
-                _logger.Error(ex, ex.Message);
                 return new Result<ClaimsIdentity>()
                 {
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                    ErrorCode = (int)StatusCode.InternalServerError
+                    ErrorMessage = ErrorMessage.PasswordIsWrong,
+                    ErrorCode = (int)StatusCode.PasswordIsWrong,
                 };
             }
+
+            var result = Authenticate(user);
+
+            return new Result<ClaimsIdentity>()
+            {
+                Data = result,
+            };
         }
 
         /// <inheritdoc/>
@@ -95,57 +82,45 @@ namespace OnlineBanking.Application.Services
                 };
             }
 
-            try
+            var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.Username);
+            if (user != null)
             {
-                var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.Username);
-                if (user != null)
+                return new Result<ClaimsIdentity>()
                 {
-                    return new Result<ClaimsIdentity>()
-                    {
-                        ErrorMessage = ErrorMessage.UserAlreadyExist,
-                        ErrorCode = (int)StatusCode.UserAlreadyExist,
-                    };
-                }
-
-                user = new User()
-                {
-                    Username = model.Username,
-                    Email = model.Email,
-                    Password = HashPasswordHelper.HashPassword(model.Password),
-                    Role = Role.User,
-                    CreatedAt = DateTime.UtcNow,
+                    ErrorMessage = ErrorMessage.UserAlreadyExist,
+                    ErrorCode = (int)StatusCode.UserAlreadyExist,
                 };
+            }
 
-                UserProfile userProfile = new UserProfile()
-                {
-                    Firstname = model.Firstname,
-                    Surname = model.Surname,
-                    IsOnlineBankingUser = true,
-                    City = model.City,
-                    Street = model.Street,
-                    ZipCode = model.ZipCode,
-                };
+            user = new User()
+            {
+                Username = model.Username,
+                Email = model.Email,
+                Password = HashPasswordHelper.HashPassword(model.Password),
+                Role = Role.User,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            UserProfile userProfile = new UserProfile()
+            {
+                Firstname = model.Firstname,
+                Surname = model.Surname,
+                IsOnlineBankingUser = true,
+                City = model.City,
+                Street = model.Street,
+                ZipCode = model.ZipCode,
+            };
                 
 
-                await _userRepository.CreateAsync(user);
-                await _userProfileRepository.CreateAsync(userProfile);
+            await _userRepository.CreateAsync(user);
+            await _userProfileRepository.CreateAsync(userProfile);
 
-                var result = Authenticate(user);
+            var result = Authenticate(user);
 
-                return new Result<ClaimsIdentity>()
-                {
-                    Data = result,
-                };
-            }
-            catch (Exception ex)
+            return new Result<ClaimsIdentity>()
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<ClaimsIdentity>()
-                {
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                    ErrorCode = (int)StatusCode.InternalServerError
-                };
-            }
+                Data = result,
+            };
         }
 
         private bool IsVerifyPassword(string userPasswordHash, string userPassword)

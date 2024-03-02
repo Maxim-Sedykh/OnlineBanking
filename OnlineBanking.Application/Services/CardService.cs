@@ -38,96 +38,72 @@ namespace OnlineBanking.Application.Services
         /// <inheritdoc/>
         public async Task<Result<Card>> CreateCardForAccount(long accountId)
         {
-            try
+            var account = await _accountRepository.GetAll()
+                .Where(x => x.Id == accountId)
+                .FirstOrDefaultAsync();
+
+            if (account == null)
             {
-                var account = await _accountRepository.GetAll()
-                    .Where(x => x.Id == accountId)
-                    .FirstOrDefaultAsync();
-
-                if (account == null)
-                {
-                    return new Result<Card>()
-                    {
-                        ErrorCode = (int)StatusCode.AccountNotFound,
-                        ErrorMessage = ErrorMessage.AccountNotFound,
-                    };
-                }
-
-                var cards = await _cardRepository.GetAll().ToListAsync();
-
-                Card currentCard = new()
-                {
-                    CardNumber = BankCardDataGenerator.GenerateCardNumber(),
-                    Validity = DateTime.UtcNow.AddYears(7),
-                    CVV = BankCardDataGenerator.GenerateCVV(),
-                    AccountId = accountId,
-                    CreatedAt = DateTime.UtcNow,
-                };
-
-                if (cards.Any(c => c.CardNumber == currentCard.CardNumber))
-                {
-                    return new Result<Card>
-                    {
-                        ErrorCode = (int)StatusCode.TryAgain,
-                        ErrorMessage = ErrorMessage.TryAgain,
-                    };
-                }
-
-                await _cardRepository.CreateAsync(currentCard);
-
-                account.IsCardLinked = true;
-
-                await _accountRepository.UpdateAsync(account);
-
                 return new Result<Card>()
                 {
-                    SuccessMessage = SuccessMessage.LinkCardMessage,
-                    Data = currentCard,
+                    ErrorCode = (int)StatusCode.AccountNotFound,
+                    ErrorMessage = ErrorMessage.AccountNotFound,
                 };
             }
-            catch (Exception ex)
+
+            var cards = await _cardRepository.GetAll().ToListAsync();
+
+            Card currentCard = new()
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<Card>()
+                CardNumber = BankCardDataGenerator.GenerateCardNumber(),
+                Validity = DateTime.UtcNow.AddYears(7),
+                CVV = BankCardDataGenerator.GenerateCVV(),
+                AccountId = accountId,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            if (cards.Any(c => c.CardNumber == currentCard.CardNumber))
+            {
+                return new Result<Card>
                 {
-                    ErrorCode = (int)StatusCode.InternalServerError,
-                    ErrorMessage = ErrorMessage.InternalServerError,
+                    ErrorCode = (int)StatusCode.TryAgain,
+                    ErrorMessage = ErrorMessage.TryAgain,
                 };
             }
+
+            await _cardRepository.CreateAsync(currentCard);
+
+            account.IsCardLinked = true;
+
+            await _accountRepository.UpdateAsync(account);
+
+            return new Result<Card>()
+            {
+                SuccessMessage = SuccessMessage.LinkCardMessage,
+                Data = currentCard,
+            };
         }
 
         /// <inheritdoc/>
         public async Task<Result<CardViewModel>> GetCardByAccountId(long accountId)
         {
-            try
+            var card = await _cardRepository.GetAll()
+                .Where(x => x.AccountId == accountId)
+                .FirstOrDefaultAsync();
+
+            if (card == null)
             {
-                var card = await _cardRepository.GetAll()
-                    .Where(x => x.AccountId == accountId)
-                    .FirstOrDefaultAsync();
-
-                if (card == null)
-                {
-                    return new Result<CardViewModel>()
-                    {
-                        ErrorCode = (int)StatusCode.CardNotFound,
-                        ErrorMessage = ErrorMessage.CardNotFound,
-                    };
-                }
-
                 return new Result<CardViewModel>()
                 {
-                    Data = card.Adapt<CardViewModel>()
+                    ErrorCode = (int)StatusCode.CardNotFound,
+                    ErrorMessage = ErrorMessage.CardNotFound,
                 };
             }
-            catch (Exception ex)
+
+            return new Result<CardViewModel>()
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<CardViewModel>()
-                {
-                    ErrorCode = (int)StatusCode.InternalServerError,
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                };
-            }
+                Data = card.Adapt<CardViewModel>()
+            };
         }
     }
 }

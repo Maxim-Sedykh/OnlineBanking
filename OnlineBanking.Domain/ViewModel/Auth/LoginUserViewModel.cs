@@ -13,6 +13,7 @@ namespace OnlineBanking.Domain.ViewModel.Auth
     public record LoginUserViewModel
     {
         [EmailAddress]
+        [Required(ErrorMessage = "Введите вашу почту")]
         public string Email { get; set; }
 
         [DataType(DataType.Password)]

@@ -12,7 +12,7 @@ namespace OnlineBanking.Domain.ViewModel.Credit
     /// </summary>
     public record SetIncomeViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Укажите ваш доход")]
         public decimal UserIncome { get; set; }
 
         public bool IsIncomeVerified { get; set; }

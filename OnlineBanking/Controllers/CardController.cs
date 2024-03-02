@@ -8,6 +8,7 @@ using System.Diagnostics.Contracts;
 using OnlineBanking.Application.Services;
 using OnlineBanking.Domain.ViewModel.Card;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace OnlineBanking.Controllers
 {
@@ -50,7 +51,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

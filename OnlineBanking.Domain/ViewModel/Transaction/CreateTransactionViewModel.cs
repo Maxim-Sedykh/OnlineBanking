@@ -17,16 +17,16 @@ namespace OnlineBanking.Domain.ViewModel.Transaction
     /// </summary>
     public record CreateTransactionViewModel
     {
-        [Required(ErrorMessage = "Карта должна быть обязательно указана")]
-        [MaxLength]
         public string RecipientCardNumber { get; set; }
 
         public decimal MoneyAmount { get; set; }
 
+        [Required(ErrorMessage = "Укажите тип платежа")]
         public byte SelectedPaymentMethodId { get; set; }
 
         public List<SelectPaymentMethodViewModel> PaymentMethodNames { get; set; }
 
+        [Required(ErrorMessage = "Укажите счёт")]
         public long SelectedUserAccountId { get; set; }
 
         public List<AccountMoneyViewModel> UserAccounts { get; set; }

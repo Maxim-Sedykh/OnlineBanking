@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using OnlineBanking.Domain.ViewModel.User;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace OnlineBanking.Controllers
 {
@@ -32,7 +33,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
         /// <summary>
@@ -43,17 +44,12 @@ namespace OnlineBanking.Controllers
         [HttpPut]
         public async Task<IActionResult> EditUserData(UserProfileViewModel viemModel)
         {
-            ModelState.Remove("Id");
-            ModelState.Remove("CreatedAt");
-            if (ModelState.IsValid)
+            byte[] imageData;
+            using (var binaryReader = new BinaryReader(viemModel.Avatar.OpenReadStream()))
             {
-                byte[] imageData;
-                using (var binaryReader = new BinaryReader(viemModel.Avatar.OpenReadStream()))
-                {
-                    imageData = binaryReader.ReadBytes((int)viemModel.Avatar.Length);
-                }
-                await _userProfileService.EditUserInfo(viemModel, imageData);
+                imageData = binaryReader.ReadBytes((int)viemModel.Avatar.Length);
             }
+            await _userProfileService.EditUserInfo(viemModel, imageData);   
             return RedirectToAction("UserProfile");
         }
     }

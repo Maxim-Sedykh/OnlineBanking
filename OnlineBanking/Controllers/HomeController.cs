@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using OnlineBanking.Domain.ViewModel.Error;
 using System.Diagnostics;
 
 namespace OnlineBanking.Controllers
@@ -19,10 +20,11 @@ namespace OnlineBanking.Controllers
         /// Переход на страницу с ошибкой
         /// </summary>
         /// <returns></returns>
+        [Route("/home/error/{errorMessage}")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error(string ErrorMessage)
+        public IActionResult Error(string errorMessage)
         {
-            return View(ErrorMessage);
+            return View(new ErrorViewModel { ErrorMessage = errorMessage });
         }
     }
 }
