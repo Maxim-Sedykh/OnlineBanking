@@ -7,6 +7,6 @@ namespace OnlineBanking.Domain.Interfaces.Services
     {
         Task<Result<UserProfileViewModel>> GetUserProfile(string userName);
 
-        Task<Result.Result> EditUserInfo(UserProfileViewModel viewModel, byte[] imageData);
+        Task<Result.Result> EditUserInfo(UserProfileViewModel viewModel);
     }
 }

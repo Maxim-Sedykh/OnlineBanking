@@ -37,20 +37,16 @@ namespace OnlineBanking.Controllers
         }
 
         /// <summary>
-        /// Редактировать данные пользователя (PUT)
+        /// Редактировать данные пользователя (Post)
         /// </summary>
         /// <param name="viemModel"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> EditUserData(UserProfileViewModel viemModel)
         {
-            byte[] imageData;
-            using (var binaryReader = new BinaryReader(viemModel.Avatar.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)viemModel.Avatar.Length);
-            }
-            await _userProfileService.EditUserInfo(viemModel, imageData);   
-            return RedirectToAction("UserProfile");
+            
+            await _userProfileService.EditUserInfo(viemModel);   
+            return RedirectToAction("GetUserProfile");
         }
     }
 }

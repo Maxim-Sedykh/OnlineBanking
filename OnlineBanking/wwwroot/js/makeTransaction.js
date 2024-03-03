@@ -22,8 +22,6 @@
         confirmButtonColor: "#042b76",
         background: '#fff',
         color: 'black',
-    }).then(() => {
-        location.reload
     });
   
 }

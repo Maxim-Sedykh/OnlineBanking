@@ -63,7 +63,7 @@
                     <label>Создан</label>  <input class="form-control br-40 w-50 ms-2" asp-for="@Model.CreatedAt" type="date" disabled>
                 </div>
             </div>
-            <div class="col-md-12"><button type="submit" class="btn btn-primary">Редактировать</button></div>
+            <div class="col-md-12"><button type="submit" class="btn btn-primary" @(Model.Avatar == null ? string.Empty : "disabled")>Выставить аватар</button></div>
         </div>
     </form>
     <div class="row" style="margin: 0px 150px 0px 150px;">

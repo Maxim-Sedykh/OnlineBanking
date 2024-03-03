@@ -11,13 +11,6 @@ using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.AccountType;
-using OnlineBanking.Domain.ViewModel.Card;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineBanking.Application.Services
 {
@@ -32,13 +25,14 @@ namespace OnlineBanking.Application.Services
         private readonly IAccountTypeValidator _accountTypeValidator;
 
         public AccountService(IBaseRepository<Account> accountReporisoty, IBaseRepository<User> userReporisoty,
-            IBaseRepository<AccountType> accountTypeReporisoty, IUserValidator userValidator, IAccountTypeValidator accountTypeValidator)
+            IBaseRepository<AccountType> accountTypeReporisoty, IUserValidator userValidator, IAccountTypeValidator accountTypeValidator, IAccountValidator accountValidator)
         {
             _accountReporisoty = accountReporisoty;
             _userReporisoty = userReporisoty;
             _accountTypeReporisoty = accountTypeReporisoty;
             _userValidator = userValidator;
             _accountTypeValidator = accountTypeValidator;
+            _accountValidator = accountValidator;
         }
 
         /// <inheritdoc/>

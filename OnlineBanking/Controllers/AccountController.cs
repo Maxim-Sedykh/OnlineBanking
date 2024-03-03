@@ -38,17 +38,17 @@ namespace OnlineBanking.Controllers
         }
 
         /// <summary>
-        /// Пополнить баланс счёта (PUT)
+        /// Пополнить баланс счёта (POST)
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> AddMoneyToAccount(AccountMoneyViewModel viewModel)
         {
             var response = await _accountService.AddMoneyToAccount(viewModel);
             if (response.IsSuccess)
             {
-                return RedirectToAction("UserProfile", "User");
+                return RedirectToAction("GetUserProfile", "UserProfile");
             }
             return View("Error", $"{response.ErrorMessage}");
         }
@@ -78,17 +78,17 @@ namespace OnlineBanking.Controllers
             var response = await _accountService.CreateNewAccount(viewModel, User.Identity.Name);
             if (response.IsSuccess)
             {
-                return RedirectToAction("UserProfile", "User");
+                return RedirectToAction("GetUserProfile", "UserProfile");
             }
             return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
-        /// Удаление счёта, если баланс счёта пуст (DELETE)
+        /// Удаление счёта, если баланс счёта пуст (POST)
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpPost]
         public async Task<IActionResult> DeleteAccountById([FromBody] AccountDeleteViewModel model)
         {
             var response = await _accountService.DeleteAccountById(model);

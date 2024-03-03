@@ -197,7 +197,7 @@ namespace OnlineBanking.Application.Services
             return new CollectionResult<CreditTypeViewModel>()
             {
                 Data = creditTypes,
-                Count = creditTypes.Count(),
+                Count = creditTypes.Count,
             };
         }
 

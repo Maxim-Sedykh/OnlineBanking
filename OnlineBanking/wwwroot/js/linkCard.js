@@ -34,8 +34,6 @@
                 background: 'white',
                 confirmButtonColor: "#042b76",
                 color: 'black',
-            }).then(() => {
-                location.reload()
             });
         }
     });

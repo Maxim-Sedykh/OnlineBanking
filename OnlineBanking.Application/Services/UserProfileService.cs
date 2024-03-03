@@ -80,36 +80,30 @@ namespace OnlineBanking.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result> EditUserInfo(UserProfileViewModel viewModel, byte[] imageData)
+        public async Task<Result> EditUserInfo(UserProfileViewModel viewModel)
         {
-            try
+            byte[] imageData;
+            using (var binaryReader = new BinaryReader(viewModel.Avatar.OpenReadStream()))
             {
-                var user = await _userRepository.GetAll()
-                    .Include(x => x.UserProfile)
-                    .Where(x => x.Id == viewModel.Id)
-                .FirstOrDefaultAsync();
-
-                var nullValidationResult = _userValidator.ValidateEntityOnNull(user);
-                if (!nullValidationResult.IsSuccess)
-                {
-                    return nullValidationResult;
-                }
-
-                user.UserProfile.Avatar = imageData;
-
-                await _userRepository.UpdateAsync(user);
-
-                return new Result();
+                imageData = binaryReader.ReadBytes((int)viewModel.Avatar.Length);
             }
-            catch (Exception ex)
+
+            var user = await _userRepository.GetAll()
+                .Include(x => x.UserProfile)
+                .Where(x => x.Id == viewModel.Id)
+            .FirstOrDefaultAsync();
+
+            var nullValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!nullValidationResult.IsSuccess)
             {
-                _logger.Error(ex, ex.Message);
-                return new Result<UserProfileViewModel>()
-                {
-                    ErrorMessage = ErrorMessage.InternalServerError,
-                    ErrorCode = (int)StatusCode.InternalServerError
-                };
+                return nullValidationResult;
             }
+
+            user.UserProfile.Avatar = imageData;
+
+            await _userRepository.UpdateAsync(user);
+
+            return new Result();
         }
     }
 }

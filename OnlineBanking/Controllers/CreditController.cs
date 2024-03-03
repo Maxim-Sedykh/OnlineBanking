@@ -60,11 +60,11 @@ namespace OnlineBanking.Controllers
         }
 
         /// <summary>
-        /// Выставить доход пользователя (PUT)
+        /// Выставить доход пользователя (POST)
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> SetUserIncome(SetIncomeViewModel viewModel)
         {
             var response = await _creditService.SetUserIncome(viewModel, User.Identity.Name);

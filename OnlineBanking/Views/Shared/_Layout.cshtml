@@ -22,6 +22,14 @@
                         <a class="nav-link active px-0 text-white" aria-current="page" asp-controller="Home" asp-action="Index">Главная страница</a>
                         <div class="ms-auto" style="margin-left:auto;">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li class="nav-item">
+                                        <form method="post" asp-controller="Auth" asp-action="Logout">
+                                            <button class="btn text-white">Выйти</button>
+                                        </form>
+                                    </li>
+                                }
                                 <li class="nav-item">
                                     <a class="nav-link text-black my-auto text-white" asp-controller="Credit" asp-action="GetCreditTypes">Кредиты</a>
                                 </li>

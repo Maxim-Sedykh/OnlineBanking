@@ -78,6 +78,7 @@ namespace OnlineBanking.Controllers
         /// </summary>
         /// <returns></returns>
         [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
