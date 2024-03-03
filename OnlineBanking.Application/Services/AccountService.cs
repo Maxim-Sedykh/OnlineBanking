@@ -7,9 +7,11 @@ using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
+using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.AccountType;
+using OnlineBanking.Domain.ViewModel.Card;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -25,52 +27,45 @@ namespace OnlineBanking.Application.Services
         private readonly IBaseRepository<Account> _accountReporisoty;
         private readonly IBaseRepository<AccountType> _accountTypeReporisoty;
         private readonly IBaseRepository<User> _userReporisoty;
-        private readonly ILogger _logger;
+        private readonly IAccountValidator _accountValidator;
+        private readonly IUserValidator _userValidator;
+        private readonly IAccountTypeValidator _accountTypeValidator;
 
-        public AccountService(IBaseRepository<Account> accountReporisoty, ILogger logger, IBaseRepository<User> userReporisoty,
-            IBaseRepository<AccountType> accountTypeReporisoty)
+        public AccountService(IBaseRepository<Account> accountReporisoty, IBaseRepository<User> userReporisoty,
+            IBaseRepository<AccountType> accountTypeReporisoty, IUserValidator userValidator, IAccountTypeValidator accountTypeValidator)
         {
             _accountReporisoty = accountReporisoty;
-            _logger = logger;
             _userReporisoty = userReporisoty;
             _accountTypeReporisoty = accountTypeReporisoty;
+            _userValidator = userValidator;
+            _accountTypeValidator = accountTypeValidator;
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Account>> AddMoneyToAccount(AccountMoneyViewModel viewModel)
+        public async Task<Result> AddMoneyToAccount(AccountMoneyViewModel viewModel)
         {
             var account = await _accountReporisoty.GetAll().FirstOrDefaultAsync(x => x.Id == viewModel.Id);
-            if (account == null)
+
+            var nullValidationResult = _accountValidator.ValidateEntityOnNull(account);
+            if (!nullValidationResult.IsSuccess) 
             {
-                return new Result<Account>
-                {
-                    ErrorCode = (int)StatusCode.AccountAlreadyExist,
-                    ErrorMessage = ErrorMessage.AccountAlreadyExist,
-                };
+                return nullValidationResult;
             }
 
             account.BalanceAmount += viewModel.BalanceAmount;
 
             await _accountReporisoty.UpdateAsync(account);
 
-            return new Result<Account>
-            {
-                Data = account,
-            };
+            return new Result();
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Account>> CreateNewAccount(CreateAccountViewModel viewModel, string userName)
+        public async Task<Result> CreateNewAccount(CreateAccountViewModel viewModel, string userName)
         {
             var user = await _userReporisoty.GetAll().FirstOrDefaultAsync(x => x.Username == userName);
-            if (user == null)
-            {
-                return new Result<Account>
-                {
-                    ErrorCode = (int)StatusCode.UserNotFound,
-                    ErrorMessage = ErrorMessage.UserNotFound,
-                };
-            }
+
+            var nullValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!nullValidationResult.IsSuccess) return nullValidationResult;
 
             Account account = new Account()
             {
@@ -83,41 +78,26 @@ namespace OnlineBanking.Application.Services
 
             await _accountReporisoty.CreateAsync(account);
 
-            return new Result<Account>
-            {
-                Data = account,
-            };
+            return new Result();
         }
 
         /// <inheritdoc/>
-        public async Task<Result<bool>> DeleteAccountById(AccountDeleteViewModel viewModel)
+        public async Task<Result> DeleteAccountById(AccountDeleteViewModel viewModel)
         {
             var account = await _accountReporisoty.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == viewModel.Id);
-            if (account == null)
-            {
-                return new Result<bool>()
-                {
-                    ErrorCode = (int)StatusCode.AccountNotFound,
-                    ErrorMessage = ErrorMessage.AccountNotFound,
-                };
-            }
 
-            if (account.BalanceAmount != 0.00m)
-            {
-                return new Result<bool>()
-                {
-                    ErrorCode = (int)StatusCode.AccountBalanceNotEmpty,
-                    ErrorMessage = ErrorMessage.AccountBalanceNotEmpty,
-                };
-            }
+            var nullValidationResult = _accountValidator.ValidateEntityOnNull(account);
+            if (!nullValidationResult.IsSuccess) return nullValidationResult;
+
+            var balanceValidationResult = _accountValidator.ValidateBalance(account.BalanceAmount);
+            if (!nullValidationResult.IsSuccess) return nullValidationResult;
 
             await _accountReporisoty.RemoveAsync(account);
 
-            return new Result<bool>()
+            return new Result()
             {
                 SuccessMessage = SuccessMessage.DeleteAccountMessage,
-                Data = true,
             };
         }
 
@@ -126,12 +106,14 @@ namespace OnlineBanking.Application.Services
         {
             var account = await _accountReporisoty.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if (account == null)
+
+            var nullValidationResult = _accountValidator.ValidateEntityOnNull(account);
+            if (!nullValidationResult.IsSuccess)
             {
                 return new Result<AccountMoneyViewModel>()
                 {
-                    ErrorCode = (int)StatusCode.AccountNotFound,
-                    ErrorMessage = ErrorMessage.AccountNotFound,
+                    ErrorMessage = nullValidationResult.ErrorMessage,
+                    ErrorCode = nullValidationResult.ErrorCode,
                 };
             }
 
@@ -150,12 +132,14 @@ namespace OnlineBanking.Application.Services
                     Id = x.Id,
                     AccountTypeName = x.AccountTypeName,
                 }).ToListAsync();
-            if (accountTypes == null)
+
+            var nullValidationResult = _accountTypeValidator.ValidateAccountTypesOnNull(accountTypes.AsEnumerable());
+            if (!nullValidationResult.IsSuccess)
             {
-                return new Result<CreateAccountViewModel>()
+                return new Result<CreateAccountViewModel>
                 {
-                    ErrorCode = (int)StatusCode.AccountTypesNotFound,
-                    ErrorMessage = ErrorMessage.AccountTypesNotFound,
+                    ErrorMessage = nullValidationResult.ErrorMessage,
+                    ErrorCode = nullValidationResult.ErrorCode,
                 };
             }
 
@@ -183,15 +167,14 @@ namespace OnlineBanking.Application.Services
                     CreatedAt = x.CreatedAt,
                 })
                 .ToArrayAsync();
-            
 
-            if (!accountTypes.Any())
+
+            if (accountTypes == null)
             {
-                _logger.Warning(ErrorMessage.AccountTypesNotFound, accountTypes.Length);
-                return new CollectionResult<AccountTypeViewModel>()
+                return new CollectionResult<AccountTypeViewModel>
                 {
                     ErrorMessage = ErrorMessage.AccountTypesNotFound,
-                    ErrorCode = (int)StatusCode.AccountTypesNotFound
+                    ErrorCode = (int)StatusCode.AccountTypesNotFound,
                 };
             }
 

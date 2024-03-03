@@ -214,11 +214,20 @@ namespace OnlineBanking.Application.Resources.Error {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Платёжный способ не найден.
+        /// </summary>
+        internal static string PaymentMethodNotFound {
+            get {
+                return ResourceManager.GetString("PaymentMethodNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Платёжные способы не найдены.
         /// </summary>
-        internal static string PaymentMethodsNotfound {
+        internal static string PaymentMethodsNotFound {
             get {
-                return ResourceManager.GetString("PaymentMethodsNotfound", resourceCulture);
+                return ResourceManager.GetString("PaymentMethodsNotFound", resourceCulture);
             }
         }
         

@@ -51,7 +51,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
     }
 }

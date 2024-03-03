@@ -31,7 +31,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>

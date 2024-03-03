@@ -6,6 +6,7 @@ using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Auth;
+using OnlineBanking.Domain.ViewModel.Error;
 using System.Net;
 
 namespace OnlineBanking.Controllers
@@ -33,7 +34,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace OnlineBanking.Controllers
             {
                 return RedirectToAction("UserProfile", "User");
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace OnlineBanking.Controllers
             {
                 return RedirectToAction("UserProfile", "User");
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage }");
         }
     }
 }

@@ -30,7 +30,7 @@ namespace OnlineBanking.Middlewares
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+        private Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
             _logger.Error(exception, exception.Message);
 
@@ -43,6 +43,8 @@ namespace OnlineBanking.Middlewares
 
             httpContext.Response.StatusCode = (int)response.ErrorCode;
             httpContext.Response.Redirect($"/home/error/{response.ErrorMessage}");
+
+            return Task.CompletedTask;
         }
     }
 }

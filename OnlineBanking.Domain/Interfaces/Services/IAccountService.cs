@@ -22,21 +22,21 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        Task<Result<bool>> DeleteAccountById(AccountDeleteViewModel viewModel);
+        Task<Result.Result> DeleteAccountById(AccountDeleteViewModel viewModel);
 
         /// <summary>
         /// Создаёт новый счёт с нулевым балансом
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        Task<Result<Account>> CreateNewAccount(CreateAccountViewModel viewModel, string username);
+        Task<Result.Result> CreateNewAccount(CreateAccountViewModel viewModel, string username);
 
         /// <summary>
         /// Добавление денег на счёт
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        Task<Result<Account>> AddMoneyToAccount(AccountMoneyViewModel viewModel);
+        Task<Result.Result> AddMoneyToAccount(AccountMoneyViewModel viewModel);
 
         /// <summary>
         /// Получение счёта по идентификатору

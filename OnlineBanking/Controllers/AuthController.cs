@@ -8,6 +8,7 @@ using OnlineBanking.Domain.ViewModel.Auth;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Net;
+using OnlineBanking.Domain.ViewModel.Error;
 
 namespace OnlineBanking.Controllers
 {
@@ -43,7 +44,7 @@ namespace OnlineBanking.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace OnlineBanking.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>

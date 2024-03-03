@@ -8,6 +8,7 @@ using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Helpers;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
+using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Card;
@@ -16,6 +17,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,30 +28,27 @@ namespace OnlineBanking.Application.Services
     {
         private readonly IBaseRepository<Card> _cardRepository;
         private readonly IBaseRepository<Account> _accountRepository;
-        private readonly ILogger _logger;
+        private readonly IAccountValidator _accountValidator;
+        private readonly ICardValidator _cardValidator;
 
-        public CardService(IBaseRepository<Card> cardRepository, IBaseRepository<Account> accountRepository, ILogger logger)
+        public CardService(IBaseRepository<Card> cardRepository, IBaseRepository<Account> accountRepository,
+            IAccountValidator accountValidator, ICardValidator cardValidator)
         {
             _cardRepository = cardRepository;
             _accountRepository = accountRepository;
-            _logger = logger;
+            _accountValidator = accountValidator;
+            _cardValidator = cardValidator;
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Card>> CreateCardForAccount(long accountId)
+        public async Task<Result> CreateCardForAccount(long accountId)
         {
             var account = await _accountRepository.GetAll()
                 .Where(x => x.Id == accountId)
                 .FirstOrDefaultAsync();
 
-            if (account == null)
-            {
-                return new Result<Card>()
-                {
-                    ErrorCode = (int)StatusCode.AccountNotFound,
-                    ErrorMessage = ErrorMessage.AccountNotFound,
-                };
-            }
+            var nullValidationResult = _accountValidator.ValidateEntityOnNull(account);
+            if (!nullValidationResult.IsSuccess) return nullValidationResult;
 
             var cards = await _cardRepository.GetAll().ToListAsync();
 
@@ -62,14 +61,10 @@ namespace OnlineBanking.Application.Services
                 CreatedAt = DateTime.UtcNow,
             };
 
-            if (cards.Any(c => c.CardNumber == currentCard.CardNumber))
-            {
-                return new Result<Card>
-                {
-                    ErrorCode = (int)StatusCode.TryAgain,
-                    ErrorMessage = ErrorMessage.TryAgain,
-                };
-            }
+            var cardWithSameNumber = await _cardRepository.GetAll().FirstOrDefaultAsync(x => x.CardNumber == currentCard.CardNumber);
+
+            var cardNumberValidationResult = _cardValidator.ValidateCardNumber(cardWithSameNumber);
+            if (!cardNumberValidationResult.IsSuccess) return cardNumberValidationResult;
 
             await _cardRepository.CreateAsync(currentCard);
 
@@ -77,10 +72,9 @@ namespace OnlineBanking.Application.Services
 
             await _accountRepository.UpdateAsync(account);
 
-            return new Result<Card>()
+            return new Result()
             {
                 SuccessMessage = SuccessMessage.LinkCardMessage,
-                Data = currentCard,
             };
         }
 
@@ -91,12 +85,13 @@ namespace OnlineBanking.Application.Services
                 .Where(x => x.AccountId == accountId)
                 .FirstOrDefaultAsync();
 
-            if (card == null)
+            var nullValidationResult = _cardValidator.ValidateEntityOnNull(card);
+            if (!nullValidationResult.IsSuccess) 
             {
                 return new Result<CardViewModel>()
                 {
-                    ErrorCode = (int)StatusCode.CardNotFound,
-                    ErrorMessage = ErrorMessage.CardNotFound,
+                    ErrorMessage = nullValidationResult.ErrorMessage,
+                    ErrorCode = nullValidationResult.ErrorCode,
                 };
             }
 

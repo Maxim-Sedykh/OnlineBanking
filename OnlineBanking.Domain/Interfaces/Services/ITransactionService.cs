@@ -29,7 +29,7 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// <param name="viewModel"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        Task<Result<Transaction>> MakeTransaction(CreateTransactionViewModel viewModel, string userName);
+        Task<Result.Result> MakeTransaction(CreateTransactionViewModel viewModel, string userName);
 
         /// <summary>
         /// Получение транзакций пользователя, заполнение информации для страницы с транзакциями
@@ -45,7 +45,7 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// <param name="viewModel"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        Task<Result<Transaction>> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName);
+        Task<Result.Result> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName);
         
     }
 }

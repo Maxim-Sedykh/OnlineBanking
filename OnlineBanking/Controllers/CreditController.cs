@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.ViewModel.Credit;
-using System.Net;
-using System.Reflection.Metadata.Ecma335;
 
 namespace OnlineBanking.Controllers
 {
@@ -27,7 +25,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -58,9 +56,9 @@ namespace OnlineBanking.Controllers
             {
                 return RedirectToAction("GetCreditInfo", "Credit");
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
-        
+
         /// <summary>
         /// Выставить доход пользователя (PUT)
         /// </summary>
@@ -74,7 +72,7 @@ namespace OnlineBanking.Controllers
             {
                 return RedirectToAction("GetCreditInfo", "Credit");
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>
@@ -104,7 +102,7 @@ namespace OnlineBanking.Controllers
             {
                 return PartialView(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
     }
 }

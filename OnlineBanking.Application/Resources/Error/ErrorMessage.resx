@@ -168,7 +168,10 @@
   <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
     <value>Пароль не совпадает с подтверждением пароля</value>
   </data>
-  <data name="PaymentMethodsNotfound" xml:space="preserve">
+  <data name="PaymentMethodNotFound" xml:space="preserve">
+    <value>Платёжный способ не найден</value>
+  </data>
+  <data name="PaymentMethodsNotFound" xml:space="preserve">
     <value>Платёжные способы не найдены</value>
   </data>
   <data name="TryAgain" xml:space="preserve">

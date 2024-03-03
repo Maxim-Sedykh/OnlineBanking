@@ -142,10 +142,10 @@
     <value>Credit is not found</value>
   </data>
   <data name="CreditTypeNotFound" xml:space="preserve">
-    <value>Тип кредита не найден</value>
+    <value>Credit type is not found</value>
   </data>
   <data name="CreditTypesNotFound" xml:space="preserve">
-    <value>Типы кредита не найдены</value>
+    <value>Credit types is not found</value>
   </data>
   <data name="InternalServerError" xml:space="preserve">
     <value>Invalid server error</value>
@@ -168,7 +168,10 @@
   <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
     <value>Password not equals password confirm</value>
   </data>
-  <data name="PaymentMethodsNotfound" xml:space="preserve">
+  <data name="PaymentMethodNotFound" xml:space="preserve">
+    <value>Payment method is not found</value>
+  </data>
+  <data name="PaymentMethodsNotFound" xml:space="preserve">
     <value>Payment methods is not found</value>
   </data>
   <data name="TryAgain" xml:space="preserve">

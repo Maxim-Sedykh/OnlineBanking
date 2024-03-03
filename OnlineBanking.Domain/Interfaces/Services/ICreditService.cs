@@ -27,7 +27,7 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        Task<Result<CreditViewModel>> CreateCredit(CreateCreditViewModel viewModel, string userName);
+        Task<Result.Result> CreateCredit(CreateCreditViewModel viewModel, string userName);
 
         /// <summary>
         /// Получение кредитов пользователя
@@ -40,7 +40,7 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        Task<Result<User>> SetUserIncome(SetIncomeViewModel viewModel, string userName);
+        Task<Result.Result> SetUserIncome(SetIncomeViewModel viewModel, string userName);
 
         /// <summary>
         /// Получить информацию о том, подтверждён ли доход пользователя

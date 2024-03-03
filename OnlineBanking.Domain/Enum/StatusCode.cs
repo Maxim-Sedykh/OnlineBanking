@@ -38,11 +38,13 @@ namespace OnlineBanking.Domain.Enum
         /// Группа статус кодов для банковских карт
         /// </summary>
         CardNotFound = 51,
+        TryAgain = 52,
 
         /// <summary>
         /// Группа статус кодов для платежного метода
         /// </summary>
-        PaymentMethodsNotFound = 61,
+        PaymentMethodNotFound = 61,
+        PaymentMethodsNotFound = 62,
 
         /// <summary>
         /// Группа статус кодов для транзакций
@@ -65,7 +67,6 @@ namespace OnlineBanking.Domain.Enum
         /// <summary>
         /// Группа статус кодов для исключительных ситуаций
         /// </summary>
-        TryAgain = 451,
         InternalServerError = 500,
     }
 }

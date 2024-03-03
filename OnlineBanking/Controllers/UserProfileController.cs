@@ -33,7 +33,7 @@ namespace OnlineBanking.Controllers
             {
                 return View(response.Data);
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return View("Error", $"{response.ErrorMessage}");
         }
 
         /// <summary>

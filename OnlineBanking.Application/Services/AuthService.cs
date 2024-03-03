@@ -9,6 +9,7 @@ using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Helpers;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
+using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Auth;
 using Serilog;
@@ -31,25 +32,27 @@ namespace OnlineBanking.Application.Services
     {
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<UserProfile> _userProfileRepository;
-        private readonly ILogger _logger;
+        private readonly IUserValidator _userValidator;
 
-        public AuthService(IBaseRepository<User> userRepository, ILogger logger, IBaseRepository<UserProfile> userProfileRepository)
+        public AuthService(IBaseRepository<User> userRepository, IBaseRepository<UserProfile> userProfileRepository, IUserValidator userValidator)
         {
             _userRepository = userRepository;
-            _logger = logger;
             _userProfileRepository = userProfileRepository;
+            _userValidator = userValidator;
         }
 
         /// <inheritdoc/>
         public async Task<Result<ClaimsIdentity>> Login(LoginUserViewModel viewModel)
         {
             var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Email == viewModel.Email);
-            if (user == null)
+
+            var nullValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!nullValidationResult.IsSuccess)
             {
                 return new Result<ClaimsIdentity>()
                 {
-                    ErrorMessage = ErrorMessage.UserNotFound,
-                    ErrorCode = (int)StatusCode.UserNotFound,
+                    ErrorMessage = nullValidationResult.ErrorMessage,
+                    ErrorCode = nullValidationResult.ErrorCode,
                 };
             }
 
@@ -83,12 +86,13 @@ namespace OnlineBanking.Application.Services
             }
 
             var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.Username);
-            if (user != null)
+            var nullValidationResult = _userValidator.RegisterUserValidate(user);
+            if (!nullValidationResult.IsSuccess)
             {
                 return new Result<ClaimsIdentity>()
                 {
-                    ErrorMessage = ErrorMessage.UserAlreadyExist,
-                    ErrorCode = (int)StatusCode.UserAlreadyExist,
+                    ErrorMessage = nullValidationResult.ErrorMessage,
+                    ErrorCode = nullValidationResult.ErrorCode,
                 };
             }
 

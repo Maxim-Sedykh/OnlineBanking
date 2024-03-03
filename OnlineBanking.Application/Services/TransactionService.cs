@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineBanking.Application.Resources.Error;
 using OnlineBanking.Application.Resources.Success;
+using OnlineBanking.Application.Validators;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
+using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
 using OnlineBanking.Domain.Result;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Auth;
@@ -12,6 +14,7 @@ using OnlineBanking.Domain.ViewModel.Credit;
 using OnlineBanking.Domain.ViewModel.PaymentMethod;
 using OnlineBanking.Domain.ViewModel.Transaction;
 using Serilog;
+using System.Security.Principal;
 
 namespace OnlineBanking.Application.Services
 {
@@ -24,19 +27,24 @@ namespace OnlineBanking.Application.Services
         private readonly IBaseRepository<Account> _accountRepository;
         private readonly IBaseRepository<Card> _cardRepository;
         private readonly IBaseRepository<Credit> _creditRepository;
-        private readonly ILogger _logger;
+        private readonly IUserValidator _userValidator;
+        private readonly IAccountValidator _accountValidator;
+        private readonly ITransactionValidator _transactionValidator;
 
-        public TransactionService(IBaseRepository<Transaction> transactionRepository, IBaseRepository<User> userRepository, ILogger logger,
+
+        public TransactionService(IBaseRepository<Transaction> transactionRepository, IBaseRepository<User> userRepository,
             IBaseRepository<Account> accountRepository, IBaseRepository<PaymentMethod> paymentMethodRepository, IBaseRepository<Card> cardRepository,
-            IBaseRepository<Credit> creditRepository)
+            IBaseRepository<Credit> creditRepository, IUserValidator userValidator, IAccountValidator accountValidator,  ITransactionValidator transactionValidator)
         {
             _transactionRepository = transactionRepository;
             _userRepository = userRepository;
-            _logger = logger;
             _accountRepository = accountRepository;
             _paymentMethodRepository = paymentMethodRepository;
             _cardRepository = cardRepository;
             _creditRepository = creditRepository;
+            _userValidator = userValidator;
+            _accountValidator = accountValidator;
+            _transactionValidator = transactionValidator;
         }
 
         /// <inheritdoc/>
@@ -45,12 +53,13 @@ namespace OnlineBanking.Application.Services
             var user = await _userRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Username == userName);
 
-            if (user == null)
+            var userValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!userValidationResult.IsSuccess)
             {
                 return new Result<CreateTransactionViewModel>()
                 {
-                    ErrorCode = (int)StatusCode.UserNotFound,
-                    ErrorMessage = ErrorMessage.UserNotFound,
+                    ErrorMessage = userValidationResult.ErrorMessage,
+                    ErrorCode = userValidationResult.ErrorCode,
                 };
             }
 
@@ -62,12 +71,13 @@ namespace OnlineBanking.Application.Services
                 })
                 .ToListAsync();
 
-            if (paymentMethodsNames.Count == 0)
+            var paymentMethodValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!paymentMethodValidationResult.IsSuccess)
             {
                 return new Result<CreateTransactionViewModel>()
                 {
-                    ErrorCode = (int)StatusCode.PaymentMethodsNotFound,
-                    ErrorMessage = ErrorMessage.PaymentMethodsNotfound,
+                    ErrorMessage = paymentMethodValidationResult.ErrorMessage,
+                    ErrorCode = paymentMethodValidationResult.ErrorCode,
                 };
             }
 
@@ -112,6 +122,16 @@ namespace OnlineBanking.Application.Services
             var user = await _userRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Username == userName);
 
+            var userNullValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!userNullValidationResult.IsSuccess)
+            {
+                return new Result<TransactionPageViewModel>()
+                {
+                    ErrorMessage = userNullValidationResult.ErrorMessage,
+                    ErrorCode = userNullValidationResult.ErrorCode,
+                };
+            }
+
             var userTransactions = await _transactionRepository.GetAll()
                 .Where(x => x.SenderId == user.Id || x.RecipientId == user.Id )
                 .Include(x => x.Recipient)
@@ -129,12 +149,13 @@ namespace OnlineBanking.Application.Services
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
 
-            if (user == null)
+            var userValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!userValidationResult.IsSuccess)
             {
                 return new Result<TransactionPageViewModel>()
                 {
-                    ErrorCode = (int)StatusCode.UserNotFound,
-                    ErrorMessage = ErrorMessage.UserNotFound,
+                    ErrorMessage = userValidationResult.ErrorMessage,
+                    ErrorCode = userValidationResult.ErrorCode,
                 };
             }
 
@@ -148,51 +169,41 @@ namespace OnlineBanking.Application.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Transaction>> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName)
+        public async Task<Result> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName)
         {
             var user = await _userRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Username == userName);
 
-            if (user == null)
+            var userNullValidationResult = _userValidator.ValidateEntityOnNull(user);
+            if (!userNullValidationResult.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.UserNotFound,
-                    ErrorMessage = ErrorMessage.UserNotFound,
-                };
+                return userNullValidationResult;
             }
 
             var userAccount = await _accountRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == viewModel.SelectedUserAccountId);
 
-            if (userAccount == null)
+            var accountNullValidationResult = _accountValidator.ValidateEntityOnNull(userAccount);
+            if (!accountNullValidationResult.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.AccountNotFound,
-                    ErrorMessage = ErrorMessage.AccountNotFound,
-                };
+                return accountNullValidationResult;
             }
 
             var credit = await _creditRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == viewModel.SelectedUserCreditId);
 
-            if (userAccount.BalanceAmount < credit.MonthlyPayment)
+            var transactionValidation = _transactionValidator.ValidateAvailabilityAccountBalance(userAccount.BalanceAmount, viewModel.MoneyAmount);
+            if (!transactionValidation.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.NotEnoughFunds,
-                    ErrorMessage = ErrorMessage.NotEnoughFunds,
-                };
+                return transactionValidation;
             }
 
-            if (credit == null)
+            ICreditValidator creditValidator = new CreditValidator();
+
+            var creditNullValidationResult = creditValidator.ValidateEntityOnNull(credit);
+            if (!creditNullValidationResult.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.CreditNotFound,
-                    ErrorMessage = ErrorMessage.CreditNotFound,
-                };
+                return creditNullValidationResult;
             }
 
             userAccount.BalanceAmount -= viewModel.MoneyAmount;
@@ -214,47 +225,37 @@ namespace OnlineBanking.Application.Services
 
             await _transactionRepository.CreateAsync(transaction);
 
-            return new Result<Transaction>()
+            return new Result()
             {
-                Data = transaction,
                 SuccessMessage = SuccessMessage.CompleteTransaction,
             };
         }
 
         /// <inheritdoc/>
-        public async Task<Result<Transaction>> MakeTransaction(CreateTransactionViewModel viewModel, string userName)
+        public async Task<Result> MakeTransaction(CreateTransactionViewModel viewModel, string userName)
         {
             var account = await _accountRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == viewModel.SelectedUserAccountId);
 
-            if (account == null)
+            var accountValidation = _accountValidator.ValidateEntityOnNull(account);
+            if (!accountValidation.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.AccountNotFound,
-                    ErrorMessage = ErrorMessage.AccountNotFound,
-                };
+                return accountValidation;
             }
 
-            if (account.BalanceAmount < viewModel.MoneyAmount)
+            var transactionValidation = _transactionValidator.ValidateAvailabilityAccountBalance(account.BalanceAmount, viewModel.MoneyAmount);
+            if (!transactionValidation.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.NotEnoughFunds,
-                    ErrorMessage = ErrorMessage.NotEnoughFunds,
-                };
+                return transactionValidation;
             }
 
             var sender = await _userRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Username == userName);
 
-            if (sender == null)
+            var userNullValidationResult = _userValidator.ValidateEntityOnNull(sender);
+            if (!userNullValidationResult.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.UserNotFound,
-                    ErrorMessage = ErrorMessage.UserNotFound,
-                };
+                return userNullValidationResult;
             }
 
             var recipientCard = await _cardRepository.GetAll()
@@ -262,13 +263,12 @@ namespace OnlineBanking.Application.Services
                 .ThenInclude(x => x.User)
                 .FirstOrDefaultAsync(x => x.CardNumber == viewModel.RecipientCardNumber);
 
-            if (recipientCard == null)
+            ICardValidator cardValidator = new CardValidator();
+
+            var cardNullValidationResult = cardValidator.ValidateEntityOnNull(recipientCard);
+            if (!cardNullValidationResult.IsSuccess)
             {
-                return new Result<Transaction>()
-                {
-                    ErrorCode = (int)StatusCode.CardNotFound,
-                    ErrorMessage = ErrorMessage.CardNotFound,
-                };
+                return cardNullValidationResult;
             }
 
             account.BalanceAmount -= viewModel.MoneyAmount;
@@ -290,9 +290,8 @@ namespace OnlineBanking.Application.Services
 
             await _transactionRepository.CreateAsync(transaction);
 
-            return new Result<Transaction>()
+            return new Result()
             {
-                Data = transaction,
                 SuccessMessage = SuccessMessage.CompleteTransaction,
             };
         }

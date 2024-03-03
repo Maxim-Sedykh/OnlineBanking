@@ -26,6 +26,6 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Result<Card>> CreateCardForAccount(long id);
+        Task<Result.Result> CreateCardForAccount(long id);
     }
 }
