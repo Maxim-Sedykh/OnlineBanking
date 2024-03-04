@@ -80,19 +80,12 @@ namespace OnlineBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCreditTransaction(CreateTransactionViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            var response = await _transactionService.MakeCreditTransaction(viewModel, User.Identity.Name);
+            if (response.IsSuccess)
             {
-                var response = await _transactionService.MakeCreditTransaction(viewModel, User.Identity.Name);
-                if (response.IsSuccess)
-                {
-                    return Ok(new { message = response.SuccessMessage });
-                }
-                return BadRequest(new { message = response.ErrorMessage });
+                return RedirectToAction("GetUserTransaction");
             }
-            var errorMessages = ModelState.Values
-                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToArray();
-            string errorMessage = string.Join(" ", errorMessages);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = errorMessage });
+            return View("Error", $"{response.ErrorMessage}");
         }
     }
 }

@@ -82,21 +82,26 @@ namespace OnlineBanking.Application.Services
         /// <inheritdoc/>
         public async Task<Result> EditUserInfo(UserProfileViewModel viewModel)
         {
-            byte[] imageData;
-            using (var binaryReader = new BinaryReader(viewModel.Avatar.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)viewModel.Avatar.Length);
-            }
-
             var user = await _userRepository.GetAll()
                 .Include(x => x.UserProfile)
                 .Where(x => x.Id == viewModel.Id)
-            .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();
 
             var nullValidationResult = _userValidator.ValidateEntityOnNull(user);
             if (!nullValidationResult.IsSuccess)
             {
                 return nullValidationResult;
+            }
+
+            if (user.UserProfile.Avatar != null)
+            {
+                return new Result();
+            }
+
+            byte[] imageData;
+            using (var binaryReader = new BinaryReader(viewModel.Avatar.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)viewModel.Avatar.Length);
             }
 
             user.UserProfile.Avatar = imageData;

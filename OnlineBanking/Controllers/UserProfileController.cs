@@ -44,7 +44,6 @@ namespace OnlineBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> EditUserData(UserProfileViewModel viemModel)
         {
-            
             await _userProfileService.EditUserInfo(viemModel);   
             return RedirectToAction("GetUserProfile");
         }
