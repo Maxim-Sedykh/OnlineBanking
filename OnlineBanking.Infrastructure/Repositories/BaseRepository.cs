@@ -1,4 +1,6 @@
-﻿using OnlineBanking.DAL.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineBanking.DAL.Context;
+using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Interfaces.Repository;
 using System;
 using System.Collections.Generic;
@@ -50,6 +52,16 @@ namespace OnlineBanking.DAL.Repositories
             await _dbContext.SaveChangesAsync();
 
             return entity;
+        }
+
+        public async Task UpdateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+            {
+                throw new ArgumentException("Entities is null");
+            }
+            _dbContext.UpdateRange(entities);
+            await _dbContext.SaveChangesAsync();
         }
 
         private void ValidateEntityOnNull(TEntity entity)

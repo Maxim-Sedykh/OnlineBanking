@@ -11,7 +11,6 @@ using System.Net;
 
 namespace OnlineBanking.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
@@ -112,6 +111,15 @@ namespace OnlineBanking.Controllers
                 return View(response.Data);
             }
             return View("Error", $"{response.ErrorMessage }");
+        }
+
+        /// <summary>
+        /// Выплата процентов пользователям
+        /// </summary>
+        /// <returns></returns>
+        public async Task SetAccountPercent()
+        {
+            await _accountService.PayAccountsPercent();
         }
     }
 }

@@ -15,5 +15,7 @@ namespace OnlineBanking.Domain.Interfaces.Repository
         Task<TEntity> UpdateAsync(TEntity entity);
 
         Task<TEntity> RemoveAsync(TEntity entity);
+
+        Task UpdateRangeAsync(IEnumerable<TEntity> entities);
     }
 }

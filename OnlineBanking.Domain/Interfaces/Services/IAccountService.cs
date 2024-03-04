@@ -56,5 +56,11 @@ namespace OnlineBanking.Domain.Interfaces.Services
         /// </summary>
         /// <returns></returns>
         Task<CollectionResult<AccountTypeViewModel>> GetAccountTypes();
+
+        /// <summary>
+        /// Выплачивание процентов пользователю каждый месяц по сберегательному счёту с помощью Quartz
+        /// </summary>
+        /// <returns></returns>
+        Task<Result.Result> PayAccountsPercent();
     }
 }

@@ -85,7 +85,7 @@ namespace OnlineBanking.Application.Services
             if (!nullValidationResult.IsSuccess) return nullValidationResult;
 
             var balanceValidationResult = _accountValidator.ValidateBalance(account.BalanceAmount);
-            if (!nullValidationResult.IsSuccess) return nullValidationResult;
+            if (!balanceValidationResult.IsSuccess) return balanceValidationResult;
 
             await _accountReporisoty.RemoveAsync(account);
 
@@ -177,6 +177,33 @@ namespace OnlineBanking.Application.Services
                 Data = accountTypes,
                 Count = accountTypes.Length
             };
+        }
+
+        /// <inheritdoc/>
+        public async Task<Result> PayAccountsPercent()
+        {
+            int savingAccountTypeId = 1;
+
+            var savingAccounts = await _accountReporisoty.GetAll()
+                .Include(x => x.AccountType)
+                .Where(x => x.AccountTypeId == savingAccountTypeId)
+                .ToListAsync();
+
+            if (!savingAccounts.Any())
+            {
+                return new Result();
+            }
+
+            decimal interestRate = (decimal)Math.Round(savingAccounts.First().AccountType.AnnualInterestRate / 12 / 100, 2, MidpointRounding.AwayFromZero);
+
+            foreach (var account in savingAccounts)
+            {
+                account.BalanceAmount += account.BalanceAmount * interestRate;
+            }
+
+            await _accountReporisoty.UpdateRangeAsync(savingAccounts);
+
+            return new Result();
         }
     }
 }

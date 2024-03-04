@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
+using OnlineBanking.Application.Jobs;
+using Quartz;
+using Quartz.Impl;
 using System.Text;
 
 namespace OnlineBanking
@@ -30,6 +33,24 @@ namespace OnlineBanking
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+        }
+
+        public static async Task AddMonthlyJob(this IServiceCollection services)
+        {
+            IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
+            await scheduler.Start();
+
+            IJobDetail job = JobBuilder.Create<SetAccountPercentJob>()
+                .WithIdentity("setAccountPercentJob", "group1")
+                .Build();
+
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity("setAccountPercentJob", "group1")
+                .StartNow()
+                .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(dayOfMonth: 1, hour: 0, minute: 0))
+                .Build();
+
+            await scheduler.ScheduleJob(job, trigger).ConfigureAwait(false);
         }
     }
 }

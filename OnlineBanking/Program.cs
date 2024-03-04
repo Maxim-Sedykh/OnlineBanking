@@ -11,6 +11,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthenticationAndAuthorization(builder);
 
+await builder.Services.AddMonthlyJob();
+
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddDataAccessLayer(builder.Configuration);

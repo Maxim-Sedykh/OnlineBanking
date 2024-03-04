@@ -31,7 +31,7 @@ namespace OnlineBanking.DAL.Configurations
                     AccountTypeName = "Текущий",
                     Description = "Текущий счет обычно используется для повседневных финансовых операций, " +
                     "и банки обычно не начисляют высокие проценты на остаток на таком счете, под данный тип счёта можно оформить дебетовую карту",
-                    AnnualInterestRate = 2.5f,
+                    AnnualInterestRate = 0,
                     CreatedAt = DateTime.UtcNow
                 },
                 new()
