@@ -210,6 +210,16 @@ namespace OnlineBanking.Application.Services
 
             credit.CreditRemainerAmount -= viewModel.MoneyAmount;
 
+            if (credit.CreditRemainerAmount <= 0)
+            {
+                await _creditRepository.RemoveAsync(credit);
+
+                return new Result()
+                {
+                    SuccessMessage = SuccessMessage.CloseCredit,
+                };
+            }
+
             Transaction transaction = new Transaction()
             {
                 SenderId = user.Id,

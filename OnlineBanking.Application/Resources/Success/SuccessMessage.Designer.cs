@@ -61,6 +61,15 @@ namespace OnlineBanking.Application.Resources.Success {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ваш кредит полностью погашен!.
+        /// </summary>
+        internal static string CloseCredit {
+            get {
+                return ResourceManager.GetString("CloseCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Транзакция была успешно выполнена.
         /// </summary>
         internal static string CompleteTransaction {
