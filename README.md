@@ -5,6 +5,8 @@
 2. Domain,
 3. Infrastructure,
 4. Presentation,
+   <img src="https://github.com/Maxim-Sedykh/OnlineBanking/assets/125740808/160c6efd-9329-4fb2-aa90-78405ea38da4" width=25%>
+   <img src="https://github.com/Maxim-Sedykh/OnlineBanking/assets/125740808/becee565-6c0f-434f-b5b6-bb444816d5ca" width=25%>
    ![Главная странца](https://github.com/Maxim-Sedykh/OnlineBanking/assets/125740808/160c6efd-9329-4fb2-aa90-78405ea38da4)
    ![Вид обычного модального окна на сайте](https://github.com/Maxim-Sedykh/OnlineBanking/assets/125740808/becee565-6c0f-434f-b5b6-bb444816d5ca)
    ![Страница профиля пользователя](https://github.com/Maxim-Sedykh/OnlineBanking/assets/125740808/62a94e45-971e-4960-b6c2-fdb2919743d6)
