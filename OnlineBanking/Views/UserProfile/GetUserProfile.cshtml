@@ -19,13 +19,13 @@
             <div class="col-md-12 text-center">
                 @if (Model.Avatar == null && Model.Image == null)
                 {
-                    <img class="img-fluid rounded-circle my-4" src="~/images/\default-avatar.jpeg" style="width:300px;">
+                    <img class="img-fluid rounded-1 my-4" src="~/images/\default-avatar.jpeg" style="width:300px; height: 300px;">
                     <input asp-for="@Model.Avatar" class="form-control w-50 mx-auto" type="file">
                 }
                 else
                 {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())" style="height: 300px; width:300px;"
-                         class="img-fluid rounded-circle my-4">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())" style="height:300px;"
+                         class="img-fluid rounded-1 my-4">
                 }
             </div>
             <div class="col-md-12 my-5 text-center">

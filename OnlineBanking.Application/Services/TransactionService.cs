@@ -4,6 +4,7 @@ using OnlineBanking.Application.Resources.Success;
 using OnlineBanking.Application.Validators;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
+using OnlineBanking.Domain.Interfaces.Database;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
@@ -30,11 +31,14 @@ namespace OnlineBanking.Application.Services
         private readonly IUserValidator _userValidator;
         private readonly IAccountValidator _accountValidator;
         private readonly ITransactionValidator _transactionValidator;
+        private readonly ILogger _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
 
         public TransactionService(IBaseRepository<Transaction> transactionRepository, IBaseRepository<User> userRepository,
             IBaseRepository<Account> accountRepository, IBaseRepository<PaymentMethod> paymentMethodRepository, IBaseRepository<Card> cardRepository,
-            IBaseRepository<Credit> creditRepository, IUserValidator userValidator, IAccountValidator accountValidator,  ITransactionValidator transactionValidator)
+            IBaseRepository<Credit> creditRepository, IUserValidator userValidator, IAccountValidator accountValidator, ITransactionValidator transactionValidator,
+            ILogger logger, IUnitOfWork unitOfWork)
         {
             _transactionRepository = transactionRepository;
             _userRepository = userRepository;
@@ -45,6 +49,8 @@ namespace OnlineBanking.Application.Services
             _userValidator = userValidator;
             _accountValidator = accountValidator;
             _transactionValidator = transactionValidator;
+            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         /// <inheritdoc/>
@@ -172,7 +178,7 @@ namespace OnlineBanking.Application.Services
         public async Task<Result> MakeCreditTransaction(CreateTransactionViewModel viewModel, string userName)
         {
             var user = await _userRepository.GetAll()
-                .FirstOrDefaultAsync(x => x.Username == userName);
+            .FirstOrDefaultAsync(x => x.Username == userName);
 
             var userNullValidationResult = _userValidator.ValidateEntityOnNull(user);
             if (!userNullValidationResult.IsSuccess)
@@ -206,34 +212,49 @@ namespace OnlineBanking.Application.Services
                 return creditNullValidationResult;
             }
 
-            userAccount.BalanceAmount -= viewModel.MoneyAmount;
-
-            credit.CreditRemainerAmount -= viewModel.MoneyAmount;
-
-            if (credit.CreditRemainerAmount <= 0)
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
-                await _creditRepository.RemoveAsync(credit);
-
-                return new Result()
+                try
                 {
-                    SuccessMessage = SuccessMessage.CloseCredit,
-                };
+                    userAccount.BalanceAmount -= viewModel.MoneyAmount;
+
+                    credit.CreditRemainerAmount -= viewModel.MoneyAmount;
+
+                    if (credit.CreditRemainerAmount <= 0)
+                    {
+                        await _creditRepository.RemoveAsync(credit);
+
+                        await transaction.CommitAsync();
+
+                        return new Result()
+                        {
+                            SuccessMessage = SuccessMessage.CloseCredit,
+                        };
+                    }
+
+                    Transaction newTransaction = new Transaction()
+                    {
+                        SenderId = user.Id,
+                        RecipientId = user.Id,
+                        MoneyAmount = viewModel.MoneyAmount,
+                        PaymentMethodId = viewModel.SelectedPaymentMethodId,
+                        TransactionType = TransactionType.Credit,
+                        CreatedAt = DateTime.UtcNow,
+                    };
+
+                    await _accountRepository.UpdateAsync(userAccount);
+                    await _creditRepository.UpdateAsync(credit);
+
+                    await _transactionRepository.CreateAsync(newTransaction);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    await transaction.RollbackAsync();
+                }
             }
-
-            Transaction transaction = new Transaction()
-            {
-                SenderId = user.Id,
-                RecipientId = user.Id,
-                MoneyAmount = viewModel.MoneyAmount,
-                PaymentMethodId = viewModel.SelectedPaymentMethodId,
-                TransactionType = TransactionType.Credit,
-                CreatedAt = DateTime.UtcNow,
-            };
-
-            await _accountRepository.UpdateAsync(userAccount);
-            await _creditRepository.UpdateAsync(credit);
-
-            await _transactionRepository.CreateAsync(transaction);
 
             return new Result()
             {
@@ -281,24 +302,37 @@ namespace OnlineBanking.Application.Services
                 return cardNullValidationResult;
             }
 
-            account.BalanceAmount -= viewModel.MoneyAmount;
-
-            recipientCard.Account.BalanceAmount += viewModel.MoneyAmount;
-
-            Transaction transaction = new Transaction()
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
-                SenderId = sender.Id,
-                RecipientId = recipientCard.Account.UserId,
-                MoneyAmount = viewModel.MoneyAmount,
-                PaymentMethodId = viewModel.SelectedPaymentMethodId,
-                TransactionType = TransactionType.Common,
-                CreatedAt = DateTime.UtcNow,
-            };
+                try
+                {
+                    account.BalanceAmount -= viewModel.MoneyAmount;
 
-            await _accountRepository.UpdateAsync(account);
-            await _cardRepository.UpdateAsync(recipientCard);
+                    recipientCard.Account.BalanceAmount += viewModel.MoneyAmount;
 
-            await _transactionRepository.CreateAsync(transaction);
+                    Transaction newTransaction = new Transaction()
+                    {
+                        SenderId = sender.Id,
+                        RecipientId = recipientCard.Account.UserId,
+                        MoneyAmount = viewModel.MoneyAmount,
+                        PaymentMethodId = viewModel.SelectedPaymentMethodId,
+                        TransactionType = TransactionType.Common,
+                        CreatedAt = DateTime.UtcNow,
+                    };
+
+                    await _accountRepository.UpdateAsync(account);
+                    await _cardRepository.UpdateAsync(recipientCard);
+
+                    await _transactionRepository.CreateAsync(newTransaction);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    await transaction.RollbackAsync();
+                }
+            }
 
             return new Result()
             {

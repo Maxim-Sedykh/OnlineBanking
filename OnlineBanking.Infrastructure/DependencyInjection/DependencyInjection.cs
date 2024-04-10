@@ -5,6 +5,7 @@ using OnlineBanking.DAL.Context;
 using OnlineBanking.DAL.Interceptors;
 using OnlineBanking.DAL.Repositories;
 using OnlineBanking.Domain.Entity;
+using OnlineBanking.Domain.Interfaces.Database;
 using OnlineBanking.Domain.Interfaces.Repository;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace OnlineBanking.DAL.DependencyInjection
                 options.UseNpgsql(connectionString);
             });
             services.InitRepositories();
+            services.InitUnitOfWork();
         }
 
         private static void InitRepositories(this IServiceCollection services)
@@ -52,6 +54,11 @@ namespace OnlineBanking.DAL.DependencyInjection
                 var implementationType = typeof(BaseRepository<>).MakeGenericType(type);
                 services.AddScoped(interfaceType, implementationType);
             }
+        }
+
+        private static void InitUnitOfWork(this IServiceCollection services)
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

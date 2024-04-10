@@ -6,6 +6,7 @@ using OnlineBanking.Application.Resources.Success;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
 using OnlineBanking.Domain.Helpers;
+using OnlineBanking.Domain.Interfaces.Database;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
@@ -26,51 +27,66 @@ namespace OnlineBanking.Application.Services
     /// <inheritdoc/>
     public class CardService : ICardService
     {
+        private readonly ILogger _logger;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseRepository<Card> _cardRepository;
         private readonly IBaseRepository<Account> _accountRepository;
         private readonly IAccountValidator _accountValidator;
         private readonly ICardValidator _cardValidator;
 
         public CardService(IBaseRepository<Card> cardRepository, IBaseRepository<Account> accountRepository,
-            IAccountValidator accountValidator, ICardValidator cardValidator)
+            IAccountValidator accountValidator, ICardValidator cardValidator, ILogger logger, IUnitOfWork unitOfWork)
         {
             _cardRepository = cardRepository;
             _accountRepository = accountRepository;
             _accountValidator = accountValidator;
             _cardValidator = cardValidator;
+            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         /// <inheritdoc/>
         public async Task<Result> CreateCardForAccount(long accountId)
         {
             var account = await _accountRepository.GetAll()
-                .Where(x => x.Id == accountId)
-                .FirstOrDefaultAsync();
+                    .Where(x => x.Id == accountId)
+                    .FirstOrDefaultAsync();
 
             var nullValidationResult = _accountValidator.ValidateEntityOnNull(account);
             if (!nullValidationResult.IsSuccess) return nullValidationResult;
 
-            var cards = await _cardRepository.GetAll().ToListAsync();
-
-            Card currentCard = new()
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
-                CardNumber = BankCardDataGenerator.GenerateCardNumber(),
-                Validity = DateTime.UtcNow.AddYears(7),
-                CVV = BankCardDataGenerator.GenerateCVV(),
-                AccountId = accountId,
-                CreatedAt = DateTime.UtcNow,
-            };
+                try
+                {
+                    Card currentCard = new()
+                    {
+                        CardNumber = BankCardDataGenerator.GenerateCardNumber(),
+                        Validity = DateTime.UtcNow.AddYears(7),
+                        CVV = BankCardDataGenerator.GenerateCVV(),
+                        AccountId = accountId,
+                        CreatedAt = DateTime.UtcNow,
+                    };
 
-            var cardWithSameNumber = await _cardRepository.GetAll().FirstOrDefaultAsync(x => x.CardNumber == currentCard.CardNumber);
+                    var cardWithSameNumber = await _cardRepository.GetAll().FirstOrDefaultAsync(x => x.CardNumber == currentCard.CardNumber);
 
-            var cardNumberValidationResult = _cardValidator.ValidateCardNumber(cardWithSameNumber);
-            if (!cardNumberValidationResult.IsSuccess) return cardNumberValidationResult;
+                    var cardNumberValidationResult = _cardValidator.ValidateCardNumber(cardWithSameNumber);
+                    if (!cardNumberValidationResult.IsSuccess) return cardNumberValidationResult;
 
-            await _cardRepository.CreateAsync(currentCard);
+                    await _cardRepository.CreateAsync(currentCard);
 
-            account.IsCardLinked = true;
+                    account.IsCardLinked = true;
 
-            await _accountRepository.UpdateAsync(account);
+                    await _accountRepository.UpdateAsync(account);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    transaction.Rollback();
+                }
+            }
 
             return new Result()
             {

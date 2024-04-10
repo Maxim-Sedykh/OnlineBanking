@@ -4,6 +4,8 @@ using OnlineBanking.Application.Resources.Error;
 using OnlineBanking.Application.Validators;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
+using OnlineBanking.Domain.Helpers;
+using OnlineBanking.Domain.Interfaces.Database;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.Interfaces.Validators.EntityValidators;
@@ -34,10 +36,12 @@ namespace OnlineBanking.Application.Services
         private readonly IUserValidator _userValidator;
         private readonly ICreditTypeValidator _creditTypeValidator;
         private readonly ICreditValidator _creditValidator;
+        private readonly ILogger _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
         public CreditService(IBaseRepository<Credit> creditRepository, IBaseRepository<CreditType> creditTypeRepository,
             IBaseRepository<User> userRepository, IBaseRepository<Account> accountRepository, IBaseRepository<AccountType> accountTypeRepository,
-            IUserValidator userValidator, ICreditTypeValidator creditTypeValidator, ICreditValidator creditValidator)
+            IUserValidator userValidator, ICreditTypeValidator creditTypeValidator, ICreditValidator creditValidator, ILogger logger, IUnitOfWork unitOfWork)
         {
             _creditRepository = creditRepository;
             _creditTypeRepository = creditTypeRepository;
@@ -47,6 +51,8 @@ namespace OnlineBanking.Application.Services
             _userValidator = userValidator;
             _creditTypeValidator = creditTypeValidator;
             _creditValidator = creditValidator;
+            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         /// <inheritdoc/>
@@ -81,11 +87,11 @@ namespace OnlineBanking.Application.Services
             }
 
             var creditTermValidationResult = _creditValidator.ValidateCreditByTerm(viewModel.CreditTerm, creditType);
-            if (!creditTypeNullValidationResult.IsSuccess) 
+            if (!creditTermValidationResult.IsSuccess) 
             {
                 return creditTypeNullValidationResult;
             }
-            
+
             decimal newCreditSumAmount = GetCreditSumAmount(viewModel.MoneyLenderReceiveAmount, creditType.YearPercent);
             decimal newCreditMounthPayment = GetCreditMounthPayment(newCreditSumAmount, viewModel.CreditTerm);
 
@@ -97,34 +103,51 @@ namespace OnlineBanking.Application.Services
             {
                 return creditTypeNullValidationResult;
             }
-             
+
             var creditAccountType = await _accountTypeRepository.GetAll().FirstOrDefaultAsync(x => x.AccountTypeName == DEFAULT_CREDIT_NAME);
-
-            Account account = new Account()
+            if (creditAccountType == null)
             {
-                AccountName = DEFAULT_CREDIT_NAME + user.UserProfile.CreditsCount,
-                UserId = user.Id,
-                BalanceAmount = viewModel.MoneyLenderReceiveAmount,
-                AccountTypeId = creditAccountType.Id,
-                IsCardLinked = false,
-                CreatedAt = DateTime.UtcNow,
-            };
+                return new Result();
+            }
 
-            Credit credit = new Credit()
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
-                UserId = user.Id,
-                CreditSumAmount = newCreditSumAmount,
-                MoneyLenderReceiveAmount = viewModel.MoneyLenderReceiveAmount,
-                CreditTerm = DateTime.SpecifyKind(viewModel.CreditTerm, DateTimeKind.Utc),
-                CreditRemainerAmount = newCreditSumAmount,
-                MonthlyPayment = newCreditMounthPayment,
-                CreditTypeId = viewModel.SelectedCreditTypeId,
-                CreatedAt = DateTime.UtcNow
-            };
+                try
+                { 
+                    Account account = new Account()
+                    {
+                        AccountName = DEFAULT_CREDIT_NAME + user.UserProfile.CreditsCount,
+                        UserId = user.Id,
+                        BalanceAmount = viewModel.MoneyLenderReceiveAmount,
+                        AccountTypeId = creditAccountType.Id,
+                        IsCardLinked = false,
+                        CreatedAt = DateTime.UtcNow,
+                    };
 
-            await _userRepository.UpdateAsync(user);
-            await _accountRepository.CreateAsync(account);
-            await _creditRepository.CreateAsync(credit);
+                    Credit credit = new Credit()
+                    {
+                        UserId = user.Id,
+                        CreditSumAmount = newCreditSumAmount,
+                        MoneyLenderReceiveAmount = viewModel.MoneyLenderReceiveAmount,
+                        CreditTerm = DateTime.SpecifyKind(viewModel.CreditTerm, DateTimeKind.Utc),
+                        CreditRemainerAmount = newCreditSumAmount,
+                        MonthlyPayment = newCreditMounthPayment,
+                        CreditTypeId = viewModel.SelectedCreditTypeId,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    await _userRepository.UpdateAsync(user);
+                    await _accountRepository.CreateAsync(account);
+                    await _creditRepository.CreateAsync(credit);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                    transaction.Rollback();
+                }
+            }
 
             return new Result();
         }
