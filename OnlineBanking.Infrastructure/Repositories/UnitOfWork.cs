@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace OnlineBanking.DAL.Repositories
 {
@@ -21,7 +22,7 @@ namespace OnlineBanking.DAL.Repositories
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
-            return await _context.Database.BeginTransactionAsync();
+            return await _context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
         }
     }
 }
