@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
 using OnlineBanking.Application.Resources.Error;
+using OnlineBanking.Application.Resources.Success;
 using OnlineBanking.Application.Validators;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
@@ -89,7 +90,7 @@ namespace OnlineBanking.Application.Services
             var creditTermValidationResult = _creditValidator.ValidateCreditByTerm(viewModel.CreditTerm, creditType);
             if (!creditTermValidationResult.IsSuccess) 
             {
-                return creditTypeNullValidationResult;
+                return creditTermValidationResult;
             }
 
             decimal newCreditSumAmount = GetCreditSumAmount(viewModel.MoneyLenderReceiveAmount, creditType.YearPercent);
@@ -101,7 +102,7 @@ namespace OnlineBanking.Application.Services
             var creditVerifyValidationResult = _creditValidator.ValidateCreditVerify(user.UserProfile.Income, user.UserProfile.MonthlyCreditsPayment);
             if (!creditTypeNullValidationResult.IsSuccess)
             {
-                return creditTypeNullValidationResult;
+                return creditVerifyValidationResult;
             }
 
             var creditAccountType = await _accountTypeRepository.GetAll().FirstOrDefaultAsync(x => x.AccountTypeName == DEFAULT_CREDIT_NAME);
@@ -149,7 +150,7 @@ namespace OnlineBanking.Application.Services
                 }
             }
 
-            return new Result();
+            return new Result() { SuccessMessage = SuccessMessage.CreateCreditMessage };
         }
 
         private decimal GetCreditSumAmount(decimal moneyLenderReceiveAmount, float yearPercent)

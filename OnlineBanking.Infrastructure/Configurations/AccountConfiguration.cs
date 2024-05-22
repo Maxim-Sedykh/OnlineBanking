@@ -45,7 +45,7 @@ namespace OnlineBanking.DAL.Configurations
             builder.HasOne(x => x.Card)
                     .WithOne(x => x.Account)
                     .HasPrincipalKey<Account>(x => x.Id)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

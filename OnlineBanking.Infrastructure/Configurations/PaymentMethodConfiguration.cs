@@ -46,7 +46,8 @@ namespace OnlineBanking.DAL.Configurations
 
             builder.HasMany(x => x.Transactions)
                 .WithOne(x => x.PaymentMethod)
-                .HasForeignKey(x => x.PaymentMethodId);
+                .HasForeignKey(x => x.PaymentMethodId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -61,6 +61,15 @@ namespace OnlineBanking.Application.Resources.Success {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Деньги на счёт добавлены.
+        /// </summary>
+        internal static string AddMoneyToAccountMessage {
+            get {
+                return ResourceManager.GetString("AddMoneyToAccountMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ваш кредит полностью погашен!.
         /// </summary>
         internal static string CloseCredit {
@@ -75,6 +84,24 @@ namespace OnlineBanking.Application.Resources.Success {
         internal static string CompleteTransaction {
             get {
                 return ResourceManager.GetString("CompleteTransaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Счёт был успешно создан.
+        /// </summary>
+        internal static string CreateAccountMessage {
+            get {
+                return ResourceManager.GetString("CreateAccountMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кредит был успешно создан.
+        /// </summary>
+        internal static string CreateCreditMessage {
+            get {
+                return ResourceManager.GetString("CreateCreditMessage", resourceCulture);
             }
         }
         

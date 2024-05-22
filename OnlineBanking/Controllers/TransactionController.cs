@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBanking.Application.Services;
+using OnlineBanking.Domain.Extensions;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.ViewModel.Transaction;
 using System.Collections.Generic;
@@ -55,21 +56,22 @@ namespace OnlineBanking.Controllers
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionViewModel viewModel)
+        public async Task<IActionResult> CreateTransaction(CreateTransactionViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var response = await _transactionService.MakeTransaction(viewModel, User.Identity.Name);
-                if (response.IsSuccess)
-                {
-                    return Ok(new { message = response.SuccessMessage });
-                }
-                return BadRequest(new { message = response.ErrorMessage });
+                var errorMessage = ModelState.Values
+                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToList().JoinErrors();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { errorMessage = errorMessage });
             }
-            var errorMessages = ModelState.Values
-                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToArray();
-            string errorMessage = string.Join(" ", errorMessages);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = errorMessage });
+
+            var response = await _transactionService.MakeTransaction(viewModel, User.Identity.Name);
+
+            if (response.IsSuccess)
+            {
+                return Ok(response.SuccessMessage);
+            }
+            return BadRequest(new { errorMessage = response.ErrorMessage });
         }
 
         /// <summary>
@@ -80,12 +82,20 @@ namespace OnlineBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCreditTransaction(CreateTransactionViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = ModelState.Values
+                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToList().JoinErrors();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { errorMessage = errorMessage });
+            }
+
             var response = await _transactionService.MakeCreditTransaction(viewModel, User.Identity.Name);
+
             if (response.IsSuccess)
             {
-                return RedirectToAction("GetUserTransaction");
+                return Ok(response.SuccessMessage);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return BadRequest(new { errorMessage = response.ErrorMessage });
         }
     }
 }

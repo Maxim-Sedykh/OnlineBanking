@@ -9,6 +9,7 @@ using OnlineBanking.Application.Services;
 using OnlineBanking.Domain.ViewModel.Card;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using OnlineBanking.Domain.Extensions;
 
 namespace OnlineBanking.Controllers
 {
@@ -28,14 +29,22 @@ namespace OnlineBanking.Controllers
         /// <param name="accountId"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateCardForAccount([FromBody] long accountId)
+        public async Task<IActionResult> CreateCardForAccount(long id)
         {
-            var response = await _cardService.CreateCardForAccount(accountId);
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = ModelState.Values
+                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToList().JoinErrors();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { errorMessage = errorMessage });
+            }
+
+            var response = await _cardService.CreateCardForAccount(id);
+
             if (response.IsSuccess)
             {
-                return Ok(new { message = response.SuccessMessage });
+                return Ok(response.SuccessMessage);
             }
-            return BadRequest(new { message = response.ErrorMessage });
+            return BadRequest(new { errorMessage = response.ErrorMessage });
         }
 
         /// <summary>

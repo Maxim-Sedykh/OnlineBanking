@@ -53,7 +53,8 @@ namespace OnlineBanking.DAL.Configurations
 
             builder.HasMany(x => x.Accounts)
                 .WithOne(x => x.AccountType)
-                .HasForeignKey(x => x.AccountTypeId);
+                .HasForeignKey(x => x.AccountTypeId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

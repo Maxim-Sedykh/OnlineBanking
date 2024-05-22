@@ -12,6 +12,11 @@ namespace OnlineBanking.Domain.ViewModel.Auth
     /// </summary>
     public record RegisterUserViewModel
     {
+        [Required(ErrorMessage = "Введите ваш код паспорта")]
+        [MinLength(2, ErrorMessage = "Длина кода паспорта счёта должна быть больше 2")]
+        [MaxLength(50, ErrorMessage = "Длина кода паспорта счёта должна быть меньше 10")]
+        public string PassportCode { get; set; }
+
         [Required(ErrorMessage = "Введите ваш логин")]
         [MinLength(2, ErrorMessage = "Длина логина счёта должна быть больше двух символов")]
         [MaxLength(50, ErrorMessage = "Длина логина счёта должна быть меньше 50 символов")]
@@ -26,6 +31,7 @@ namespace OnlineBanking.Domain.ViewModel.Auth
         [MinLength(2, ErrorMessage = "Длина фамилии должна быть больше двух символов")]
         [MaxLength(50, ErrorMessage = "Длина фамилии счёта должна быть меньше 50 символов")]
         public string Surname { get; set; }
+
 
         [EmailAddress]
         [Required(ErrorMessage = "Введите вашу почту")]

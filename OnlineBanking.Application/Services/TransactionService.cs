@@ -4,6 +4,7 @@ using OnlineBanking.Application.Resources.Success;
 using OnlineBanking.Application.Validators;
 using OnlineBanking.Domain.Entity;
 using OnlineBanking.Domain.Enum;
+using OnlineBanking.Domain.Extensions;
 using OnlineBanking.Domain.Interfaces.Database;
 using OnlineBanking.Domain.Interfaces.Repository;
 using OnlineBanking.Domain.Interfaces.Services;
@@ -150,7 +151,7 @@ namespace OnlineBanking.Application.Services
                     MoneyAmount = x.MoneyAmount,
                     PaymentMethodName = x.PaymentMethod.Name,
                     CreatedAt = x.CreatedAt,
-                    TransactionType = x.TransactionType
+                    TransactionType = x.TransactionType.GetDisplayName()
                 })
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();

@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddMoneyToAccountMessage" xml:space="preserve">
+    <value>Деньги на счёт добавлены</value>
+  </data>
   <data name="CloseCredit" xml:space="preserve">
     <value>Ваш кредит полностью погашен!</value>
   </data>
   <data name="CompleteTransaction" xml:space="preserve">
     <value>Транзакция была успешно выполнена</value>
+  </data>
+  <data name="CreateAccountMessage" xml:space="preserve">
+    <value>Счёт был успешно создан</value>
+  </data>
+  <data name="CreateCreditMessage" xml:space="preserve">
+    <value>Кредит был успешно создан</value>
   </data>
   <data name="DeleteAccount" xml:space="preserve">
     <value>Ваш счёт успешно удалён!</value>

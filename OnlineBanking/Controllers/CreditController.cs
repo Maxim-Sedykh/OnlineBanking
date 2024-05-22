@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineBanking.Application.Services;
+using OnlineBanking.Domain.Extensions;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.ViewModel.Credit;
 
@@ -51,12 +53,20 @@ namespace OnlineBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCredit(CreateCreditViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = ModelState.Values
+                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToList().JoinErrors();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { errorMessage = errorMessage });
+            }
+
             var response = await _creditService.CreateCredit(viewModel, User.Identity.Name);
+
             if (response.IsSuccess)
             {
-                return RedirectToAction("GetCreditInfo", "Credit");
+                return Ok(response.SuccessMessage);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return BadRequest(new { errorMessage = response.ErrorMessage });
         }
 
         /// <summary>

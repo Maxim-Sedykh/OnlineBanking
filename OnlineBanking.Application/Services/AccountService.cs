@@ -50,7 +50,7 @@ namespace OnlineBanking.Application.Services
 
             await _accountReporisoty.UpdateAsync(account);
 
-            return new Result();
+            return new Result() { SuccessMessage = SuccessMessage.AddMoneyToAccountMessage };
         }
 
         /// <inheritdoc/>
@@ -72,7 +72,7 @@ namespace OnlineBanking.Application.Services
 
             await _accountReporisoty.CreateAsync(account);
 
-            return new Result();
+            return new Result() { SuccessMessage = SuccessMessage.CreateAccountMessage };
         }
 
         /// <inheritdoc/>

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <form asp-controller="Credit" asp-action="CreateCredit">
+            <form id="createCredit">
                 <div class="form-group">
                     <label asp-for="MoneyLenderReceiveAmount">Сколько средств вы хотите взять в кредит?</label>
                     <input asp-for="MoneyLenderReceiveAmount" type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите количетство денег">
@@ -25,7 +25,8 @@
                     <input type="date" class="form-control" asp-for="CreditTerm" placeholder="Введите дату окончания кредита" value="@DateTime.UtcNow">
                     <small id="emailHelp" class="form-text text-muted">Вы должны выбрать срок кредита в соответствии с характеристиками типа кредита, который вы выберете</small>
                 </div>
-                <button class="btn btn-primary mt-3" type="submit">
+                <button class="btn btn-primary mt-3" type="submit"
+                        onclick="doActionWithConfirmation(event, { url: '/Credit/CreateCredit', formId: 'createCredit', confirmationTitle: 'взять этот кредит?' })">
                     Подтвердить
                 </button>
             </form>

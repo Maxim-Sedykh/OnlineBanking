@@ -65,7 +65,7 @@ namespace OnlineBanking.DAL.Configurations
             builder.HasOne(x => x.User)
                 .WithOne(x => x.UserProfile)
                 .HasPrincipalKey<UserProfile>(x => x.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

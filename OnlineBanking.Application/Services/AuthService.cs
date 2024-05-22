@@ -85,7 +85,9 @@ namespace OnlineBanking.Application.Services
                 };
             }
 
-            var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.Username);
+            // Гипотетическая проверка, есть ли человек с такими паспортными данными
+
+            var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.Username || x.PassportCode == model.PassportCode);
             var nullValidationResult = _userValidator.RegisterUserValidate(user);
             if (!nullValidationResult.IsSuccess)
             {

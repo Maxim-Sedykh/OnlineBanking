@@ -22,7 +22,7 @@ namespace OnlineBanking.Domain.ViewModel.Transaction
 
         public string PaymentMethodName { get; set; }
 
-        public TransactionType TransactionType { get; set; }
+        public string TransactionType { get; set; }
 
         public DateTime CreatedAt { get; set; }
     }

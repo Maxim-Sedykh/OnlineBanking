@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OnlineBanking.Application.Services;
 using OnlineBanking.Domain.Entity;
+using OnlineBanking.Domain.Extensions;
 using OnlineBanking.Domain.Interfaces.Services;
 using OnlineBanking.Domain.ViewModel.Accounts;
 using OnlineBanking.Domain.ViewModel.Auth;
@@ -44,12 +45,20 @@ namespace OnlineBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMoneyToAccount(AccountMoneyViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = ModelState.Values
+                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToList().JoinErrors();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { errorMessage = errorMessage });
+            }
+
             var response = await _accountService.AddMoneyToAccount(viewModel);
+
             if (response.IsSuccess)
             {
-                return RedirectToAction("GetUserProfile", "UserProfile");
+                return Ok(response.SuccessMessage);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return BadRequest(new { errorMessage = response.ErrorMessage });
         }
 
         /// <summary>
@@ -74,12 +83,20 @@ namespace OnlineBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAccount(CreateAccountViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = ModelState.Values
+                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToList().JoinErrors();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { errorMessage = errorMessage });
+            }
+
             var response = await _accountService.CreateNewAccount(viewModel, User.Identity.Name);
+
             if (response.IsSuccess)
             {
-                return RedirectToAction("GetUserProfile", "UserProfile");
+                return Ok(response.SuccessMessage);
             }
-            return View("Error", $"{response.ErrorMessage}");
+            return BadRequest(new { errorMessage = response.ErrorMessage });
         }
 
         /// <summary>
@@ -88,14 +105,22 @@ namespace OnlineBanking.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> DeleteAccountById([FromBody] AccountDeleteViewModel model)
+        public async Task<IActionResult> DeleteAccountById(AccountDeleteViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = ModelState.Values
+                .SelectMany(v => v.Errors.Select(x => x.ErrorMessage)).ToList().JoinErrors();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { errorMessage = errorMessage });
+            }
+
             var response = await _accountService.DeleteAccountById(model);
+
             if (response.IsSuccess)
             {
-                return Ok(new { message = response.SuccessMessage });
+                return Ok(response.SuccessMessage);
             }
-            return BadRequest(new { message = response.ErrorMessage });
+            return BadRequest(new { errorMessage = response.ErrorMessage });
         }
 
         /// <summary>

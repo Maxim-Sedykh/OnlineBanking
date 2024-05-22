@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace OnlineBanking.DAL.DependencyInjection
 {
@@ -27,7 +28,7 @@ namespace OnlineBanking.DAL.DependencyInjection
             services.AddSingleton<AuditInterceptor>();
             services.AddDbContext<BankingDbContext>(options =>
             {
-                options.UseNpgsql(connectionString);
+                options.UseSqlServer(connectionString);
             });
             services.InitRepositories();
             services.InitUnitOfWork();

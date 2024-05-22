@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <form asp-controller="Account" asp-action="AddMoneyToAccount">
+            <form id="accountMoneyAdd">
                 <div>
                     <input type="hidden" asp-for="Id" value="@Model.Id" />
                     <input type="hidden" asp-for="AccountName" value="@Model.AccountName"/>
@@ -14,7 +14,10 @@
                     <label for="balanceAmountInput">Введите сумму (₽)</label>
                     <input class="form-control" value="0,00" type="number" asp-for="BalanceAmount" id="balanceAmountInput">
                 </div>
-                <button type="submit" class="btn btn-primary d-block mx-auto">Пополнить счёт</button>
+                <button type="submit" class="btn btn-primary d-block mx-auto"
+                        onclick="doActionWithPopupWindow(event, { url: '/Account/AddMoneyToAccount', formId: 'accountMoneyAdd' })">
+                    Пополнить счёт
+                </button>
             </form>
         </div>
     </div>
