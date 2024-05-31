@@ -23,7 +23,6 @@ namespace OnlineBanking.DAL.Configurations
                     Id = 1,
                     Username = "TestUser1",
                     Password = HashPasswordHelper.HashPassword("1234567"),
-                    PassportCode = "541234",
                     Email = "test_mail@mail.ru",
                     Role = Role.User,
                     CreatedAt = DateTime.UtcNow,
@@ -33,7 +32,6 @@ namespace OnlineBanking.DAL.Configurations
                     Id = 2,
                     Username = "TestUser2",
                     Password = HashPasswordHelper.HashPassword("43214321"),
-                    PassportCode = "612345",
                     Email = "testik_maike@bk.ru",
                     Role = Role.User,
                     CreatedAt = DateTime.UtcNow,
@@ -59,6 +57,10 @@ namespace OnlineBanking.DAL.Configurations
             builder.HasMany(x => x.RecicipientTransactions)
                 .WithOne(x => x.Recipient)
                 .HasForeignKey(x => x.RecipientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(x => x.UserPassport)
+                .WithOne(x => x.User)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

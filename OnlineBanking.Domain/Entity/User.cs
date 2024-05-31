@@ -20,11 +20,6 @@ namespace OnlineBanking.Domain.Entity
         public string Username { get; set; }
 
         /// <summary>
-        /// Код паспорта
-        /// </summary>
-        public string PassportCode { get; set; }
-
-        /// <summary>
         /// Почта пользователя
         /// </summary>
         public string Email { get; set; }
@@ -63,6 +58,11 @@ namespace OnlineBanking.Domain.Entity
         /// Профиль пользователя
         /// </summary>
         public UserProfile UserProfile { get; set; }
+
+        /// <summary>
+        /// Данные о паспорте пользователя
+        /// </summary>
+        public Passport UserPassport { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

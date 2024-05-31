@@ -87,7 +87,9 @@ namespace OnlineBanking.Application.Services
 
             // Гипотетическая проверка, есть ли человек с такими паспортными данными
 
-            var user = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Username == model.Username || x.PassportCode == model.PassportCode);
+            var user = await _userRepository.GetAll()
+                .Include(x => x.UserPassport)
+                .FirstOrDefaultAsync(x => x.Username == model.Username || x.UserPassport.PassportSeries == model.PassportSeries);
             var nullValidationResult = _userValidator.RegisterUserValidate(user);
             if (!nullValidationResult.IsSuccess)
             {
@@ -107,6 +109,8 @@ namespace OnlineBanking.Application.Services
                 CreatedAt = DateTime.UtcNow,
             };
 
+            await _userRepository.CreateAsync(user);
+
             UserProfile userProfile = new UserProfile()
             {
                 Firstname = model.Firstname,
@@ -116,9 +120,17 @@ namespace OnlineBanking.Application.Services
                 Street = model.Street,
                 ZipCode = model.ZipCode,
             };
-                
 
-            await _userRepository.CreateAsync(user);
+            Passport passport = new Passport()
+            {
+                PassportSeries = model.PassportSeries,
+                PassportId = model.PassportId,
+                IssuedBy = model.IssuedBy,
+                IsConfirmed = false,
+                UserId = user.Id,
+                DateOfIssue = model.DateOfIssue
+            };  
+
             await _userProfileRepository.CreateAsync(userProfile);
 
             var result = Authenticate(user);

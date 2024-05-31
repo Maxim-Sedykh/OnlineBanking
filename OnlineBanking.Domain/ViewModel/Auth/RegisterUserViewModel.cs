@@ -12,10 +12,23 @@ namespace OnlineBanking.Domain.ViewModel.Auth
     /// </summary>
     public record RegisterUserViewModel
     {
-        [Required(ErrorMessage = "Введите ваш код паспорта")]
-        [MinLength(2, ErrorMessage = "Длина кода паспорта счёта должна быть больше 2")]
-        [MaxLength(50, ErrorMessage = "Длина кода паспорта счёта должна быть меньше 10")]
-        public string PassportCode { get; set; }
+        [Required(ErrorMessage = "Введите вашу серию паспорта")]
+        [MinLength(2, ErrorMessage = "Длина серии паспорта счёта должна быть больше 2")]
+        [MaxLength(10, ErrorMessage = "Длина серии паспорта счёта должна быть меньше 10")]
+        public string PassportSeries { get; set; }
+
+        [Required(ErrorMessage = "Введите ваш номер паспорта")]
+        [MinLength(2, ErrorMessage = "Длина номера паспорта счёта должна быть больше 2")]
+        [MaxLength(10, ErrorMessage = "Длина номера паспорта счёта должна быть меньше 10")]
+        public string PassportId { get; set; }
+
+        [Required(ErrorMessage = "Введите кем был выдан паспорт")]
+        [MinLength(10, ErrorMessage = "Длина поля выдачи паспорта должна быть больше 10")]
+        [MaxLength(200, ErrorMessage = "Длина поля выдачи паспорта должна быть меньше 200")]
+        public string IssuedBy { get; set; }
+
+        [Required(ErrorMessage = "Введите дату выдачи паспорта")]
+        public DateTime DateOfIssue { get; set; }
 
         [Required(ErrorMessage = "Введите ваш логин")]
         [MinLength(2, ErrorMessage = "Длина логина счёта должна быть больше двух символов")]
